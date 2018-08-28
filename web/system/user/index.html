@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../../css/app.css" />
+	<link rel="stylesheet" href="../../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
+	<style>
+
+	#items li{background-color:#ffffff; margin:10px; border-radius:5px; padding:10px}
+	#items li h2{font-size:15px}
+	#items li h2 span{font-size:10px; margin-left:5px; font-weight:300; color:#aaaaaa}
+	#items li .item-icon{font-size:50px; color:#e7e7e7; margin-right:10px}
+	#items li a{color:#555555;}
+	#items li a:hover{color:#ffaa00;}
+	#items li p{margin-top:10px}
+	#items li .delete-button{height:50px; padding:0px 20px; background-color:#EC4F13; font-size:15px}
+	#items li .delete-button i{margin-right:4px; font-size:16px}
+	
+	input{color: #444444; margin-top:5px; width:100%; margin-right:10px; border:none; border-radius:2px; padding:0px 6px; height:30px;}
+	
+	</style>
+</head>
+
+<body style="margin:0px; background-color:#EEEEEE">
+	
+	<div class="clearfix" style="background-color:#F7F7F7; margin:10px">
+	
+		<div class="clearfix" style="padding:20px">
+			<div class="left" style="font-size:23px; letter-spacing:2px; color:#666666; font-weight:300;">
+				用户<span style="color:#468847">管理</span>
+			</div>
+			<div class="right">
+				<button style="height:60px; padding:0px 20px; font-size:20px" id="add-user-button"><i class="fa fa-plus" style="margin-right:3px;"></i>增加用户</button>
+			</div>
+		</div>
+		<div id="user-field-panel" style="padding:20px; display:none">
+			<div class="clearfix">
+				<div class="left" style="width:30%; margin-right:10px">姓名：<input type="text" id="name"/></div>
+				<div class="left" style="width:30%; margin-right:10px">用户名：<input type="text" id="loginname"/></div>
+				<div class="left" style="width:30%; margin-right:10px">密码：<input type="text" id="password"/></div>
+			</div>
+			<div style="text-align:center; margin-top:20px">
+				<button id="save-button" style="padding:4px 20px">确定</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<ul id="items">
+	</ul>
+	
+	
+	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript">
+
+		$(function()
+		{
+			load();
+			
+			$("#save-button").on("click", function()
+			{
+				showLoading();
+				$.getJSON("do.jsp?mode=2", {"name":$("#name").val(), "loginname":$("#loginname").val(), "password":$("#password").val()}, function(response)
+				{
+					hideLoading();
+					load();
+				});
+			});
+			
+			$("#add-user-button").on("click", function()
+			{
+				$("#user-field-panel").slideToggle('fast');
+			});
+			
+
+		});
+		
+		function load()
+		{
+			showLoading();
+			$.getJSON("user.jsp?mode=1", function(response)
+			{
+				hideLoading();
+				var $items = $("#items");
+				var rows = response.DATA.rows;
+				var content = [];
+				$.each(rows, function(i, row)
+				{
+					content.push('<li class="clearfix">');
+					content.push('<div class="left"><i class="item-icon fa fa-user"></i></div>');
+					content.push('<div class="left">');
+					content.push('<h2>'+row.NAME+'<span>'+row.LOGIN_NAME+'</span></h2>');
+					content.push('<p>创建日期：'+row.CREATE_DATE+'</p>');
+					content.push('</div>');
+					content.push('<div class="right">');
+					content.push('<button class="delete-button" code="'+row.ID+'"><i class="fa fa-trash-o"></i>删除</button></li>');
+					content.push('</div>');
+				});
+				
+				$items.html(content.join(""));
+				
+				$items.find(".delete-button").on("click", function()
+				{
+					showLoading();
+					$.getJSON("do.jsp?mode=1&id="+$(this).attr("code"), function(response)
+					{
+						hideLoading();
+						load();
+					});
+				});
+				
+			});
+		}
+	
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../../css/app.css" />
+	<link rel="stylesheet" href="../../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
+	<style>
+	table{background-color:#ffffff; border-collapse:separate; border-spacing:0px; width:100%}
+	table tr td:last-child, table tr th:last-child{border-right:0px}
+	td{padding:8px; 5px; font-size:12px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #aaaaaa; border-right:1px solid #aaaaaa; font-size:14px}
+	th{padding:8px; 5px; text-align:left; font-size:12px; border-collapse:separate; overflow:hidden; border-top:1px solid #aaaaaa; border-right:1px solid #aaaaaa; font-size:14px; border-bottom:1px solid #aaaaaa}
+	
+	</style>
+</head>
+
+<body style="margin:0px">
+	
+	<table>
+		<thead>
+		</thead>
+
+		<tbody>
+		</tbody>
+	</table>
+	
+	
+	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript" src="../p1/fixedcost.js"></script>
+	<script type="text/javascript">
+
+		$(function()
+		{
+			var year = $.getParameter("year");
+			var type = $.getParameter("type");
+			load(year, type)
+		});
+		
+		function load(year, type)
+		{
+			showLoading();
+			$.getJSON("data.jsp?type="+type+"&year="+year, function(response)
+			{
+				hideLoading();
+				var rows = response.DATA.rows;
+				var content = [];
+				if(type == 1)
+				{
+					content.push('<tr>');
+					content.push('<th style="text-align:center; width:60px">月度</th>');
+					content.push('<th style="text-align:center">区域</th>');
+					content.push('<th style="text-align:center">卷烟牌号</th>');
+					content.push('<th>卷烟规格</th>');
+					content.push('<th>内部烟</th>');
+					content.push('<th>调拨价</th>');
+					content.push('<th>批发价</th>');
+					content.push('<th>毛利率</th>');
+					content.push('<th>销售数量</th>');
+					content.push('<th>销售金额</th>');
+					content.push('</tr>');
+
+					$.each(rows, function(i, row)
+					{
+						content.push('<tr><td style="text-align:center">'+row.MONTH+'</td><td style="text-align:center">'+row.AREA+'</td><td style="text-align:center">'+row.BRAND+'</td><td>'+row.MODEL+'</td><td>'+row.ISINSIDE+'</td><td>￥'+row.COST+'</td><td>￥'+row.PRICE+'</td><td>'+(row.PROFITRATE * 100).toFixed(2)+'%</td><td>'+parseInt(row.VOLUME)+'</td><td>￥'+row.AMOUNT+'</td></tr>');
+					});
+				}
+				else if(type == 2)
+				{
+					content.push('<tr>');
+					content.push('<th style="text-align:center">卷烟牌号</th>');
+					content.push('<th>卷烟规格</th>');
+					content.push('<th>内部烟</th>');
+					content.push('<th>调拨价</th>');
+					content.push('<th>批发价</th>');
+					content.push('</tr>');
+
+					$.each(rows, function(i, row)
+					{
+						content.push('<tr><td style="text-align:center">'+row.BRAND+'</td><td>'+row.MODEL+'</td><td>'+row.ISINSIDE+'</td><td>￥'+row.COST+'</td><td>￥'+row.PRICE+'</td></tr>');
+					});
+				}
+				else if(type == 3)
+				{
+					var fixedcost = FixedCost.create();
+					var items = fixedcost.items;
+					var itemmap = {};
+					$.each(items, function(i, item)
+					{
+						itemmap[item.key] = item.value;
+					});
+					content.push('<tr>');
+					content.push('<th>年度</th>');
+					content.push('<th>月份</th>');
+					content.push('<th>项目</th>');
+					content.push('<th>值</th>');
+					content.push('</tr>');
+					var row = rows[0];
+					var items = $.parseJSON(row.CONTENT);
+					for(var key in items)
+					{
+						content.push('<tr><td style="text-align:center">'+row.YEAR+'</td><td>'+row.MONTH+'</td><td>'+itemmap[key]+'</td><td>'+JSON.stringify(items[key])+'</td></tr>');
+					}
+
+				}
+
+				$("tbody").html(content.join(""));
+			});
+		}
+	
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+

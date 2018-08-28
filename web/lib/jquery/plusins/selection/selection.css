@@ -1,0 +1,27 @@
+.selection-field{cursor:pointer; border-radius:2px; height:30px; width:130px; padding:0px 18px 0px 5px; background-repeat:no-repeat; color:#666666}
+
+#selector-panel 
+{
+    background-color:#ffffff;
+	z-index:999;
+	border-bottom-right-radius:3px;
+	border-bottom-left-radius:3px;
+}
+#selector-panel > div
+{
+	margin:3px;
+	overflow:auto;
+	max-height:250px;
+}
+
+#selector-panel .item-panel
+{
+	background-color:#ffffff;
+}
+
+#selector-panel .item-panel li
+{
+	padding:5px;
+	font-size:12px;
+	color:#666666;
+}

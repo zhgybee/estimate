@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../css/app.css" />
+	<link rel="stylesheet" href="../lib/jquery/plusins/uploadify/uploadify.css" />
+	<link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../lib/jquery/plusins/selection/selection.css" />
+
+	<style>
+	.uploadify-queue-item
+	{
+		margin:0px 5px 0px 5px;
+	}
+	.warning
+	{	
+		color:#ff6600;
+	}
+	.info
+	{
+		color:#000000;
+	}
+	.success
+	{
+		color:green;
+	}
+	
+	#message-container
+	{
+		border:1px solid #f5f5f5;
+		margin-top:10px;
+		padding:10px;
+		background-color:#f5f5f5;
+		min-height:200px
+	}
+	
+	#message-container li
+	{
+		height:30px; line-height:30px;
+	}
+	
+	button
+	{
+		background-color:#4ab6ef; border:0px solid transparent; color:#ffffff; cursor:pointer
+	}
+	</style>
+
+</head>
+
+<body style="margin:10px;">
+	<input type="hidden" id="filename">
+	<div class="clearfix">
+
+
+		<div style="float:left;"><button type="button" style="width:80px; height:48px;" onclick="">选择方式</button></div>
+		<div style="float:left; padding:0px 3px; font-size:15px; width:135px; height:48px; line-height:48px; overflow:hidden; background-color:#F5F5F5; margin-right:5px">
+			<input id="import-type" readonly="readonly" style="margin-left:5px; width:130px; height:26px; border-width:0px; background-color:#F5F5F5">
+		</div>
+		<div style="float:left"><button type="button" id="upfile-button" style="width:80px; height:48px;">选择文件</button></div>
+		<div id="file-queue" style="float:left; overflow:hidden; width:350px; height:48px; background-color:#F5F5F5"></div>
+		<div style="float:left; margin-left:5px"><button type="button" style="width:70px; height:48px;" onclick="run()">导入</button></div>
+		<div style="float:left; margin-left:5px"><button type="button" style="width:70px; height:48px;" onclick="messageempty()">清空消息</button></div>
+	</div>
+
+	<ul id="message-container"></ul>
+
+
+	
+	<script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../lib/jquery/plusins/uploadify/jquery.uploadify.js"></script>
+	<script type="text/javascript" src="../lib/jquery/plusins/selection/selection.js"></script>
+	<script type="text/javascript">
+	
+		$(function()
+		{
+			$("#import-type").selection
+			(
+				{
+					url:"type.json",
+					ismultiple:false,
+					mode:'list'
+				}
+			);
+
+			$("#upfile-button").uploadify(
+			{
+				'auto':true, 
+				'buttonCursor': 'pointer', 
+				'buttonText': '选择文件', 
+				'uploader': '../plug-in/filemanager.jsp?action=up', 
+				'del': '../plug-in/filemanager.jsp?action=del', 
+				'swf': '../lib/jquery/plusins/uploadify/uploadify.swf',
+				'cancelImg': '../lib/jquery/plusins/uploadify/uploadify-cancel.png', 
+				'queueID': 'file-queue', 
+				'width': '90',
+				'height': '48',
+				'checkExisting': '',
+				'onUploadStart': function(file)
+				{
+					var size = $("#file-queue").children().size();
+					if(size > 1)
+					{
+						$('#upfile-button').uploadify('cancel')
+					}
+				},
+				'onUploadSuccess': function(file, data, response)
+				{
+					$("#filename").val(file.name);
+				},
+				'removeCompleted': false,
+				'multi': false
+			});
+		});
+				
+		function messageempty()
+		{
+			$("#message-container").empty();
+		}
+
+		function run(reportcode)
+		{
+			$("#message-container").append('<li class="info">数据导入中，请稍后&nbsp;&nbsp;<img src="../images/loading1.gif"/></li>');
+
+			$.ajax(
+			{
+				url:"do.jsp",
+				data:{"filename":encodeURIComponent($("#filename").val()), type:$("#import-type").val()},
+				dataType:"json",
+				success:function(response)
+				{
+					messageempty();
+					if(response.STATUS == -1)
+					{
+						var messages = response.MESSAGES;
+						$.each(messages, function(i, message)
+						{
+							$("#message-container").append('<li class="warning">'+message+'</li>');
+						});
+					}
+					else
+					{
+						$("#message-container").append('<li class="success">导入成功。</li>');
+					}
+
+				},
+				error:function (XMLHttpRequest, textStatus, errorThrown) 
+				{
+					alert("导入时出现未知错误！");
+				}
+			});		
+		}
+	</script>
+
+
+</body>
+</html>

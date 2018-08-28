@@ -1,0 +1,150 @@
+<!doctype html>
+
+<html>
+<head>		
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" />
+	<script type="text/javascript" src="lib/jquery/jquery.js"></script>
+	<style>
+		body{margin:0px; overflow:hidden;}
+
+		#header{height:60px; line-height:60px; border-bottom:1px solid #e6e6e6; padding:0px 10px 0px 20px;}
+		#footer{height:60px; line-height:60px; border-top:1px solid #e6e6e6; padding:0px 20px 0px 20px;}
+
+		#title{margin:0px 0px 20px 0px; padding:0px; text-align:center; letter-spacing:5px; font-size:30px; font-weight:500; color:#555555}
+
+		#menu-panel{margin:auto; table-layout:fixed; border-collapse:separate; border-right:1px solid #e6e6e6; border-bottom:1px solid #e6e6e6; border-spacing:0px;}
+		#menu-panel tr{}
+		#menu-panel td{background-color:#ffffff; border-left:1px solid #e6e6e6; border-top:1px solid #e6e6e6; width:180px; height:170px; text-align:center;  }
+
+		
+		#menu-panel td a{color:#333333}
+		#menu-panel td a:hover{color:#E06666}
+		#menu-panel td a:hover .icon i{color:#E06666}
+
+		#menu-panel td a .icon {margin-top:20px}
+		#menu-panel td a .icon i{font-size:80px; color:#00B7EE}
+		#menu-panel td a p{font-size:17px; margin:10px 0px}
+
+
+		#header i{font-size:16px; margin-right:2px;}
+		#header span{font-size:16px; margin-right:25px;}
+		
+		#footer i{font-size:16px; margin-right:2px;}
+		#footer span{font-size:16px; margin-right:25px;}
+
+
+		#header a{color:#333333}
+		#header a:hover{color:#00B7EE}
+		
+		#footer a{color:#333333}
+		#footer a:hover{color:#00B7EE}
+
+	</style>
+	<script type="text/javascript">
+		$(function()
+		{
+			$.getJSON("version/config.json", function(config)
+			{
+				$("#version-code").html(config.version);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="header" class="clearfix">
+		<div style="float:left"><a href="index.html"><i class="fa fa-sign-out"></i><span>注销</span></a></div>
+		<div style="float:left"><a href="help" target="_blank"><i class="fa fa-question-circle"></i><span>帮助</span></a></div>
+		<div style="float:right"><span style="margin-right:15px;">徽映易测　研制</span></div>	
+	</div>
+
+<div style="background-color:#f4f5f6; padding:20px 0px 40px 0px">
+	<h1 id="title">徽映易测芜烟精算平台</h1>
+	<table id="menu-panel">
+		<tr>
+			<td>
+				<a href="estimate/p1?type=1" target="_blank">
+					<div class="icon"><i class="fa fa-user"></i></div>
+					<p>量税利预测</p>
+				</a>
+			</td>
+			<td>
+				<a href="estimate/p1?type=2" target="_blank">
+					<div class="icon"><i class="fa fa-file-text"></i></div>
+					<p>销量组合预测</p>
+				</a>
+			</td>
+			<td>
+				<a href="estimate/p2" target="_blank">
+					<div class="icon"><i class="fa fa-upload"></i></div>
+					<p>采购预测</p>
+				</a>
+			</td>
+			<td>
+				<a href="estimate/p3" target="_blank">
+					<div class="icon"><i class="fa fa-sitemap"></i></div>
+					<p>资金预测</p>
+				</a>
+			</td>
+			<td>
+				<a href="estimate/p4" target="_blank">
+					<div class="icon"><i class="fa fa-download"></i></div>
+					<p>绩效考核</p>
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="import" target="_blank">
+					<div class="icon"><i class="fa fa-street-view"></i></div>
+					<p>数据导入</p>
+				</a>
+			</td>
+			<td>
+				<a href="estimate/manager.html" target="_blank">
+					<div class="icon"><i class="fa fa-credit-card"></i></div>
+					<p>数据管理</p>
+				</a>
+			</td>
+			<td>
+				<a href="system/user/" target="_blank">
+					<div class="icon"><i class="fa fa-cog"></i></div>
+					<p>用户设置</p>
+				</a>
+			</td>
+			<td>
+				<a href="version/" target="_blank">
+					<div class="icon"><i class="fa fa-gavel"></i></div>
+					<p>升级维护</p>
+				</a>
+			</td>
+			<td>
+				<a href="system/db/" target="_blank">
+					<div class="icon"><i class="fa fa-database"></i></div>
+					<p>备份还原</p>
+				</a>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+	<div id="footer" class="clearfix">
+		<div class="left"><a href="system/cleanup.jsp" target="_blank"><i class="fa fa-trash-o"></i><span>清理临时文件</span></a></div>
+
+		<div class="left"><a href="template/采购计划导入模板.xls" target="_blank"><i class="fa fa-file-o"></i><span>采购计划导入模板</span></a></div>
+		<div class="left"><a href="template/往年销售数据导入模板.xls" target="_blank"><i class="fa fa-file-o"></i><span>往年销售数据导入模板</span></a></div>
+		<div class="left"><a href="template/销量组合导入模板.xls" target="_blank"><i class="fa fa-file-o"></i><span>销量组合导入模板</span></a></div>
+		<div class="left"><a href="template/预测年规格导入模板.xls" target="_blank"><i class="fa fa-file-o"></i><span>预测年规格导入模板</span></a></div>
+		<div class="left"><a href="template/预测年年度费用导入模板.xls" target="_blank"><i class="fa fa-file-o"></i><span>预测年年度费用导入模板</span></a></div>
+
+
+		<div class="right"><a href="version/" target="_blank"><span style="margin-right:12px">版本</span><span style="margin-right:15px" id="version-code"></span></a></div>	
+	</div>
+</body>
+
+</html>

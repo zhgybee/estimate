@@ -1,0 +1,891 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../../css/app.css" />
+	<link rel="stylesheet" href="../../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/selection/selection.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/uploadify/uploadify.css" />
+	<style>
+	.tables-panel{display:flex; flex-direction:row}
+	table{table-layout:fixed; background-color:#ffffff; border-collapse:separate; border-spacing:0px; border-left:1px solid #cccccc; box-sizing:border-box;}
+	td{text-align:center; padding:8px 5px; font-size:12px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;}
+	thead td{background-color:#efefef; padding:8px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #cccccc; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc}
+	table .header-description{color:#aaaaaa; margin-left:5px; font-size:10px}
+		
+	.summary-table{margin-left:10px}
+	
+	#stretch-button{text-align:center; color:#aaaaaa; cursor:pointer; height:30px; line-height:30px}
+	.tab-title{float:left; padding:0px 10px; height:50px; line-height:50px; cursor:pointer}
+	.tab-title:hover{background-color:#ffffff; color:#ff6600}
+	.tab-title.selected{background-color:#ffffff; color:#ff6600}
+	.plan-label{float:left; margin:10px 10px 10px 0px; font-size:14px; color:#333333; background-color:#fffeda; border:1px solid #cccccc; padding:10px}
+	.plan-label span{color:#008aff; font-size:14px; margin-left:5px;}
+	.plan-label i{font-size:12px; margin-left:12px; margin-right:4px;}
+	.plan-label b{font-weight:400;}
+	
+	.parameters-panel{}
+	.parameters-panel .parameter-panel{display:none; padding:20px; position:absolute; left:0px; top:50px; background-color:#fefefe; width:100%; filter:alpha(opacity=90); opacity:0.9;}
+	.parameters-panel ul li{padding:10px 0px}
+	.parameters-panel ul li label{float:left; width:100px; font-weight:bold;}
+	.parameters-panel .checkbox{margin:0px 3px 0px 12px; font-size:14px; cursor:pointer}
+	.parameters-panel .parameter-field{width:100%; font-size:12px; padding:0px 3px}
+	.parameters-panel .parameter-title{width:100%; font-weight:600; padding:20px 0px 10px 0px; font-size:14px}
+
+
+	.parameters-panel .parameter-group{display:flex; column:flex-direction;}
+	.parameters-panel .parameter-group .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.parameters-panel .parameter-group .parameter-group-item:last-child{padding-right:0px}
+
+	.parameters-panel .parameter-header{display:flex; column:flex-direction;}
+	.parameters-panel .parameter-header .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.parameters-panel .parameter-header .parameter-group-item:last-child{padding-right:0px}
+	.parameters-panel .add-button{float:right; color:#388bff; cursor:pointer}
+	.parameters-panel .add-button:hover{color:#ff6600}
+	.stretch-button{text-align:center; color:#aaaaaa; line-height:17px; cursor:pointer}
+
+	.slide-mennus{position:absolute; top:40px; display:none; width:120px; border:1px solid #eeeeee}
+	.slide-mennus li{padding:10px; color:#333333; background-color:#ffffff; cursor:pointer; text-align:center}
+	.slide-mennus li:hover{background-color:#fafafa}
+	.uploadify-queue-item{margin:0px; background-color:#f0f0f0}
+
+	.volume-2{display:none}
+	</style>
+</head>
+
+<body style="overflow:scroll">
+	
+	<div style="background-color:#f0f0f0; height:50px; position:relative" class="clearfix">
+		<div class="tab-title selected" target="plan-1">方案一</div>
+		<div class="tab-title" target="plan-2">方案二</div>
+		<div class="tab-title" target="plan-3">方案三</div>
+
+		<button id="volume-2-button" style="float:right; margin:10px 10px 10px 0px; width:30px; height:30px; background-color:#aaaaaa">箱</button>
+		<button id="volume-1-button" style="float:right; margin:10px 0px 10px 0px; width:30px; height:30px;">条</button>
+		<button id="area-button" style="float:right; margin:10px 10px 10px 0px; height:30px">县市分解</button>
+		<button id="month-button" style="float:right; margin:10px 10px 10px 0px; height:30px">月度分解</button>	
+		<button id="export-button" style="float:right; margin:10px 10px 10px 0px; height:30px; width:90px">导出表格</button>
+		<div style="float:right; margin:10px 10px 10px 0px; height:30px"><button id="upfile-button"></button></div>
+		<div id="file-queue" style="float:right; overflow:hidden; width:300px;"></div>
+
+
+		
+		<ul class="slide-mennus"><li value="1">销量表</li><li value="2">利润表</li><li value="3">销量表+利润表</li></ul>
+		
+	</div>
+
+	<div class="parameters-panel">
+		<div id="month-parameter-panel" class="parameter-panel">
+			<ul>
+				<li class="clearfix">
+					<label>月份</label>
+					<div class="left">
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="1"></i>一月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="2"></i>二月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="3"></i>三月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="4"></i>四月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="5"></i>五月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="6"></i>六月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="7"></i>七月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="8"></i>八月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="9"></i>九月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="10"></i>十月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="11"></i>十一月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="12"></i>十二月
+					</div>
+					<div class="left" style="margin-left:10px">
+						<span id="selected-all" value="1" style="background-color:#ffe8e8; margin:0px; padding:0px 2px; border:1px solid #cccccc; font-size:11px; cursor:pointer;">取消全选</span>
+					</div>
+				</li>
+				<li class="clearfix">
+					<label>是否剩余月份</label>
+					<div class="left">
+						<i class="checkbox fa fa-square is-surplus-month" value="0"></i>
+					</div>
+				</li>
+				<li class="clearfix" style="line-height:29px">
+					<label>县区</label>
+					<div class="left">
+						<input type="text" class="parameter-field" style="margin-left:12px; width:200px" id="month-area-field" />
+					</div>
+				</li>
+			<ul>
+			<div style="margin:20px auto; width:70px;"><button style="width:100%" id="starting-month-button">确定</button></div>
+
+			<div id="month-stretch-button" class="stretch-button">
+				<i class="fa fa-angle-up"></i><br/><span>收起</span>
+			</div>
+		</div>
+
+		<div id="area-parameter-panel" class="parameter-panel">
+			<div class="clearfix" id="arearatios-panel">
+				<div class="parameter-title clearfix">年度县（市）分局销量组合预测 <span class="add-button" id="arearatios-change-button">增加</span></div>
+				<div class="parameter-header">
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">规格</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">芜湖市区卷烟营销部</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">芜湖县卷烟营销部</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">繁昌县卷烟营销部</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">南陵县卷烟营销部</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">无为县卷烟营销部</div>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-subtitle">江北区卷烟营销部</div>
+					</div>	
+				</div>
+			</div>	
+			<div style="margin:20px auto; width:70px;"><button style="width:100%" id="starting-area-button">确定</button></div>
+			<div id="area-stretch-button" class="stretch-button">
+				<i class="fa fa-angle-up"></i><br/><span>收起</span>
+			</div>
+		</div>
+	</div>
+
+
+	<div style="padding:5px">
+		<div id="plan-1" class="tab-element">
+			<div class="clearfix">
+				<div style="float:left; margin:10px 10px 10px 0px"><button class="selected-button" style="padding:12px; height:auto">选择为预测方案</button></div>
+				<div class="profit-panel plan-label">利税总额<span></span></div>
+				<div class="volume-panel plan-label">销售总量<span></span></div>
+				<div class="average-panel plan-label">条均价<span></span></div>
+				<div class="netprofit-panel plan-label">净利润<span></span></div>
+				<div class="custon-volume-panel plan-label">与上传文件中销量的差值<span>-</span></div>
+			</div>
+			<div class="tables-panel">	
+				<div class="detailed-table">
+				</div>
+				<div class="summary-table">
+				</div>
+			</div>
+		</div>
+		<div id="plan-2" class="tab-element" style="display:none">
+			<div class="clearfix">
+				<div style="float:left; margin:10px 10px 10px 0px"><button class="selected-button" style="padding:12px; height:auto">选择为预测方案</button></div>
+				<div class="profit-panel plan-label">利税总额<span></span></div>
+				<div class="volume-panel plan-label">销售总量<span></span></div>
+				<div class="average-panel plan-label">条均价<span></span></div>
+				<div class="netprofit-panel plan-label">净利润<span></span></div>
+				<div class="custon-volume-panel plan-label">与上传文件中销量的差值<span>-</span></div>
+			</div>
+			<div class="tables-panel">	
+				<div class="detailed-table">
+				</div>
+				<div class="summary-table">
+				</div>			
+			</div>
+		</div>
+		<div id="plan-3" class="tab-element" style="display:none">
+			<div class="clearfix">
+				<div style="float:left; margin:10px 10px 10px 0px"><button class="selected-button" style="padding:12px; height:auto">选择为预测方案</button></div>
+				<div class="profit-panel plan-label">利税总额<span></span></div>
+				<div class="volume-panel plan-label">销售总量<span></span></div>
+				<div class="average-panel plan-label">条均价<span></span></div>
+				<div class="netprofit-panel plan-label">净利润<span></span></div>
+				<div class="custon-volume-panel plan-label">与上传文件中销量的差值<span>-</span></div>
+			</div>
+			<div class="tables-panel">	
+				<div class="detailed-table">
+				</div>
+				<div class="summary-table">
+				</div>			
+			</div>
+		</div>
+	</div>
+	<div>
+		<table id="export-table" style="display:no1ne"></table>
+	</div>
+
+	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.table2excel.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/uploadify/jquery.uploadify.js"></script>
+	<script type="text/javascript" src="report.js"></script>
+	<script type="text/javascript" src="fixedcost.js"></script>
+	<script type="text/javascript">
+
+		var arearatios = null;
+		var areatotalratios = null;
+		var parameter = decodeURIComponent($.getParameter("parameter"));
+		parameter = $.parseJSON(parameter);
+
+		var fixedcost = null;
+	
+
+		$(function()
+		{
+			showLoading();
+			$.getJSON("fixedcost.jsp?year="+parameter.year, function(response)
+			{
+				hideLoading();
+				if(response.STATUS == 1)
+				{
+					var row = response.DATA.row;
+					fixedcost = FixedCost.create(row.YEAR, row.MONTH, row.CONTENT);
+					
+
+					var areaselection = [];
+					$.each(fixedcost.areas, function(i, area)
+					{
+						areaselection.push({key:area, value:area});
+					});
+					$("#month-area-field").selection
+					({
+						items:areaselection,
+						ismultiple:false
+					});
+
+					initialise();
+				}
+				else
+				{
+					alert('获取固定费用出错（'+data.MESSAGE+'）');
+				}	
+			});
+
+			$("#upfile-button").uploadify(
+			{
+				'auto':true, 
+				'buttonCursor': 'pointer', 
+				'buttonText': '上传销量组合', 
+				'uploader': '../../plug-in/filemanager.jsp?action=up', 
+				'del': '../../plug-in/filemanager.jsp?action=del', 
+				'swf': '../../lib/jquery/plusins/uploadify/uploadify.swf',
+				'cancelImg': '../../lib/jquery/plusins/uploadify/uploadify-cancel.png', 
+				'queueID': 'file-queue',
+				'width': '110',
+				'height': '30',
+				'checkExisting': '',
+				'onUploadStart': function(file)
+				{
+				},
+				'onUploadSuccess': function(file, data, response)
+				{
+					showLoading();
+					$.getJSON("volume.jsp", {name:file.name}, function(message)
+					{
+						hideLoading();
+						if(message.STATUS == 1)
+						{
+							var map = message.DATA.MAP;
+
+							for(let i = 1 ; i <= 3 ; i++)
+							{
+								var data = $("#plan-"+i).data("data");
+								let rows = data.DATA.ROWS;
+								
+								let number = 0;
+								$.each(rows, function(i, row)
+								{
+									var name = row.MODEL;
+									var volume = row.X;
+									if(map[name] != null)
+									{
+										number += Math.abs(parseFloat(map[name]) - parseFloat(volume));
+									}
+								});
+								$("#plan-"+i).find(".custon-volume-panel span").html(number.toFixed(2));
+							}
+
+						}
+						else
+						{
+							alert(data.MESSAGES);
+						}
+					});
+				},
+				'removeCompleted': false,
+				'multi': false
+			});
+
+			$("#arearatios-change-button").click(function()
+			{
+				var $group = $('<div class="parameter-group" style="margin-top:5px"></div>');
+				var content = '';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field brand-changer" />';
+				content +='	</div>	';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a1"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a2"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a3"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a4"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a5"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field a6"/>';
+				content +='	</div>';
+				$group.html(content);
+
+
+				$group.find(".brand-changer").selection
+				({
+					url:"../dictionary/brand.jsp",
+					ismultiple:false,
+					onclick:changebrand
+				});
+
+				$group.dblclick(function()
+				{
+					$(this).remove()
+				});
+
+				$("#arearatios-panel").append($group);
+			});
+
+			$("#selected-all").on("click", function()
+			{
+				let value = $(this).attr("value");
+				
+				if(value == 1)
+				{
+					$(this).attr("value", "0");
+					$(this).html("全选");
+				}
+				else
+				{
+					$(this).attr("value", "1");
+					$(this).html("取消全选");
+				}
+				$.each($(".selection-month"), function(i, box)
+				{
+					if(value == 1)
+					{
+						$(box).removeClass("fa-check-square");
+						$(box).addClass("fa-square");
+						$(box).attr("value", "0");
+					}
+					else
+					{
+						$(box).removeClass("fa-square");
+						$(box).addClass("fa-check-square");
+						$(box).attr("value", "1");
+					}
+				});
+			});
+
+			$(".checkbox").on("click", function()
+			{
+				let value = $(this).attr("value");
+				if(value == 1)
+				{
+					$(this).removeClass("fa-check-square");
+					$(this).addClass("fa-square");
+					$(this).attr("value", "0");
+				}
+				else
+				{
+					$(this).removeClass("fa-square");
+					$(this).addClass("fa-check-square");
+					$(this).attr("value", "1");
+				}
+			});
+
+			$("#volume-1-button").on("click", function()
+			{
+				$(".volume-1").show();
+				$(".volume-2").hide();
+				$(".volume-type").text("条");
+				$(this).css("background-color", "#4ab6ef");
+				$("#volume-2-button").css("background-color", "#aaaaaa");
+			});
+
+			$("#volume-2-button").on("click", function()
+			{
+				$(".volume-2").show();
+				$(".volume-1").hide();
+				$(".volume-type").text("箱");
+				$(this).css("background-color", "#4ab6ef");
+				$("#volume-1-button").css("background-color", "#aaaaaa");
+			});
+
+			$("#starting-month-button").on("click", function()
+			{
+				
+				var area = $("#month-area-field").val();
+				
+				showLoading();
+				$.getJSON('monthvolume.jsp', {year:parameter.year, area:area}, function(response)
+				{
+					hideLoading();
+					
+					if(response.STATUS == 1)
+					{
+						let monthratios = response.DATA.MONTHRATIOS;
+						let monthtotalratios = response.DATA.MONTHTOTALRATIOS;
+						let monthfixedcost = response.DATA.FIXEDCOST;
+						let data = $(".tab-element:visible").data("data");
+						data = JSON.parse(JSON.stringify(data));
+						let rows = data.DATA.ROWS;
+
+						let monthnames = [];
+						$.each($(".selection-month"), function(i, month)
+						{
+							let $month = $(month);
+							if($month.attr("value") == 1)
+							{
+								monthnames.push( $month.attr("month") )
+							}
+						});
+
+
+						let issurplus = $(".is-surplus-month").attr("value");
+						$.each(rows, function(j, row)
+						{
+							let model = row.MODEL;
+							var value = $("#month-area-field").val();
+							if(value == "")
+							{
+								value = "X";
+							}
+							let volume = row[value];
+							let monthratio = monthratios[model];
+							if(monthratio == null)
+							{
+								//如果是新增规格，则没有往年月销售占比，按照总月销售占比计算
+								monthratio = monthtotalratios;
+							}
+
+							let totalvolume = 0;
+							$.each(monthnames, function(l, name)
+							{
+								totalvolume += parseFloat(monthratio[name] || 0);
+							});	
+							$.each(monthnames, function(l, name)
+							{
+								if(issurplus == 1)
+								{
+									row[name] = parseFloat(monthratio[name] || 0) / totalvolume * volume;
+									//row[name] = parseFloat(monthratio[name] || 0) / totalvolume;
+								}
+								else
+								{
+									row[name] = parseFloat(monthratio[name] || 0) * volume;
+									//row[name] = parseFloat(monthratio[name] || 0);
+								}
+							});	
+						});	
+
+
+						$(".tab-element:visible .detailed-table").empty();
+						$(".tab-element:visible .summary-table").empty();
+						fillin($(".tab-element:visible"), data, {area:area, months:monthnames, monthfixedcost:monthfixedcost});
+
+						$("#month-stretch-button").click();
+
+					}
+					else
+					{
+						alert("获取月份数据错误（"+response.MESSAGE+"）。")
+					}
+					
+
+				});
+
+			});
+
+			$("#starting-area-button").on("click", function()
+			{
+				let data = $(".tab-element:visible").data("data");
+				data = JSON.parse(JSON.stringify(data));
+				let rows = data.DATA.ROWS;
+				if(arearatios != null)
+				{
+					let changemodelratio = {};
+					let areamodels = $("#arearatios-panel .brand-changer:visible");		
+					let arearatio1 = $("#arearatios-panel .a1");		
+					let arearatio2 = $("#arearatios-panel .a2");		
+					let arearatio3 = $("#arearatios-panel .a3");		
+					let arearatio4 = $("#arearatios-panel .a4");		
+					let arearatio5 = $("#arearatios-panel .a5");	
+					let arearatio6 = $("#arearatios-panel .a6");					
+					$.each(areamodels, function(i, areamodel)
+					{
+						let modelname = $(areamodel).val();
+						changemodelratio[modelname] = {};
+						changemodelratio[modelname]["芜湖市区卷烟营销部"] = $(arearatio1.get(i)).val();
+						changemodelratio[modelname]["芜湖县卷烟营销部"] = $(arearatio2.get(i)).val();
+						changemodelratio[modelname]["繁昌县卷烟营销部"] = $(arearatio3.get(i)).val();
+						changemodelratio[modelname]["南陵县卷烟营销部"] = $(arearatio4.get(i)).val();
+						changemodelratio[modelname]["无为县卷烟营销部"] = $(arearatio5.get(i)).val();
+						changemodelratio[modelname]["江北区卷烟营销部"] = $(arearatio6.get(i)).val();
+					});
+					$.each(rows, function(j, row)
+					{
+						let model = row.MODEL;
+						let volume = row.X;
+						let arearatio = arearatios[model];
+						if(changemodelratio[model] != null)
+						{
+							arearatios[model] = changemodelratio[model];
+						}
+					});
+				}
+
+				$(".tab-element:visible .detailed-table").empty();
+				$(".tab-element:visible .summary-table").empty();
+				fillin($(".tab-element:visible"), data, null);
+				$("#area-stretch-button").click();
+			});
+
+			$(".tab-title").on("click", function()
+			{
+				$(".tab-element").hide();
+				$(".tab-title").removeClass("selected");
+				$("#"+$(this).attr("target")).show();
+				$(this).addClass("selected");
+			});
+
+			$(".selected-button").on("click", function()
+			{
+				let data = $(".tab-element:visible").data("data");
+				let rows = data.DATA.ROWS;
+				let year = parameter.year;
+				showLoading();
+				$.post("save.jsp", {year:year, rows:JSON.stringify(rows)}, function()
+				{
+					hideLoading();
+				});
+			});
+
+			$("#export-button").on("click", function(event)
+			{
+				$(".slide-mennus").css("left", $(this).position().left - ( ($(".slide-mennus").outerWidth() - $(this).outerWidth()) / 2 ) +"px");
+
+				$(".slide-mennus").slideDown('fast');
+				event.stopPropagation();
+			});
+
+			$("body").on("click", function(event)
+			{
+
+				$(".slide-mennus").slideUp('fast');
+
+			});
+
+			$(".slide-mennus li").on("click", function(event)
+			{
+				let value = $(this).attr("value");
+
+				var $target = $("#export-table");
+				$target.empty();
+
+				var $rows1 = $("#plan-1 .detailed-table table tr");
+				var $rows2 = $("#plan-1 .summary-table table tr");
+				
+				if(value==1)
+				{
+					$target.append($rows1.clone());
+				}
+				else if(value == 2)
+				{
+					$target.append($rows2.clone());
+				}
+				else
+				{
+					var size = 0;
+					$.each($rows1, function(i, row1)
+					{
+						var $row1 = $(row1).clone();
+
+						$row1.append("<td style='width:60px'></td>");
+						if($rows2.length > i)
+						{
+							var $row2 = $($rows2.get(i)).clone();
+							var $cells = $($row2.find("td"));
+							size = $cells.length;
+							$row1.append($cells);
+						}
+						else
+						{
+							for(var s = 0 ; s < size ; s++)
+							{
+								$row1.append("<td></td>");
+							}
+						}
+						$target.append($row1);
+						
+					});
+				}
+			
+
+				var $cells = $target.find("td");
+				$.each($cells, function(j, cell)
+				{
+					$(cell).removeAttr("class");
+					$(cell).find("span:hidden").remove();
+				});
+
+
+
+				$("#export-table").table2excel
+				({
+					exclude: "",
+					name: "表格",
+					filename: "表格" + new Date().toISOString().replace(/[\-\:\.]/g, ""),
+					fileext: ".xls",
+					exclude_img: true,
+					exclude_links: true,
+					exclude_inputs: true
+				});
+				event.stopPropagation();
+			});
+
+			$("#month-button").on("click", function()
+			{
+				$("#month-parameter-panel").slideDown('fast');
+				$("#area-parameter-panel").hide();
+			});
+
+			$("#area-button").on("click", function()
+			{
+				$("#area-parameter-panel").slideDown('fast');
+				$("#month-parameter-panel").hide();
+			});
+
+			$("#month-stretch-button").on("click", function()
+			{
+				$("#month-parameter-panel").slideUp('fast');
+			});
+
+			$("#area-stretch-button").on("click", function()
+			{
+				$("#area-parameter-panel").slideUp('fast');
+			});
+
+			$("#arearatios-change-button").click();
+			
+		});
+
+		function initialise()
+		{
+			parameter.profittarget = fixedcost.getTarget(parameter.profittarget);
+			
+			if(parameter.type != 3)
+			{
+				//for(let i = 1 ; i <= 1 ; i++)
+				for(let i = 1 ; i <= 3 ; i++)
+				{
+					showLoading();
+					$.getJSON('do.jsp', parameter, function(response)
+					{
+						$("#plan-"+i).data("data", response);
+						fillin($("#plan-"+i), response, null);
+						hideLoading();
+
+					});
+				}
+			}
+			else
+			{
+				$(".tab-title[target='plan-1']").html("已选方案");
+				$(".tab-title[target='plan-2']").hide();
+				$(".tab-title[target='plan-3']").hide();
+				$(".selected-button").hide();
+				showLoading();
+				$.getJSON('do.jsp', parameter, function(response)
+				{
+					$("#plan-1").data("data", response);
+					fillin($("#plan-1"), response, null);
+					hideLoading();
+
+				});
+			}
+			
+		}
+		
+		function fillin($plan, data, monthmap)
+		{
+			if(data.STATUS == 1)
+			{
+				let rows = data.DATA.ROWS;
+				let lastyearaverageprice = data.DATA.LASTYEARAVERAGEPRICE;
+				let areanames = fixedcost.areas;
+
+
+				if(arearatios == null)
+				{
+					arearatios = data.DATA.AREARATIOS;
+				}
+
+				if(areatotalratios == null)
+				{
+					areatotalratios = data.DATA.AREATOTALRATIOS;
+				}
+
+
+				var content = [];
+
+				var width = 820;
+				content.push('<table>');
+				content.push('<thead>');
+				content.push('	<tr>');
+				content.push('	<td style="width:90px">价格区间<span class="header-description">元</span></td>');
+				content.push('	<td style="width:130px">区间数量<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:200px; text-align:left;">卷烟规格</td>');
+				content.push('	<td style="width:60px;">省内烟</td>');
+				content.push('	<td style="width:80px">批发价<span class="header-description">元</span></td>');
+				content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
+
+				if(monthmap != null)
+				{
+					var monthnames = monthmap.months;
+					if(monthmap.area != "")
+					{
+						content.push('	<td style="width:150px">'+monthmap.area+'<span class="header-description volume-type">条</span></td>');
+						width += 150;
+					}
+					for(var i = 0 ; i < monthnames.length ; i++)
+					{
+						content.push('	<td style="width:100px">'+monthnames[i]+'月<span class="header-description volume-type">条</span></td>');
+						width += 100;
+					}
+				}
+				else
+				{
+					for(var i = 0 ; i < areanames.length ; i++)
+					{
+						content.push('	<td style="width:150px">'+areanames[i]+'<span class="header-description volume-type">条</span></td>');
+						width += 100;
+					}
+				}
+
+				content.push('	</tr>');
+				content.push('</thead>');
+				content.push('<tbody>');
+
+
+
+				let totalprice = 0;
+				let groupname = "";
+				let totalvolume = 0;
+				let profit = 0;
+
+				$.each(rows, function(j, row)
+				{
+					content.push('<tr>');
+					content.push('<td>'+((row.GROUPNAME == groupname) ? '' : row.GROUPNAME)+'</td>');
+					content.push('<td><span class="volume-1">'+((row.GROUPNAME == groupname) ? '' : row.GROUPVOLUME)+'</span><span class="volume-2">'+((row.GROUPNAME == groupname) ? '' : (row.GROUPVOLUME / 250))+'</span></td>');
+					content.push('<td style="text-align:left;">'+row.MODEL+'</td>');
+					content.push('<td>'+(row.ISINSIDE == "1" ? '是' : '')+'</td>');
+					content.push('<td>￥'+row.PRICE+'</td>');
+					content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
+					content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
+					content.push('<td><span class="volume-1">'+row.X+'</span><span class="volume-2">'+(row.X / 250)+'</span></td>');
+
+					if(monthmap != null)
+					{
+						var monthnames = monthmap.months;
+						if(monthmap.area != "")
+						{
+							content.push('<td><span class="volume-1">'+row[monthmap.area]+'</span><span class="volume-2">'+(row[monthmap.area] / 250)+'</span></td>');
+						}
+						for(var i = 0 ; i < monthnames.length ; i++)
+						{
+							let number = row[monthnames[i]];
+							content.push('<td><span class="volume-1">'+number+'</span><span class="volume-2">'+(number / 250)+'</span></td>');
+						}
+					}
+					else
+					{
+						for(var i = 0 ; i < areanames.length ; i++)
+						{
+							let arearatio = arearatios[row.MODEL];
+							let number = 0;
+							if(arearatio == null)
+							{
+								//如果是新增规格，则没有往年县区占比，按照总县区占比计算
+								number = row.X * (areatotalratios[areanames[i]] || 0);
+							}
+							else
+							{
+								number = row.X * (arearatio[areanames[i]] || 0);
+							}
+							row[areanames[i]] = number;
+							content.push('<td><span class="volume-1">'+number+'</span><span class="volume-2">'+(number / 250)+'</span></td>');
+						}
+					}
+
+					content.push('</tr>');
+					groupname = row.GROUPNAME;
+					totalprice += row.PRICE * row.X;
+					totalvolume += row.X;
+					profit += row.X * row.PROFIT;
+				});	
+
+
+
+				content.push('</tbody>');
+				content.push('</table>');
+
+				$plan.find(".profit-panel span").html(fixedcost.getProfit(profit));
+				$plan.find(".volume-panel span").html(totalvolume);
+				let averageprice = totalprice / totalvolume;
+				let growth = (averageprice - lastyearaverageprice) / lastyearaverageprice * 100;
+				if(growth > 0)
+				{
+					$plan.find(".average-panel span").html(averageprice.toFixed(2) + '<i class="fa fa-arrow-up" style="color:#ff6600; vertical-align:top"></i><b style="color:#ff6600">'+growth.toFixed(2)+'%</b>');
+				}
+				else
+				{
+					$plan.find(".average-panel span").html(averageprice.toFixed(2) + '<i class="fa fa-arrow-down" style="color:#21a717; vertical-align:top"></i><b style="color:#21a717">'+growth.toFixed(2)+'%</b>');
+				}
+				$plan.find(".detailed-table").html(content.join(""));
+				$plan.find(".detailed-table table").css("width", width+"px")
+
+				let report = summary(rows, parameter, fixedcost, monthmap);
+				$plan.find(".summary-table").html(report.content);
+				$plan.find(".netprofit-panel span").html(report.netprofit);
+			}
+			else
+			{
+				$plan.find(".detailed-table").empty();
+				$plan.find(".detailed-table").append('<div style="text-align:center; color:red">计算出现错误（'+data.STATUS+'）</div>');
+			}	
+		}
+
+		function changebrand(item, element)
+		{
+			let items = arearatios[item.value];
+			element.parents(".parameter-group").find(".a1").val(items["芜湖市区卷烟营销部"]);
+			element.parents(".parameter-group").find(".a2").val(items["芜湖县卷烟营销部"]);
+			element.parents(".parameter-group").find(".a3").val(items["繁昌县卷烟营销部"]);
+			element.parents(".parameter-group").find(".a4").val(items["南陵县卷烟营销部"]);
+			element.parents(".parameter-group").find(".a5").val(items["无为县卷烟营销部"]);
+			element.parents(".parameter-group").find(".a6").val(items["江北区卷烟营销部"]);
+		}
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+

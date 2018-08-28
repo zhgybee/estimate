@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../css/app.css" />
+	<link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../lib/jquery/plusins/loading/loading.css" />
+	<style>
+
+	#items li{background-color:#ffffff; margin:10px; border-radius:5px; padding:10px}
+	#items li h2{font-size:15px}
+	#items li .item-icon{font-size:50px; color:#e7e7e7; margin-right:10px}
+	#items li a{color:#555555;}
+	#items li a:hover{color:#ffaa00;}
+	#items li p{margin-top:10px}
+	#items li .delete-button{height:50px; padding:0px 20px; background-color:#EC4F13; font-size:15px}
+	#items li .delete-button i{margin-right:4px; font-size:16px}
+	
+	</style>
+</head>
+
+<body style="margin:0px; background-color:#EEEEEE">
+	
+	<div class="clearfix" style="background-color:#F7F7F7; margin:10px">
+	
+		<div class="clearfix" style="padding:20px">
+			<div class="left" style="font-size:23px; letter-spacing:2px; color:#666666; font-weight:300;">
+				数据<span style="color:#468847">管理</span>
+			</div>
+			<div class="right">
+				<button style="height:60px; padding:0px 20px; font-size:20px" onclick="window.open('../import/')"><i class="fa fa-plus" style="margin-right:3px;"></i>导入数据</button>
+			</div>
+		</div>
+		
+	</div>
+	<ul id="items">
+	</ul>
+	
+	
+	<script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript">
+
+		$(function()
+		{
+			load();
+		});
+		
+		function load()
+		{
+			showLoading();
+			$.getJSON("data.jsp", function(response)
+			{
+				hideLoading();
+				if(response.STATUS == 1)
+				{
+					var $items = $("#items");
+					var rows = response.DATA.rows;
+					var content = [];
+					$.each(rows, function(i, row)
+					{
+						var type = "";
+						var color = "";
+						if(row.TYPE == 1)
+						{
+							type = '往年销售数据';
+							color = "red";
+						}
+						else if(row.TYPE == 2)
+						{
+							type = '预测年品牌规格';
+							color = "green";
+						}
+						else if(row.TYPE == 3)
+						{
+							type = '预测年年度费用';
+							color = "blue";
+						}
+						
+						
+						content.push('<li class="clearfix">');
+						content.push('<div class="left"><i class="item-icon fa fa-database"></i></div>');
+						content.push('<div class="left">');
+						content.push('<h2><a href="data/index.html?year='+row.YEAR+'&month='+row.MONTH+'&type='+row.TYPE+'" target="_blank">'+row.YEAR+'年'+((row.MONTH == "") ? '' : row.MONTH+'月')+'</a></h2>');
+						content.push('<p>导入日期：'+row.CREATE_DATE+'　　类别：<span style="color:'+color+'">'+type+'</span></p>');
+						content.push('</div>');
+						content.push('<div class="right">');
+						content.push('<button class="delete-button" year="'+row.YEAR+'" month="'+row.MONTH+'" type="'+row.TYPE+'"><i class="fa fa-trash-o"></i>删除</button></li>');
+						content.push('</div>');
+					});
+					
+					$items.html(content.join(""));
+					
+					$items.find(".delete-button").on("click", function()
+					{
+						showLoading();
+						$.getJSON("do.jsp?type="+$(this).attr("type")+"&year="+$(this).attr("year")+'&month='+$(this).attr("month"), function(response)
+						{
+							hideLoading();
+							load();
+						});
+					});
+				}
+				else
+				{
+					alert(response.MESSAGES);
+				}	
+				
+			});
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+

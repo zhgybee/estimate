@@ -1,0 +1,492 @@
+
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../../css/app.css" />
+	<link rel="stylesheet" href="../../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/selection/selection.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
+	<style>
+	.forecast-panel{background-color:#ffffff; border-radius:4px; margin-bottom:10px; padding:40px 10px}
+	.forecast-panel .title{text-align:center; font-weight:400; box-sizing:border-box; margin-bottom:10px}
+	.forecast-panel .parameters-panel{padding:0px 10px 20px 10px;}
+	.forecast-panel .parameters-panel .parameter-title{width:100%; font-weight:600; padding:20px 0px 10px 0px; font-size:14px}
+	.forecast-panel .parameters-panel .parameter-description{color:#bbbbbb; margin-left:5px; font-size:10px}
+	
+	.forecast-panel .parameters-panel .parameter-group{display:flex; column:flex-direction;}
+	.forecast-panel .parameters-panel .parameter-group .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.forecast-panel .parameters-panel .parameter-group .parameter-group-item:last-child{padding-right:0px}
+	
+	.forecast-panel .parameters-panel .parameter-header{display:flex; column:flex-direction;}
+	.forecast-panel .parameters-panel .parameter-header .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.forecast-panel .parameters-panel .parameter-header .parameter-group-item:last-child{padding-right:0px}
+	
+	.forecast-panel .parameters-panel .parameter-subtitle{width:100%; margin:3px 0px}
+	.forecast-panel .parameters-panel .parameter-field{width:100%; font-size:12px; padding:0px 3px}
+	.forecast-panel .parameters-panel .add-button{float:right; color:#388bff; cursor:pointer}
+	.forecast-panel .parameters-panel .add-button:hover{color:#ff6600}
+	.forecast-panel .button-panel{text-align:center; margin-top:20px}
+	.forecast-panel .starter-button, .forecast-panel .selected-button{width:200px; height:70px; font-size:25px; font-weight:100; margin-bottom:20px}
+	.forecast-panel .forecast-result{font-weight:400px; font-size:25px; color:#ff6600; margin-top:20px;}
+	.forecast-panel .forecast-result span{color:#bbbbbb; font-size:14px; margin-left:5px}
+	</style>
+</head>
+
+<body style="background-color:#f0f0f0; margin:0px 10px">
+	
+	<div style="display:flex; column:flex-direction; background-color:#f0f0f0; padding:10px">
+		<div id="year-panel" style="font-size:16px; padding-top:3px;"></div>
+		<div style="width:700px"><input type="range" id="year-selector" style="margin-left:10px; width:100%;" max="2030" min="2010" value="2018"></div>
+	</div>
+
+	
+	<div style="display:flex; column:flex-direction;">
+	
+		<div id="volume-panel" class="forecast-panel" style="margin-right:10px;flex-grow:0; width:500px">
+			<h1 class="title">年度销售量预测</h1>
+			<div class="parameters-panel">
+				<div class="clearfix">
+					<div class="parameter-title">1、前三年权重</div>
+					<div class="parameter-group">
+						<div class="parameter-group-item">
+							<div id="first-year" class="parameter-subtitle"></div>
+							<input type="text" value="20" class="parameter-field" id="weight-1"/>
+						</div>	
+						<div class="parameter-group-item">
+							<div id="second-year" class="parameter-subtitle"></div>
+							<input type="text" value="30" class="parameter-field" id="weight-2"/>
+						</div>	
+						<div class="parameter-group-item">
+							<div id="third-year" class="parameter-subtitle"></div>
+							<input type="text" value="50" class="parameter-field" id="weight-3"/>
+						</div>	
+					</div>
+				</div>	
+
+				<div class="clearfix">
+					<div class="parameter-title">2、预测增长率<span class="parameter-description">%</span></div>
+					<input type="text" value="20" class="parameter-field" id="growth"/>
+				</div>	
+			</div>
+			<div class="button-panel">
+				<button class="starter-button">预测</button>
+			</div>
+			<div class="clearfix">
+				<div class="forecast-result left" style="padding-left:10px;"  id="total-volume-1"></div>
+				<div class="forecast-result right" style="padding-right:10px; text-align:right" id="total-volume-2"></div>
+			</div>
+		</div>
+
+		<div id="profit-panel" class="forecast-panel" style="flex-grow:1">
+
+			<h1 class="title" id="type-title">年度利税总额预测</h1>
+			<div class="parameters-panel">	
+				<div class="parameter-title"></div>
+
+				<div class="parameter-group">
+					<div class="parameter-group-item">
+						<div class="parameter-title">1、利税总额<span class="parameter-description">元</span></div>
+						<input type="text" id="profit-target" class="parameter-field" style="background-color:#f1f1f1; color:#ff6600; font-weight:bold;" readonly="readonly"/>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-title">2、总销量目标<span class="parameter-description">条</span></div>
+						<input type="text" id="volume-target" value="" class="parameter-field"/>
+					</div>	
+					<div class="parameter-group-item">
+						<div class="parameter-title">3、增值税税率</div>
+						<input type="text" id="taxrate1" value="0.16" class="parameter-field"/>
+					</div>					
+				</div>
+
+				<div class="parameter-group">
+					<div class="parameter-group-item">
+						<div class="parameter-title">4、印花税率</div>	
+						<input type="text" id="taxrate2" value="0.0003" class="parameter-field"/>
+					</div>		
+					<div class="parameter-group-item">
+					</div>	
+					<div class="parameter-group-item">
+					</div>	
+				</div>
+
+
+
+				
+
+				<div class="clearfix" id="upper-lower-panel">
+					<div class="parameter-title clearfix">5、品牌规格销售量上限及下限 <span class="add-button" id="upper-lower-button">增加</span></div>
+					<div class="parameter-header">
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">规格</div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">下限<span class="parameter-description">条</span></div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">上限<span class="parameter-description">条</span></div>
+						</div>	
+					</div>
+				</div>	
+
+				
+				<div class="clearfix">
+					<div class="parameter-title">6、省内品牌销售最低占比<span class="parameter-description">%</span></div>
+					<input type="text" value="50" class="parameter-field" id="internal-brand-volume"/>
+				</div>	
+				
+				<div class="clearfix" id="brand-group-panel">
+					<div class="parameter-title">7、价格区间<span class="add-button" id="brand-group-button">增加</span></div>
+					<div class="parameter-header">
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">价格区间<span class="parameter-description">元</span></div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">&nbsp;</div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">总量区间<span class="parameter-description">%</span></div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">&nbsp;</div>
+						</div>	
+					</div>
+				</div>
+				
+				<div id="fixedcost-panel"></div>
+
+				
+			</div>
+			<div class="button-panel">
+				<button class="starter-button">预测</button>
+				<button class="selected-button">已选方案</button>
+			</div>
+			
+		</div>
+		
+		
+	</div>
+	
+	
+	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript" src="fixedcost.js"></script>
+	<script type="text/javascript">
+
+		$(function()
+		{
+			var type = $.getParameter("type");
+			if(type == "2")
+			{
+				$("#profit-target").css("background-color", "#ffffff");
+				$("#profit-target").removeAttr("readonly");
+				$("#type-title").html("年度总销量组合预测");
+			}
+			
+			changeyear();
+			getFixedCost();
+			getPriceSpace();
+						
+			$(".brand-changer").selection
+			({
+				url:"../dictionary/brand.jsp",
+				ismultiple:false,
+				onclick:changebrand
+			});
+			
+			$("#year-selector").click(function()
+			{
+				changeyear();
+				getFixedCost();
+				getPriceSpace();
+			});
+
+			$("#volume-panel .starter-button").click(function()
+			{
+				var parameter = {};
+				parameter["mode"] = 1;
+				parameter["year"] = $("#year-selector").val();
+				parameter["weight1"] = $("#weight-1").val();
+				parameter["weight2"] = $("#weight-2").val();
+				parameter["weight3"] = $("#weight-3").val();
+				parameter["growth"] = $("#growth").val();
+
+				showLoading();
+				$.getJSON('do.jsp', parameter, function(response)
+				{
+					hideLoading();
+					if(response.STATUS == 1)
+					{
+						$("#volume-panel #total-volume-1").html(response.DATA.volume+'<span>条</span>');
+						$("#volume-panel #total-volume-2").html((response.DATA.volume / 250)+'<span>箱</span>');
+						$("#volume-target").val(response.DATA.volume);
+
+					}
+					else
+					{
+						$("#volume-panel #total-volume-1").html("计算出现错误");
+					}
+				});
+			});
+
+			$("#profit-panel .starter-button").click(function()
+			{
+				var parameter = {};
+				parameter["mode"] = 2;
+				parameter["type"] = type;
+				parameter = setParameter(parameter);
+				
+				
+				if(parameter["volumetarget"] == "")
+				{
+					alert("请填写[总销量目标]");
+					return;
+				}
+
+				var brandchangers = [];
+				$(".brand-changer:visible").each(function(i, item)
+				{
+					brandchangers.push($(item).val());
+				});
+
+				var brandlowers = [];
+				$(".brand-lower").each(function(i, item)
+				{
+					brandlowers.push($(item).val());
+				});
+				
+				var branduppers = [];
+				$(".brand-upper").each(function(i, item)
+				{
+					branduppers.push($(item).val());
+				});
+
+				parameter["brandchangers"] = brandchangers.join(",");
+				parameter["brandlowers"] = brandlowers.join(",");
+				parameter["branduppers"] = branduppers.join(",");
+				
+				
+				var grouppricelowers = [];
+				$(".group-price-lower").each(function(i, item)
+				{
+					grouppricelowers.push($(item).val());
+				});
+
+				var grouppriceuppers = [];
+				$(".group-price-upper").each(function(i, item)
+				{
+					grouppriceuppers.push($(item).val());
+				});
+				
+				var groupvolumelowers = [];
+				$(".group-volume-lower").each(function(i, item)
+				{
+					groupvolumelowers.push($(item).val());
+				});
+				
+				var groupvolumeuppers = [];
+				$(".group-volume-upper").each(function(i, item)
+				{
+					groupvolumeuppers.push($(item).val());
+				});
+				
+				parameter["grouppricelowers"] = grouppricelowers.join(",");
+				parameter["grouppriceuppers"] = grouppriceuppers.join(",");
+				parameter["groupvolumelowers"] = groupvolumelowers.join(",");
+				parameter["groupvolumeuppers"] = groupvolumeuppers.join(",");	
+				window.open("plan.html?parameter="+encodeURIComponent(JSON.stringify(parameter)));
+			});
+
+			$("#profit-panel .selected-button").click(function()
+			{
+				var parameter = {};
+				parameter["mode"] = 2;
+				parameter["type"] = 3;
+				parameter = setParameter(parameter);
+				window.open("plan.html?parameter="+encodeURIComponent(JSON.stringify(parameter)));
+			});
+
+			$("#upper-lower-button").click(function()
+			{
+				var $group = $('<div class="parameter-group" style="margin-top:5px"></div>');
+				var content = '';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field brand-changer" />';
+				content +='	</div>	';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field brand-lower"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field brand-upper"/>';
+				content +='	</div>';
+				$group.html(content);
+
+
+				$group.find(".brand-changer").selection
+				({
+					url:"../dictionary/brand.jsp",
+					ismultiple:false,
+					onclick:changebrand
+				});
+
+				$group.dblclick(function()
+				{
+					$(this).remove()
+				});
+
+				$("#upper-lower-panel").append($group);
+			});
+
+			$("#brand-group-button").click(function()
+			{
+				var $group = $('<div class="parameter-group" style="margin-top:5px"></div>');
+				var content = '';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field group-price-lower"/>';
+				content +='	</div>	';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field group-price-upper"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field group-volume-lower"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field group-volume-upper"/>';
+				content +='	</div>';
+				$group.html(content);
+
+				$group.dblclick(function()
+				{
+					$(this).remove()
+				});
+
+				$("#brand-group-panel").append($group);
+			});
+			
+			$("#upper-lower-button").click();
+
+
+
+		});
+		
+		function getPriceSpace()
+		{
+			$("#brand-group-panel .parameter-group").remove();
+			$.getJSON("pricespace.jsp?year="+$("#year-selector").val(), function(items)
+			{
+				$.each(items, function(i, item)
+				{
+					$("#brand-group-button").click();
+					$('.group-price-lower').last().val(item.pricelower);
+					$('.group-price-upper').last().val(item.priceupper);
+					$('.group-volume-lower').last().val(item.volumelower);
+					$('.group-volume-upper').last().val(item.volumeupper);
+				});
+			});
+		}
+
+
+		function getFixedCost()
+		{
+
+			showLoading();
+			$.getJSON("fixedcost.jsp?year="+$("#year-selector").val(), function(response)
+			{
+				hideLoading();
+				if(response.STATUS == 1)
+				{
+					var row = response.DATA.row;
+					var fixedcost = FixedCost.create(row.YEAR, row.MONTH, row.CONTENT);
+					var itemnames = fixedcost.items;
+					var areas = fixedcost.areas;
+
+					var content = '';
+
+
+					var $panel = $("#fixedcost-panel");
+
+					content += '<div class="parameter-title clearfix">8、固定费用</div>';
+
+					content += '<div class="parameter-header">';
+					content += '<div class="parameter-group-item"><div class="parameter-subtitle" style="">项目</div></div>';
+					$.each(areas, function(j, area)
+					{
+						content += '<div class="parameter-group-item"><div class="parameter-subtitle" style="text-align:center;">'+area+'</div></div>';
+					});
+					content += '</div>';
+
+					$.each(itemnames, function(i, itemname)
+					{
+						content +='	<div class="parameter-group" style="margin-top:15px">';
+						content +='		<div class="parameter-group-item" style="line-height:28px">'+itemname.value+'</div>';
+						$.each(areas, function(j, area)
+						{
+							content +='		<div class="parameter-group-item" style="text-align:center"><input type="text" style="text-align:center; width:100%; background-color:#f1f1f1;" readonly="readonly" value="'+fixedcost.value(itemname.key, area)+'"></div>';
+						});
+
+						content +='	</div>';
+					});
+
+					$panel.html(content);
+					
+				}
+				else
+				{
+					$("#fixedcost-panel").empty();
+					$("#fixedcost-panel").append('<div style="text-align:center; color:red">获取固定费用出错（'+data.MESSAGE+'）</div>');
+				}	
+			});
+		}
+
+		function changeyear()
+		{
+			var year = $("#year-selector").val();
+			$("#year-panel").html(year + "年");
+			$("#first-year").html(year - 3+'<span class="parameter-description">%</span>');
+			$("#second-year").html(year - 2+'<span class="parameter-description">%</span>');
+			$("#third-year").html(year - 1+'<span class="parameter-description">%</span>');
+		}
+		
+		function changebrand(item, element)
+		{
+			if(item.min == "")
+			{
+				item.min = 0;
+			}
+			element.parents(".parameter-group").find(".brand-lower").val(item.min);
+			var max = item.max;
+			if(max == "")
+			{
+				max = 0;
+			}
+			if($("#growth").val() != "")
+			{
+				max = max * (1 + ($("#growth").val() / 100))
+			}
+			element.parents(".parameter-group").find(".brand-upper").val(max);
+		}
+
+		function setParameter(parameter)
+		{
+			parameter["year"] = $("#year-selector").val();
+			parameter["volumetarget"] = toNumber($("#volume-target").val());
+			parameter["profittarget"] = toNumber($("#profit-target").val());
+			parameter["growth"] = toNumber($("#growth").val());
+			parameter["taxrate2"] = toNumber($("#taxrate2").val());
+			parameter["taxrate1"] = toNumber($("#taxrate1").val());
+			return parameter;
+		}
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+

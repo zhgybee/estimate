@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title></title>
+	<link rel="stylesheet" href="../../css/app.css" />
+	<link rel="stylesheet" href="../../lib/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/selection/selection.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
+	<link rel="stylesheet" href="../../lib/jquery/plusins/uploadify/uploadify.css" />
+	<style>
+	table{table-layout:fixed; background-color:#ffffff; border-collapse:separate; border-spacing:0px; border-left:1px solid #cccccc; box-sizing:border-box;}
+	td{text-align:center; padding:8px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;}
+	thead td{background-color:#efefef; padding:12px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #cccccc; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc}
+	table .header-description{color:#aaaaaa; margin-left:5px; font-size:10px}
+	
+	.plan-label{float:left; margin:10px 10px 10px 0px; font-size:14px; color:#333333; background-color:#fffeda; border:1px solid #cccccc; padding:10px}
+	.plan-label span{color:#008aff; font-size:14px; margin-left:5px;}
+	.plan-label i{font-size:12px; margin-left:12px; margin-right:4px;}
+	.plan-label b{font-weight:400;}
+
+	.forecast-panel{background-color:#ffffff; border-radius:4px; margin-bottom:10px; padding:40px 10px}
+	.forecast-panel .title{text-align:center; font-weight:400; box-sizing:border-box; margin-bottom:10px}
+	.forecast-panel .parameters-panel{padding:0px 10px 20px 10px;}
+	.forecast-panel .parameters-panel .parameter-title{width:100%; font-weight:600; padding:20px 0px 10px 0px; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:140px}
+	.forecast-panel .parameters-panel .parameter-description{color:#bbbbbb; margin-left:5px; font-size:10px}
+	
+	.forecast-panel .parameters-panel .checkbox{margin:0px 3px 0px 12px; font-size:14px; cursor:pointer}
+	.forecast-panel .parameters-panel .parameter-group{display:flex; column:flex-direction;}
+	.forecast-panel .parameters-panel .parameter-group .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.forecast-panel .parameters-panel .parameter-group .parameter-group-item:last-child{padding-right:0px}
+	
+	.forecast-panel .parameters-panel .parameter-header{display:flex; column:flex-direction;}
+	.forecast-panel .parameters-panel .parameter-header .parameter-group-item{flex-basis:0; flex-grow:1; padding-right:10px}
+	.forecast-panel .parameters-panel .parameter-header .parameter-group-item:last-child{padding-right:0px}
+	
+	.forecast-panel .parameters-panel .parameter-subtitle{width:100%; margin:3px 0px}
+	.forecast-panel .parameters-panel .parameter-field{width:100%; font-size:12px; padding:0px 3px}
+	.forecast-panel .parameters-panel .add-button{float:right; color:#388bff; cursor:pointer}
+	.forecast-panel .parameters-panel .add-button:hover{color:#ff6600}
+	.forecast-panel .button-panel{margin-top:20px}
+	.forecast-panel button{float:left; width:150px; height:70px; font-size:25px; font-weight:100; margin-bottom:20px; margin-right:6px}
+	.forecast-panel .forecast-result{text-align:center; font-weight:400px; font-size:30px; color:#ff6600;}
+	.uploadify-button-text{font-size:25px; font-weight:100}
+	.uploadify-queue-item{margin:0px; background-color:#f0f0f0}
+	.uploadify-queue-item{height:70px}
+	</style>
+</head>
+
+<body style="background-color:#f0f0f0; margin:0px 10px">
+	
+	<div style="display:flex; column:flex-direction; background-color:#f0f0f0; padding:10px">
+		<div id="year-panel" style="font-size:16px; padding-top:3px;"></div>
+		<div style="width:700px"><input type="range" id="year-selector" style="margin-left:10px; width:100%;" max="2030" min="2010" value="2018"></div>
+	</div>
+	
+	<div style="display:flex; column:flex-direction;">
+		<div class="forecast-panel" style="margin-right:10px; width:45%">
+			<h1 class="title">采购计划</h1>
+				<div class="parameters-panel">	
+
+
+				<div class="clearfix">
+					<div class="parameter-title">1、月份</div>
+					<div class="left">
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="1"></i>一月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="2"></i>二月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="3"></i>三月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="4"></i>四月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="5"></i>五月
+						<i class="checkbox fa fa-check-square selection-month" value="1" month="6"></i>六月
+						<i class="checkbox fa fa-square selection-month" value="0" month="7"></i>七月
+						<i class="checkbox fa fa-square selection-month" value="0" month="8"></i>八月
+						<i class="checkbox fa fa-square selection-month" value="0" month="9"></i>九月
+						<i class="checkbox fa fa-square selection-month" value="0" month="10"></i>十月
+						<i class="checkbox fa fa-square selection-month" value="0" month="11"></i>十一月
+						<i class="checkbox fa fa-square selection-month" value="0" month="12"></i>十二月
+					</div>
+				</div>	
+
+					<div class="clearfix" id="stock-panel">
+						<div class="parameter-title clearfix">2、库存 <span class="add-button" id="stock-button">增加</span></div>
+						<div class="parameter-header">
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">规格</div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">计划期初剩余库存<span class="parameter-description">条</span></div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">计划期末预留库存<span class="parameter-description">条</span></div>
+						</div>	
+					</div>
+				</div>
+			</div>	
+
+
+			<div class="button-panel" class="clearfix">
+				<button id="starter-button">预测</button>
+				<button id="export-button">导出</button>
+				<button id="import-button">导入</button>
+				<div id="file-queue" style="float:left; overflow:hidden; width:300px; height:70px;"></div>
+			</div>
+		</div>
+
+		<div class="forecast-panel" style="width:55%; padding:10px">
+
+			<div class="clearfix">
+				<div class="volume-panel plan-label">采购量合计（条）：<span></span></div>
+				<div class="cost-panel plan-label">采购金额合计（元）：<span></span></div>
+			</div>
+
+			<table style="width:100%">
+				<thead>
+					<tr>
+						<td style="text-align:left">卷烟规格</td>
+						<td style="width:150px">采购量<span class="header-description">条</span></td>
+						<td style="width:200px">采购金额<span class="header-description">元</span></td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+				
+			</table>
+		</div>
+	</div>
+	
+	
+	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/jquery.table2excel.js"></script>
+	<script type="text/javascript" src="../../lib/jquery/plusins/uploadify/jquery.uploadify.js"></script>
+	<script type="text/javascript">
+
+		$(function()
+		{
+			changeyear();
+			$("#year-selector").click(function()
+			{
+				changeyear();
+			});
+
+			$("#export-button").on("click", function()
+			{
+				$("table").table2excel
+				({
+					exclude: "",
+					name: "采购计划",
+					filename: "采购计划" + new Date().toISOString().replace(/[\-\:\.]/g, ""),
+					fileext: ".xls",
+					exclude_img: true,
+					exclude_links: true,
+					exclude_inputs: true
+				});
+			});
+
+			$("#import-button").uploadify(
+			{
+				'auto':true, 
+				'buttonCursor': 'pointer', 
+				'buttonText': '导入', 
+				'uploader': '../../plug-in/filemanager.jsp?action=up', 
+				'del': '../../plug-in/filemanager.jsp?action=del', 
+				'swf': '../../lib/jquery/plusins/uploadify/uploadify.swf',
+				'cancelImg': '../../lib/jquery/plusins/uploadify/uploadify-cancel.png', 
+				'queueID': 'file-queue',
+				'width': '150',
+				'height': '70',
+				'checkExisting': '',
+				'onUploadStart': function(file)
+				{
+				},
+				'onUploadSuccess': function(file, data, response)
+				{
+					showLoading();
+					$.getJSON("analysis.jsp", {name:file.name}, function(message)
+					{
+						hideLoading();
+						if(message.STATUS == 1)
+						{
+							var rows = message.DATA.ROWS;
+
+							$.each(rows, function(i, row)
+							{
+								var name = row.MODEL;
+								var x1 = row.X1;
+								var x2 = row.X2;
+								$("#stock-button").click();
+								$(".brand-changer:visible").last().val(name);
+								$(".p1").last().val(x1);
+								$(".p2").last().val(x2);
+							});
+
+						}
+						else
+						{
+							alert(data.MSSAGE);
+						}
+					});
+				},
+				'removeCompleted': false,
+				'multi': false
+			});
+
+
+			$("#starter-button").on("click", function()
+			{
+				showLoading();
+
+				let monthnames = [];
+
+				$.each($(".selection-month"), function(i, month)
+				{
+					let $month = $(month);
+					if($month.attr("value") == 1)
+					{
+						monthnames.push( $month.attr("month") )
+					}
+				});
+
+				$.getJSON('do.jsp', {year:$("#year-selector").val()}, function(response)
+				{
+					hideLoading();
+					if(response.STATUS == 1)
+					{
+						var rows = response.DATA.ROWS;
+						var monthratios = response.DATA.MONTHRATIOS;
+						var monthtotalratios = response.DATA.MONTHTOTALRATIOS;
+
+						
+						let customstocks = {};
+						$(".brand-changer:visible").each(function(i, item)
+						{
+							if($(item).val() != "")
+							{
+								customstocks[$(item).val()] = {p1:$($(".p1").get(i)).val(), p2:$($(".p2").get(i)).val()};
+							}
+						});
+
+						var content = [];
+						let totalmonthsvolume = 0;
+						let totalmonthscost = 0;
+						$.each(rows, function(j, row)
+						{
+							let cost = row.COST
+							let model = row.MODEL;
+							let volume = row.X;
+							let monthratio = monthratios[model];
+							if(monthratio == null)
+							{
+								monthratio = monthtotalratios;
+							}
+
+							let monthsvolume = 0;
+							$.each(monthnames, function(l, name)
+							{
+								monthsvolume += parseFloat(monthratio[name] || 0) * parseFloat(volume);
+							});	
+
+							let customstock = customstocks[model];
+							if(customstock != null)
+							{
+								monthsvolume = monthsvolume - parseFloat(customstock.p1 || 0) + parseFloat(customstock.p2 || 0);
+							}
+
+
+							let monthscost = cost * monthsvolume;
+							content.push('<tr>');
+							content.push('<td style="text-align:left">'+model+'</td>');
+							content.push('<td>'+monthsvolume+'</td>');
+							content.push('<td>'+monthscost+'</td>');
+							content.push('</tr>');
+
+							totalmonthsvolume += monthsvolume;
+							totalmonthscost += monthscost;
+						});	
+						$("table tbody").html(content.join(""));
+
+						
+						$(".cost-panel span").html(parseFloat(totalmonthscost).toFixed(2));
+						$(".volume-panel span").html(parseFloat(totalmonthsvolume).toFixed(2));
+
+					}
+					else
+					{
+						$("table").prepend('<div style="text-align:center; color:red">错误（'+response.MESSAGES+'）</div>');
+					}
+				});
+			});
+
+			$("#stock-button").click(function()
+			{
+				var $group = $('<div class="parameter-group" style="margin-top:5px"></div>');
+				var content = '';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field brand-changer" />';
+				content +='	</div>	';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field p1"/>';
+				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field p2"/>';
+				content +='	</div>';
+				$group.html(content);
+
+
+				$group.find(".brand-changer").selection
+				({
+					url:"../dictionary/brand.jsp",
+					ismultiple:false
+				});
+
+				$group.dblclick(function()
+				{
+					$(this).remove()
+				});
+
+				$("#stock-panel").append($group);
+			});
+
+			$(".checkbox").on("click", function()
+			{
+				let value = $(this).attr("value");
+				if(value == 1)
+				{
+					$(this).removeClass("fa-check-square");
+					$(this).addClass("fa-square");
+					$(this).attr("value", "0");
+				}
+				else
+				{
+					$(this).removeClass("fa-square");
+					$(this).addClass("fa-check-square");
+					$(this).attr("value", "1");
+				}
+			});
+
+
+		});	
+
+		function changeyear()
+		{
+			var year = $("#year-selector").val();
+			$("#year-panel").html(year + "年");
+		}
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+

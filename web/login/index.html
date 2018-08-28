@@ -1,0 +1,157 @@
+
+
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css" />
+<script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+<script type="text/javascript" src="../lib/jquery/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="../lib/jquery/jquery.form.js"></script> 
+<script type="text/javascript" src="login.js"></script> 
+<title></title>
+<style>
+html
+{
+	height:100%;
+	overflow:hidden
+}
+body
+{
+	height:100%;
+	overflow:hidden
+}
+
+div
+{
+	color:#ffffff;
+	font-size:12px;
+}
+
+table
+{
+	border-collapse:separate; 
+	border-spacing:0px;
+	table-layout:fixed;
+}
+
+td
+{
+	padding:0px;
+}
+
+.textedit
+{
+	background-color:#bbd3eb;
+	width:170px;
+	height:28px;
+	border:none;
+	line-height:28px;
+}
+
+.login-button
+{
+	width:172px; 
+	height:30px; 
+	background-color:#72be44;
+	border:none;
+	color:#ffffff;
+	font-size:14px;
+	cursor:pointer;
+}
+
+
+</style>
+
+
+</head>
+
+<body style="margin:0px; background-color:#0f4478;">
+
+<div id="error-text" style="line-height:30px;display:none; font-weight:bold; position:absolute; top:0px; left:0px; background-color:#fefbdf; border-bottom:1px solid #f4c984; width:100%; padding:10px; color:#333333"></div>
+
+<div style="margin:70px auto; width:850px;">
+
+	<div style="font-size:20px; margin:5px 5px 10px 5px; font-weight:bold">徽映易测芜烟精算平台</div>
+	<div style="clear:both"></div>
+	<div style="float:left">
+		<table style="">
+			<tr>
+				<td>
+					<div style="width:190px; height:200px; float:left; background-color:#1e86ea; margin:5px; font-size:18px; text-align:center; ">
+						<i class="fa fa-cog" style="font-size:120px; margin:15px 0px 10px 0px"></i><br/>量税利预测
+					</div>
+				</td>
+				<td>
+					<div style="width:220px; height:95px; float:left; background-color:#ffa200; margin:5px; position:relative">
+						<div style="font-size:18px; position:absolute; bottom:8px; left:8px">量组合预测</div>
+						<div style="position:absolute; right:8px; top:8px"><i class="fa fa-user" style="font-size:70px"></i></div>
+					</div>
+					<div style="width:160px; height:95px; float:left; background-color:#00a8ec; margin:5px; position:relative">
+						<div style="font-size:18px; position:absolute; top:8px; left:8px">采购预测</div>
+						<div style="position:absolute; right:8px; bottom:0px"><i class="fa fa-cloud-upload " style="font-size:70px"></i></div>
+					</div>
+					<div style="clear:both"></div>
+					<div style="width:145px; height:95px; float:left; background-color:#72be44; margin:5px; font-size:18px; text-align:center; ">
+						<i class="fa fa-clock-o" style="font-size:50px; margin-top:10px"></i><br/>资金预测
+					</div>
+					<div style="width:235px; height:95px; float:left; background-color:#e74f9a; margin:5px; position:relative">
+						<div style="position:absolute; left:16px; top:12px"><i class="fa fa-bell-o" style="font-size:65px; color:#FEEEF5"></i></div>
+						<div style="font-size:18px; position:absolute; bottom:8px; right:8px">绩效考核</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="width:190px; height:95px; float:left; background-color:#9f13e1; margin:5px; position:relative">
+						<div style="position:absolute; left:10px; bottom:10px"><i class="fa fa-coffee" style="font-size:65px"></i></div>
+						<div style="font-size:18px; position:absolute; top:36px; right:13px">销售预测</div>
+					</div>
+				</td>
+				<td>
+					<div style="width:190px; height:95px; float:left; background-color:#1fc5f9; margin:5px; position:relative">
+						<div style="position:absolute; left:15px; top:16px"><i class="fa fa-bar-chart-o" style="font-size:65px"></i></div>
+						<div style="font-size:18px; position:absolute; top:39px; right:13px">综合信息</div>
+					</div>
+					<div style="width:190px; height:95px; float:left; background-color:#e5d331; margin:5px; position:relative">
+						<div style="font-size:18px; position:absolute; bottom:8px; left:15px">销售预测</div>
+						<div style="position:absolute; right:14px; top:14px"><i class="fa fa-recycle" style="font-size:70px"></i></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div style="margin:5px 0px 0px 20px; float:left; width:210px; height:305px; background-color:#275786; border:1px solid #135a88;">
+
+		<form action="do.jsp" id="login-form" method="post">
+			<div style="font-size:15px; font-weight:bold; margin:5px 0px 15px 10px">用户登录</div>
+
+			<div style="font-size:13px; margin:5px 0px 5px 10px">用户名：</div>
+			<div style="margin:5px 0px 10px 10px"><input type="text" class="textedit" name="name" id="name"/></div>
+
+			<div style="font-size:13px; margin:0px 0px 5px 10px">密码：</div>
+			<div style="margin:5px 0px 10px 10px"><input type="password" class="textedit" name="password" id="password"/></div>
+
+			<div style="font-size:13px; margin:0px 0px 5px 10px">界面风格：</div>
+			<div style="margin:5px 0px 10px 10px"><select id="theme" class="textedit" style="width:173px"></select></div>
+
+			<div style="margin:5px 0px 15px 10px">
+			<div style="padding-left:4px; float:left; font-size:13px;cursor:pointer" onclick="memorization()" id="memorization"><i class="fa fa-square" isselect="0" style="margin-right:5px"></i>记住登陆状态</div>
+			</div>
+
+			<div style="clear:both"></div>
+
+			<div style="margin:10px 0px 5px 10px"><input onclick="login()" type="button" class="login-button" value="登录" id="login-button"/></div>
+		</form>
+
+	</div>
+
+
+</div>
+
+
+</body>
+</html>
