@@ -1,4 +1,4 @@
-package com.estimate.office;
+package com.system.office;
 
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
@@ -277,7 +277,7 @@ public class XLSUtils
 				if(isIncreaseSheet)
 				{
 					index++;
-					//�����ļ��д���һ��sheet������ģ�����Ѿ�����һ��sheet��sheet����Ϊ0�������Կ�¡���sheet����Ϊindex					
+					//在新文件中创建一个sheet，由于模板中已经存在一个sheet（sheet索引为0），所以克隆后的sheet索引为index					
 				    sheet = workbook.cloneSheet(0);
 				    if(workbook.getSheet(title) == null)
 				    {
@@ -303,7 +303,7 @@ public class XLSUtils
 					
 					if(data != null)
 					{
-						//�����ͨ��񣨲���Ҫ�Զ��仯��ṹ�����ݡ�
+						//填充普通表格（不需要自动变化变结构）数据。
 					    Set<String> keys = data.keySet();
 					    for(String key : keys)
 					    {
@@ -341,15 +341,15 @@ public class XLSUtils
 					}
 					if(list != null)
 					{
-						//�����ϸ�����Ҫ�仯��ṹ�����������Զ������У����ݡ�
+						//填充明细表格（需要变化变结构，随着数据自动增加行）数据。
 						
-						//��ģ�塣����ϸ����У���Ĭ�ϴ��ڵ�һ�����ݵ�����ʽ������ģ��
+						//行模板。在明细表格中，需默认存在第一条数据的行样式。即行模板
 						Map<Integer, Row> referrows = new HashMap<Integer, Row>();
-						
-						//��ģ�������һ�е��кţ������Զ�������ʱ���ƶ���ʶ��
+
+						//行模板中最后一行的行号，用于自动增加行时的移动标识。
 				    	int startrownumber = 0;
-				    	
-				    	//��ģ���кϲ���Ԫ��Ĺ���
+
+				    	//行模板中合并单元格的规则
 				    	Set<CellRangeAddress> mergecells = new HashSet<CellRangeAddress>();
 				    	
 					    for(int i = 0 ; i < list.size() ; i++)
@@ -359,9 +359,9 @@ public class XLSUtils
 					    	Map<Integer, Row> rows = new HashMap<Integer, Row>();
 					    	if(i > 0)
 					    	{
-					    		//������ǵ�һ�����ݣ�˵����ģ��Ȳ�����������ϡ�
+					    		//如果不是第一条数据，说明行模板等参数已设置完毕。
 					    		
-					    		//������ģ�������һ�е��кŽ����ƶ��������Ѵ���ģ�������һ�е�ģ���β�������ƶ���Ҫ���ӵ�����
+					    		//根据行模板中最后一行的行号进行移动操作，把从行模板中最后一行到模板结尾，向下移动需要增加的行数
 					    		int nextrownumber = startrownumber + ( (i - 1) * referrows.size() ) + 1;
 					    		Set<Integer> rownumbers = referrows.keySet();
 					    		sheet.shiftRows(nextrownumber, sheet.getLastRowNum(), rownumbers.size(), true, false);
@@ -379,7 +379,7 @@ public class XLSUtils
 	
 					    		for(CellRangeAddress mergecell : mergecells)
 					    		{
-					    			//����ģ���кϲ���Ԫ��Ĺ�������������������
+					    			//把行模板中合并单元格的规则，作用于新增的行中
 					    			CellRangeAddress copy = mergecell.copy();
 					    			copy.setFirstRow(mergecell.getFirstRow() + (i * rownumbers.size()));
 					    			copy.setLastRow(mergecell.getLastRow() + (i * rownumbers.size()));
@@ -399,7 +399,7 @@ public class XLSUtils
 								    Row row = null;
 								    if(i == 0)
 								    {
-								    	//����ǵ�һ�����ݣ�ֱ����䵽ģ���Ѵ��ڵ����У���������Ϊ��ģ�塣
+								    	//如果是第一条数据，直接填充到模板已存在的行中，并且设置为行模板。
 								    	row = sheet.getRow(y);
 								    	referrows.put(y, row);
 								    	startrownumber = Math.max(startrownumber, y);
@@ -407,7 +407,7 @@ public class XLSUtils
 							    		int mergednumber = sheet.getNumMergedRegions();
 							    		for(int j = 0 ; j < mergednumber ; j++)
 							    		{
-							    			//���ģ���еĺϲ���λ������Ƿ���������ģ���У���������ڣ����¼��mergeCells����
+							    			//检测模板中的合并单位格规则是否作用于行模板中，如果作用于，则记录（mergeCells）。
 										    CellRangeAddress cellrange = sheet.getMergedRegion(j);
 										    if(cellrange.getFirstRow() == y || cellrange.getLastRow() == y)
 										    {
@@ -434,7 +434,7 @@ public class XLSUtils
 								    }
 								    else
 								    {
-								    	System.out.println("��"+y+"����excel����в����ڡ�");
+								    	System.out.println("第"+y+"行在excel表格中不存在。");
 								    }
 						    	}
 						    }		
@@ -444,7 +444,7 @@ public class XLSUtils
 				}
 				else
 				{
-					System.out.println("sheet("+title+")���ļ��в����ڣ�");
+					System.out.println("sheet("+title+")在excel表格中不存在。");
 				}
 			}
 
