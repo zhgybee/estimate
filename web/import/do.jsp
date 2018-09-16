@@ -127,7 +127,7 @@
 		{
 			String[] row = rows.get(i);
 			
-			if(row.length == 6)
+			if(row.length == 7)
 			{
 				String year = row[0];
 				year = StringUtils.replace(year, "年", "");
@@ -166,9 +166,10 @@
 				
 				double costvalue = NumberUtils.toDouble(cost, 0);
 				double pricevalue = NumberUtils.toDouble(price, 0);
+				String producer = row[6];
 				
-				String sql = "INSERT INTO T_CURRITEMS(ID, YEAR, BRAND, MODEL, COST, PRICE, PROFIT, ISINSIDE, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+
-					SystemUtils.uuid()+"', '"+year+"', '"+brand+"', '"+model+"', '"+cost+"', '"+price+"', '"+(pricevalue - costvalue / 1.16)+"', '"+isinside+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
+				String sql = "INSERT INTO T_CURRITEMS(ID, YEAR, BRAND, MODEL, COST, PRICE, ISINSIDE, PRODUCER, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+
+					SystemUtils.uuid()+"', '"+year+"', '"+brand+"', '"+model+"', '"+cost+"', '"+price+"', '"+isinside+"', '"+producer+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
 	
 				pyear = year;
 				pbrand = brand;
@@ -176,7 +177,7 @@
 			}
 			else
 			{
-				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+row.length+"/6）错误。");
+				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+row.length+"/7）错误。");
 				break;
 			}
 		}
@@ -190,7 +191,7 @@
 		if(rows.size() > 2)
 		{
 			String[] names = rows.get(1);
-			if(names.length == 12)
+			if(names.length == 13)
 			{
 				for(int i = 2 ; i < rows.size() ; i++)
 				{
@@ -223,7 +224,7 @@
 			}
 			else
 			{
-				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+names.length+"/11）错误。");
+				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+names.length+"/13）错误。");
 			}
 			
 		}

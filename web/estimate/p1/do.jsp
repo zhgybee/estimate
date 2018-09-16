@@ -97,12 +97,21 @@
 			
 			if(type.equals("1") || type.equals("2"))
 			{
-				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, T_CURRITEMS.PROFIT, TS.MAX, TS.MIN from T_CURRITEMS left join (select MODEL, max(VOLUME) as MAX, min(VOLUME) as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and (year = ? or year = ? or year = ?) group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
-						usercode, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), usercode, String.valueOf(year));
+				double volumetarget = NumberUtils.toDouble(request.getParameter("volumetarget"));			
+				
+				Datum lastyeartotal = datasource.get("select sum(VOLUME) as 'TOTAL' from T_TOTAL_SALES where year = ?", String.valueOf(year - 1));	
+				double lastyearvolumetotal = lastyeartotal.getDouble("TOTAL");
+				double ratio = volumetarget / lastyearvolumetotal;					
+				
+				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.PRODUCER, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, (T_CURRITEMS.PRICE - T_CURRITEMS.COST) as 'PROFIT', TS.MAX, TS.MIN, TS.VOLUME as 'LASTVOLUME' from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * 1.2 * "+ratio+") as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
+						usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
+
+				
 			}
 			else if(type.equals("3"))
 			{
-				rows = datasource.find("select * from T_SELECTED_PLAN where CREATE_USER_ID = ? and YEAR = ? order by GROUPNAME, PRICE", usercode, String.valueOf(year));
+				rows = datasource.find("select T_SELECTED_PLAN.*, (T_SELECTED_PLAN.PRICE - T_SELECTED_PLAN.COST) as 'PROFIT', TS.VOLUME as 'LASTVOLUME' from T_SELECTED_PLAN left join (select MODEL, VOLUME from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_SELECTED_PLAN.MODEL = TS.MODEL where T_SELECTED_PLAN.CREATE_USER_ID = ? and T_SELECTED_PLAN.YEAR = ? order by T_SELECTED_PLAN.GROUPNAME, T_SELECTED_PLAN.PRICE", 
+						usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
 				message.data.put("ROWS", rows);	
 			}
 			
@@ -196,7 +205,6 @@
 			String[] brandchangers = StringUtils.split( StringUtils.defaultString(request.getParameter("brandchangers"), ""), ",");
 			String[] brandlowers = StringUtils.split( StringUtils.defaultString(request.getParameter("brandlowers"), ""), ",");
 			String[] branduppers = StringUtils.split( StringUtils.defaultString(request.getParameter("branduppers"), ""), ",");
-			double growth = NumberUtils.toDouble(request.getParameter("growth"), 0);
 	
 			Map<String, String[]> changers = new HashMap<String, String[]>();
 			//设置某个规格的上下限
@@ -229,7 +237,8 @@
 			//根据增长率自动调整上限，如果手工设置了上下限，则参照手工设置
 			for(Datum row : rows)
 			{
-				row.put("MAX", format.format( Math.ceil( row.getDouble("MAX") * (1 + (growth / 100)) ) ));
+				row.put("MIN", Math.floor(row.getDouble("MIN")));
+				row.put("MAX", Math.ceil(row.getDouble("MAX")));
 				
 				String model = row.getString("MODEL");
 				String[] values = changers.get(model);

@@ -11,23 +11,23 @@
 	<style>
 		body{margin:0px; overflow:hidden;}
 
-		#header{height:60px; line-height:60px; border-bottom:1px solid #e6e6e6; padding:0px 10px 0px 20px;}
+		#header{line-height:60px; border-bottom:1px solid #e6e6e6; padding:0px 10px 0px 20px;}
 		#footer{height:60px; line-height:60px; border-top:1px solid #e6e6e6; padding:0px 20px 0px 20px;}
 
-		#title{margin:0px 0px 20px 0px; padding:0px; text-align:center; letter-spacing:5px; font-size:30px; font-weight:500; color:#555555}
+		#title{padding:0px; letter-spacing:5px; font-size:30px; font-weight:400; color:#555555}
 
-		#menu-panel{margin:auto; table-layout:fixed; border-collapse:separate; border-right:1px solid #e6e6e6; border-bottom:1px solid #e6e6e6; border-spacing:0px;}
+		#menu-panel{margin:auto; table-layout:fixed; border-collapse:separate; border-right:1px solid #ffffff; border-bottom:1px solid #ffffff; border-spacing:0px;}
 		#menu-panel tr{}
-		#menu-panel td{background-color:#ffffff; border-left:1px solid #e6e6e6; border-top:1px solid #e6e6e6; width:180px; height:170px; text-align:center;  }
+		#menu-panel td{background-color:#ffffff; border-left:1px solid #e6e6e6; border-top:1px solid #e6e6e6; width:250px; height:240px; text-align:center;  }
 
 		
-		#menu-panel td a{color:#333333}
-		#menu-panel td a:hover{color:#E06666}
-		#menu-panel td a:hover .icon i{color:#E06666}
+		#menu-panel td a{color:#ffffff}
+		#menu-panel td a:hover{font-size:35px;}
+		#menu-panel td a:hover .icon i{font-size:130px;}
 
 		#menu-panel td a .icon {margin-top:20px}
-		#menu-panel td a .icon i{font-size:80px; color:#00B7EE}
-		#menu-panel td a p{font-size:17px; margin:10px 0px}
+		#menu-panel td a .icon i{font-size:120px; color:#ffffff}
+		#menu-panel td a p{font-size:24px; margin:10px 0px; font-weight:100}
 
 
 		#header i{font-size:16px; margin-right:2px;}
@@ -57,40 +57,39 @@
 
 <body>
 	<div id="header" class="clearfix">
-		<div style="float:left"><a href="index.html"><i class="fa fa-sign-out"></i><span>注销</span></a></div>
-		<div style="float:left"><a href="help" target="_blank"><i class="fa fa-question-circle"></i><span>帮助</span></a></div>
-		<div style="float:right"><span style="margin-right:15px;">徽映易测　研制</span></div>	
+		<div style="float:left; height:90px"><h1 id="title"><img src="images/logo.png" style="height:50px; vertical-align:middle; margin:20px 10px">徽映E测芜烟精算平台</h1></div>
+		<div style="float:right; height:90px; line-height:90px"><a href="index.html"><i class="fa fa-sign-out"></i><span>注销</span></a></div>
+		<div style="float:right; height:90px; line-height:90px"><a href="help" target="_blank"><i class="fa fa-question-circle"></i><span>帮助</span></a></div>
 	</div>
 
-<div style="background-color:#f4f5f6; padding:20px 0px 40px 0px">
-	<h1 id="title">徽映易测芜烟精算平台</h1>
+<div style="background-color:#f4f5f6; padding:80px 0px 80px 0px">
 	<table id="menu-panel">
 		<tr>
-			<td>
+			<td style="background-color:#7CBB00">
 				<a href="estimate/p1?type=1" target="_blank">
 					<div class="icon"><i class="fa fa-user"></i></div>
 					<p>量税利预测</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#009CEA">
 				<a href="estimate/p1?type=2" target="_blank">
 					<div class="icon"><i class="fa fa-file-text"></i></div>
 					<p>销量组合预测</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#EC4F13">
 				<a href="estimate/p2" target="_blank">
 					<div class="icon"><i class="fa fa-upload"></i></div>
 					<p>采购预测</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#FFBB00">
 				<a href="estimate/p3" target="_blank">
 					<div class="icon"><i class="fa fa-sitemap"></i></div>
 					<p>资金预测</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#678fcf">
 				<a href="estimate/p4" target="_blank">
 					<div class="icon"><i class="fa fa-download"></i></div>
 					<p>绩效考核</p>
@@ -98,31 +97,31 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td style="background-color:#678fcf">
 				<a href="import" target="_blank">
 					<div class="icon"><i class="fa fa-street-view"></i></div>
 					<p>数据导入</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#FFBB00">
 				<a href="estimate/manager.html" target="_blank">
 					<div class="icon"><i class="fa fa-credit-card"></i></div>
 					<p>数据管理</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#009CEA">
 				<a href="system/user/" target="_blank">
 					<div class="icon"><i class="fa fa-cog"></i></div>
 					<p>用户设置</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#EC4F13">
 				<a href="version/" target="_blank">
 					<div class="icon"><i class="fa fa-gavel"></i></div>
 					<p>升级维护</p>
 				</a>
 			</td>
-			<td>
+			<td style="background-color:#7CBB00">
 				<a href="system/db/" target="_blank">
 					<div class="icon"><i class="fa fa-database"></i></div>
 					<p>备份还原</p>

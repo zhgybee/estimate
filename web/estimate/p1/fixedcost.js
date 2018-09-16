@@ -23,11 +23,13 @@ function FixedCost()
 					{key:"K15", value:"营业外收入"},
 					{key:"K16", value:"营业外支出"},
 					{key:"K17", value:"其他项目税金"},
-					{key:"K18", value:"进项税金额"},
+					{key:"K18", value:"上年留底进项"},
 					{key:"K19", value:"费用化进项"},
 					{key:"K20", value:"其他业务收入"},
 					{key:"K21", value:"其他业务成本"},
-					{key:"K22", value:"印花税交税比例"}
+					{key:"K22", value:"印花税交税比例"},
+					{key:"K23", value:"进项调整金额"}
+	
 				]
 
 	this.areas = ["芜湖市区卷烟营销部", "芜湖县卷烟营销部", "繁昌县卷烟营销部", "南陵县卷烟营销部", "无为县卷烟营销部", "江北区卷烟营销部", "机关", "物流"]
@@ -35,14 +37,14 @@ function FixedCost()
 
 	this.getTarget = function(target)
 	{
-		//∑( (不含税批发价 * 1.16 - 不含税调拨价) * 规格销售量 ) = 利税总额预测值 + 管理费用 + 销售费用 + 财务费用 - 公允价值变动损益 - 投资收益 - 汇兑收益 - 营业外收入 + 营业外支出  - 其他项目税金 + 进项税金额 + 费用化进项 - 其他业务收入 + 其他业务成本
-		return target + (this.value("K05") + this.value("K06") + this.value("K07")) + (this.value("K08") + this.value("K09") + this.value("K10")) + this.value("K11") - this.value("K12") - this.value("K13") - this.value("K14") - this.value("K15") + this.value("K16") - this.value("K17") + this.value("K18") + this.value("K19") - this.value("K20") + this.value("K21");
+		//∑( (不含税批发价 * 1.16 - 不含税调拨价) * 规格销售量 ) = 利税总额预测值 + 管理费用 + 销售费用 + 财务费用 - 公允价值变动损益 - 投资收益 - 汇兑收益 - 营业外收入 + 营业外支出  - 其他项目税金 + 手工输入上年留底进项 + 手工输入费用化进项 + 手工输入进项调整金额 - 其他业务收入 + 其他业务成本
+		return target + (this.value("K05") + this.value("K06") + this.value("K07")) + (this.value("K08") + this.value("K09") + this.value("K10")) + this.value("K11") - this.value("K12") - this.value("K13") - this.value("K14") - this.value("K15") + this.value("K16") - this.value("K17") + this.value("K18") + this.value("K19") + this.value("K23") - this.value("K20") + this.value("K21");
 	}
 
 
 	this.getProfit = function(profit)
 	{
-		return profit - (this.value("K05") + this.value("K06") + this.value("K07")) - (this.value("K08") + this.value("K09") + this.value("K10")) - this.value("K11") + this.value("K12") + this.value("K13") + this.value("K14") + this.value("K15") - this.value("K16") + this.value("K17") - this.value("K18") - this.value("K19") + this.value("K20") - this.value("K21");
+		return profit - (this.value("K05") + this.value("K06") + this.value("K07")) - (this.value("K08") + this.value("K09") + this.value("K10")) - this.value("K11") + this.value("K12") + this.value("K13") + this.value("K14") + this.value("K15") - this.value("K16") + this.value("K17") - this.value("K18") - this.value("K19") - this.value("K23") + this.value("K20") - this.value("K21");
 	}
 
 	this.value = function(itemkey, area)
@@ -51,16 +53,19 @@ function FixedCost()
 		if(area == null || area == "")
 		{
 			var values = this.cost[itemkey];
-			for(var key in values)
+			if(values != null)
 			{
-				number += this.cost[itemkey][key];
+				for(var key in values)
+				{
+					number += this.cost[itemkey][key] || 0;
+				}
 			}
 		}
 		else
 		{
 			if(this.cost[itemkey] != null)
 			{
-				number = this.cost[itemkey][area];
+				number = this.cost[itemkey][area] || 0;
 			}
 		}
 		return number;
@@ -70,7 +75,7 @@ function FixedCost()
 FixedCost.create = function(year, month, cost)
 {
 	var fixedcost = new FixedCost();
-	fixedcost.fixedcost = year;
+	fixedcost.year = year;
 	fixedcost.month = month;
 	if(cost != null && cost != "")
 	{

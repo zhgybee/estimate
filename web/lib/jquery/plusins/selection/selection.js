@@ -203,7 +203,7 @@
 						$(this).data("joint", $field);
 						$(this).data("$panel", $panel);
 						$field.on("click", {"$panel":$panel}, open);
-						if(options.search != null && search)
+						if(options.search != null && options.search)
 						{
 							$field.on("keyup", {"$panel":$panel}, function(event)
 							{
@@ -212,7 +212,7 @@
 								var $items = $panel.find(".item-panel li");
 								$.each($items, function(i, item)
 								{
-									if($(item).text().indexOf(value) == 0)
+									if($(item).text().indexOf(value) != -1)
 									{
 										$(item).show();
 									}

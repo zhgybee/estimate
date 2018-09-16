@@ -25,7 +25,6 @@
 			JSONObject object = new JSONObject();
 			object.put("MODEL", row[0]);
 			object.put("X1", row[1]);
-			object.put("X2", row[2]);
 			array.put(object);
 		}
 		message.data.put("ROWS", array);

@@ -38,9 +38,9 @@
 	</style>
 </head>
 
-<body style="background-color:#f0f0f0; margin:0px 10px">
+<body style="background-color:#eeeeee; margin:0px 10px">
 	
-	<div style="display:flex; column:flex-direction; background-color:#f0f0f0; padding:10px">
+	<div style="display:flex; column:flex-direction; background-color:#eeeeee; padding:10px">
 		<div id="year-panel" style="font-size:16px; padding-top:3px;"></div>
 		<div style="width:700px"><input type="range" id="year-selector" style="margin-left:10px; width:100%;" max="2030" min="2010" value="2018"></div>
 	</div>
@@ -54,40 +54,56 @@
 				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">1、月份<span class="parameter-description"></span></div>
-						<input type="text" id="month" value="1" class="parameter-field"/>
+						<input type="text" id="month" value="1" class="parameter-field integer"/>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">2、财务费用月度金额<span class="parameter-description"></span></div>
-						<input type="text" id="p1" value="" class="parameter-field"/>
+						<input type="text" id="p1" value="0" class="parameter-field integer"/>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">3、应收账款减少数<span class="parameter-description"></span></div>
-						<input type="text" id="p2" value="" class="parameter-field"/>
+						<input type="text" id="p2" value="0" class="parameter-field integer"/>
 					</div>						
 				</div>
 				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">4、预收账款增加数<span class="parameter-description"></span></div>
-						<input type="text" id="p3" value="" class="parameter-field"/>
+						<input type="text" id="p3" value="0" class="parameter-field integer"/>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">5、工资发放支出<span class="parameter-description"></span></div>
-						<input type="text" id="p4" value="" class="parameter-field"/>
+						<input type="text" id="p4" value="0" class="parameter-field integer"/>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">6、税收支出<span class="parameter-description"></span></div>
-						<input type="text" id="p5" value="" class="parameter-field"/>
+						<input type="text" id="p5" value="0" class="parameter-field integer"/>
 					</div>						
 				</div>
 				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">7、其他资金下拨支出<span class="parameter-description"></span></div>
-						<input type="text" id="p6" value="" class="parameter-field"/>
+						<input type="text" id="p6" value="0" class="parameter-field integer"/>
 					</div>	
 					<div class="parameter-group-item">	
+						<div class="parameter-title">8、期初内部活期存款余额<span class="parameter-description"></span></div>
+						<input type="text" id="p7" value="0" class="parameter-field integer"/>
 					</div>					
 					<div class="parameter-group-item">	
+						<div class="parameter-title">9、期初内部定期存款余额<span class="parameter-description"></span></div>
+						<input type="text" id="p8" value="0" class="parameter-field integer"/>
 					</div>					
+				</div>
+				<div class="parameter-group">
+					<div class="parameter-group-item">
+						<div class="parameter-title">10、投资活动支出<span class="parameter-description"></span></div>
+						<input type="text" id="p9" value="0" class="parameter-field integer"/>
+					</div>		
+					<div class="parameter-group-item">
+						<div class="parameter-title">11、利息收入减项<span class="parameter-description"></span></div>
+						<input type="text" id="p10" value="122500" class="parameter-field integer"/>
+					</div>	
+					<div class="parameter-group-item">
+					</div>	
 				</div>
 			</div>
 
@@ -368,12 +384,18 @@
 	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/jquery.table2excel.js"></script>
+	<script type="text/javascript" src="../../lib/app.js"></script>
 	<script type="text/javascript">
 
 		$(function()
 		{
 			changeyear();
 			$("#year-selector").click(function()
+			{
+				changeyear();
+			});
+			
+			$("#year-selector").mouseup(function()
 			{
 				changeyear();
 			});
@@ -394,9 +416,18 @@
 
 			$("#starter-button").on("click", function()
 			{
+				var $errorfield = app.isNumberValue($(".integer"));
+				if($errorfield != null)
+				{
+					var title = $errorfield.parent().find(".parameter-title").text();
+					alert("["+title+"]请填写数字");
+					return false;
+				}
+				
+
 				var month = $("#month").val();
 				showLoading();
-				$.getJSON('../p2/do.jsp', {year:$("#year-selector").val()}, function(response)
+				$.getJSON('../p2/do.jsp?purchase=1', {year:$("#year-selector").val(), month:month}, function(response)
 				{
 					hideLoading();
 					if(response.STATUS == 1)
@@ -412,6 +443,7 @@
 						var totalprice = 0;		
 						$.each(rows, function(i, row)
 						{
+							var purchasevolume = parseFloat(row["PURCHASEX"] || 0);
 							var volume = parseFloat(row["X"]);
 							var model = row["MODEL"];
 							var cost = parseFloat(row["COST"]);
@@ -422,35 +454,38 @@
 							{
 								monthratio = monthtotalratios;
 							}
-
-
 							var ratio = parseFloat(monthratio[month] || 0);
+							totalprice += ratio * (volume * price);
+
 							if(isinside == "1")
 							{
-								insidetotalcost += ratio * (volume * cost);
+								insidetotalcost += purchasevolume * cost;
 							}
 							else if(isinside == "0")
 							{
-								outsidetotalcost += ratio * (volume * cost);
+								outsidetotalcost += purchasevolume * cost;
 							}
-							totalprice += ratio * (volume * price);
 
 						});
 
 
-
-						$("#v020102").html(-parseFloat($("#p1").val() || 0) - 122500);
-						$("#v020201").html( parseFloat($("#p2").val() || 0) + parseFloat($("#p3").val() || 0) + parseFloat(totalprice) * 1.16 );
-						$("#v030101").html(parseFloat(insidetotalcost).toFixed(2));
-						$("#v030201").html(parseFloat(outsidetotalcost).toFixed(2));
-						$("#v030202").html($("#p4").val());
+						$("#v020102").html( app.pre1(-parseFloat($("#p1").val() || 0) - parseFloat($("#p10").val())) );
+						$("#v020201").html( app.pre1(parseFloat($("#p2").val() || 0) + parseFloat($("#p3").val() || 0) + parseFloat(totalprice) * 1.16 ) );
+						$("#v030101").html( app.pre1(parseFloat(insidetotalcost)) );
+						$("#v030201").html( app.pre1(parseFloat(outsidetotalcost)) );
+						$("#v030202").html( $("#p4").val());
 						$("#v030203").html($("#p5").val());
 						$("#v030211").html($("#p6").val());
+
+						$("#v0101").html($("#p7").val());
+						$("#v0102").html($("#p8").val());
+						$("#v030204").html($("#p9").val());
+						
 						
 					}
 					else
 					{
-						$("table").prepend('<div style="text-align:center; color:red">错误（'+response.MESSAGES+'）</div>');
+						$("table").before('<div style="margin:5px; color:red">错误（'+response.MESSAGES+'）</div>');
 					}
 				});
 			});

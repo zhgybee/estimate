@@ -164,6 +164,7 @@ function handle(rows, parameter, key, area, fixedcost)
 	args.K20 = fixedcost.value("K20", area);
 	args.K21 = fixedcost.value("K21", area);
 	args.K22 = fixedcost.value("K22", area);
+	args.K23 = fixedcost.value("K23", area);
 
 
 	$.each(rows, function(j, row)
@@ -173,15 +174,16 @@ function handle(rows, parameter, key, area, fixedcost)
 		//营业成本
 		args.maintotalcost += row.COST / 1.16 * row[key];
 		//增值税
-		args.zzs += (row.PRICE / 1.16 * row[key] * args.taxrate1);
+		args.zzs += (row.PRICE / 1.16 - row.COST / 1.16) * row[key] * args.taxrate1;
 		//消费税
 		args.xfs += row[key] + row.PRICE / 1.16 * row[key] * 0.11;
 	});	
 
 	args.totalprice = args.totalprice + args.K20;
+
 	args.maintotalcost = args.maintotalcost + args.K21;
 
-	args.zzs = args.zzs - args.K18 - args.K19;
+	args.zzs = args.zzs - args.K18 - args.K19 - args.K23;
 
 	//教育税
 	args.jys = 0.05 * (args.xfs + args.zzs);
@@ -237,15 +239,15 @@ function setValue($table, areacolumn)
 {
 	$table.find("tbody .v1").append('<td></td>');
 	$table.find("tbody .v2").append('<td></td>');
-	$table.find("tbody .v3").append('<td>'+areacolumn.totalprice+'</td>');
-	$table.find("tbody .v4").append('<td>'+areacolumn.K20+'</td>');
+	$table.find("tbody .v3").append('<td>'+app.pre1(areacolumn.totalprice)+'</td>');
+	$table.find("tbody .v4").append('<td>'+app.pre1(areacolumn.K20)+'</td>');
 	$table.find("tbody .v5").append('<td></td>');
 	$table.find("tbody .v6").append('<td></td>');
 	$table.find("tbody .v7").append('<td></td>');
-	$table.find("tbody .v8").append('<td>'+areacolumn.totalcost+'</td>');
+	$table.find("tbody .v8").append('<td>'+app.pre1(areacolumn.totalcost)+'</td>');
 	$table.find("tbody .v9").append('<td></td>');
-	$table.find("tbody .v10").append('<td>'+areacolumn.maintotalcost+'</td>');
-	$table.find("tbody .v11").append('<td>'+areacolumn.K21+'</td>');
+	$table.find("tbody .v10").append('<td>'+app.pre1(areacolumn.maintotalcost)+'</td>');
+	$table.find("tbody .v11").append('<td>'+app.pre1(areacolumn.K21)+'</td>');
 	$table.find("tbody .v12").append('<td></td>');
 	$table.find("tbody .v13").append('<td></td>');
 	$table.find("tbody .v14").append('<td></td>');
@@ -253,53 +255,53 @@ function setValue($table, areacolumn)
 	$table.find("tbody .v16").append('<td></td>');
 	$table.find("tbody .v17").append('<td></td>');
 	$table.find("tbody .v18").append('<td></td>');
-	$table.find("tbody .v19").append('<td>'+areacolumn.yysjfj+'</td>');
-	$table.find("tbody .v20").append('<td>'+(areacolumn.K08 + areacolumn.K09 + areacolumn.K10)+'</td>');
-	$table.find("tbody .v21").append('<td>'+(areacolumn.K05 + areacolumn.K06 + areacolumn.K07)+'</td>');
+	$table.find("tbody .v19").append('<td>'+app.pre1(areacolumn.yysjfj)+'</td>');
+	$table.find("tbody .v20").append('<td>'+app.pre1(areacolumn.K08 + areacolumn.K09 + areacolumn.K10)+'</td>');
+	$table.find("tbody .v21").append('<td>'+app.pre1(areacolumn.K05 + areacolumn.K06 + areacolumn.K07)+'</td>');
 	$table.find("tbody .v22").append('<td></td>');
 	$table.find("tbody .v23").append('<td></td>');
-	$table.find("tbody .v24").append('<td>'+areacolumn.K11+'</td>');
+	$table.find("tbody .v24").append('<td>'+app.pre1(areacolumn.K11)+'</td>');
 	$table.find("tbody .v25").append('<td></td>');
 	$table.find("tbody .v26").append('<td></td>');
 	$table.find("tbody .v27").append('<td></td>');
 	$table.find("tbody .v28").append('<td></td>');
 	$table.find("tbody .v29").append('<td></td>');
 	$table.find("tbody .v30").append('<td></td>');
-	$table.find("tbody .v31").append('<td>'+areacolumn.K13+'</td>');
+	$table.find("tbody .v31").append('<td>'+app.pre1(areacolumn.K13)+'</td>');
 	$table.find("tbody .v32").append('<td></td>');
 	$table.find("tbody .v33").append('<td></td>');
-	$table.find("tbody .v34").append('<td>'+areacolumn.yylr+'</td>');
-	$table.find("tbody .v35").append('<td>'+areacolumn.K15+'</td>');
+	$table.find("tbody .v34").append('<td>'+app.pre1(areacolumn.yylr)+'</td>');
+	$table.find("tbody .v35").append('<td>'+app.pre1(areacolumn.K15)+'</td>');
 	$table.find("tbody .v36").append('<td></td>');
 	$table.find("tbody .v37").append('<td></td>');
 	$table.find("tbody .v38").append('<td></td>');
 	$table.find("tbody .v39").append('<td></td>');
-	$table.find("tbody .v40").append('<td>'+areacolumn.K16+'</td>');
+	$table.find("tbody .v40").append('<td>'+app.pre1(areacolumn.K16)+'</td>');
 	$table.find("tbody .v41").append('<td></td>');
 	$table.find("tbody .v42").append('<td></td>');
 	$table.find("tbody .v43").append('<td></td>');
-	$table.find("tbody .v44").append('<td>'+areacolumn.lrze+'</td>');
-	$table.find("tbody .v45").append('<td>'+areacolumn.sds+'</td>');
+	$table.find("tbody .v44").append('<td>'+app.pre1(areacolumn.lrze)+'</td>');
+	$table.find("tbody .v45").append('<td>'+app.pre1(areacolumn.sds)+'</td>');
 	$table.find("tbody .v46").append('<td></td>');
-	$table.find("tbody .v47").append('<td>'+areacolumn.jlr+'</td>');
+	$table.find("tbody .v47").append('<td>'+app.pre1(areacolumn.jlr)+'</td>');
 	$table.find("tbody .v48").append('<td></td>');
-	$table.find("tbody .v49").append('<td>'+areacolumn.lshj+'</td>');
+	$table.find("tbody .v49").append('<td>'+app.pre1(areacolumn.lshj)+'</td>');
 	$table.find("tbody .v50").append('<td></td>');
-	$table.find("tbody .v51").append('<td>'+areacolumn.sds+'</td>');
-	$table.find("tbody .v52").append('<td>'+areacolumn.xfs+'</td>');
-	$table.find("tbody .v53").append('<td>'+areacolumn.zzs+'</td>');
-	$table.find("tbody .v54").append('<td>'+areacolumn.cjs+'</td>');
+	$table.find("tbody .v51").append('<td>'+app.pre1(areacolumn.sds)+'</td>');
+	$table.find("tbody .v52").append('<td>'+app.pre1(areacolumn.xfs)+'</td>');
+	$table.find("tbody .v53").append('<td>'+app.pre1(areacolumn.zzs)+'</td>');
+	$table.find("tbody .v54").append('<td>'+app.pre1(areacolumn.cjs)+'</td>');
 	$table.find("tbody .v55").append('<td></td>');
-	$table.find("tbody .v56").append('<td>'+(areacolumn.jys * 0.6)+'</td>');
-	$table.find("tbody .v57").append('<td>'+(areacolumn.jys * 0.4)+'</td>');
-	$table.find("tbody .v58").append('<td>'+areacolumn.K04+'</td>');
-	$table.find("tbody .v59").append('<td>'+areacolumn.yhs+'</td>');
-	$table.find("tbody .v60").append('<td>'+areacolumn.K01+'</td>');
-	$table.find("tbody .v61").append('<td>'+areacolumn.K02+'</td>');
-	$table.find("tbody .v62").append('<td>'+areacolumn.K03+'</td>');
+	$table.find("tbody .v56").append('<td>'+app.pre1(areacolumn.jys * 0.6)+'</td>');
+	$table.find("tbody .v57").append('<td>'+app.pre1(areacolumn.jys * 0.4)+'</td>');
+	$table.find("tbody .v58").append('<td>'+app.pre1(areacolumn.K04)+'</td>');
+	$table.find("tbody .v59").append('<td>'+app.pre1(areacolumn.yhs)+'</td>');
+	$table.find("tbody .v60").append('<td>'+app.pre1(areacolumn.K01)+'</td>');
+	$table.find("tbody .v61").append('<td>'+app.pre1(areacolumn.K02)+'</td>');
+	$table.find("tbody .v62").append('<td>'+app.pre1(areacolumn.K03)+'</td>');
 	$table.find("tbody .v63").append('<td></td>');
 	$table.find("tbody .v64").append('<td></td>');
 	$table.find("tbody .v65").append('<td></td>');
 	$table.find("tbody .v66").append('<td></td>');
-	$table.find("tbody .v67").append('<td>'+areacolumn.K17+'</td>');
+	$table.find("tbody .v67").append('<td>'+app.pre1(areacolumn.K17)+'</td>');
 }

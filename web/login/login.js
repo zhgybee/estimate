@@ -1,5 +1,14 @@
 $(function()
 {
+
+	var left = ($(window).outerWidth(true) - $("#login-container").outerWidth(true)) / 2
+	var top = ($(window).outerHeight(true) - $("#login-container").outerHeight(true)) / 2
+	$("#login-container").css("left", left+"px");
+	$("#login-container").css("top", (top - 30)+"px");
+
+	$("#login-panel").css("left", $("#login-container").css("left"));
+	$("#login-panel").css("top", $("#login-container").css("top"));
+
 	var cookiename = $.cookie('nest-name');
 	if(cookiename != null)
 	{

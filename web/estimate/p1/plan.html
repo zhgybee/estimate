@@ -13,7 +13,7 @@
 	.tables-panel{display:flex; flex-direction:row}
 	table{table-layout:fixed; background-color:#ffffff; border-collapse:separate; border-spacing:0px; border-left:1px solid #cccccc; box-sizing:border-box;}
 	td{text-align:center; padding:8px 5px; font-size:12px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;}
-	thead td{background-color:#efefef; padding:8px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #cccccc; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc}
+	thead td{background-color:#5b5e61; color:#ffffff; padding:8px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #5b5e61; border-right:1px solid #cccccc; border-bottom:1px solid #5b5e61}
 	table .header-description{color:#aaaaaa; margin-left:5px; font-size:10px}
 		
 	.summary-table{margin-left:10px}
@@ -215,6 +215,7 @@
 	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/plusins/uploadify/jquery.uploadify.js"></script>
+	<script type="text/javascript" src="../../lib/app.js"></script>
 	<script type="text/javascript" src="report.js"></script>
 	<script type="text/javascript" src="fixedcost.js"></script>
 	<script type="text/javascript">
@@ -695,7 +696,6 @@
 						$("#plan-"+i).data("data", response);
 						fillin($("#plan-"+i), response, null);
 						hideLoading();
-
 					});
 				}
 			}
@@ -739,18 +739,21 @@
 
 				var content = [];
 
-				var width = 820;
+				var width = 1020;
 				content.push('<table>');
 				content.push('<thead>');
 				content.push('	<tr>');
 				content.push('	<td style="width:90px">价格区间<span class="header-description">元</span></td>');
 				content.push('	<td style="width:130px">区间数量<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:200px; text-align:left;">卷烟规格</td>');
+				content.push('	<td style="width:200px;">生产厂家</td>');
 				content.push('	<td style="width:60px;">省内烟</td>');
 				content.push('	<td style="width:80px">批发价<span class="header-description">元</span></td>');
-				content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
-				content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:80px">调拨价<span class="header-description">元</span></td>');
+				//content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
+				//content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:80px">同比增长</td>');
 
 				if(monthmap != null)
 				{
@@ -788,27 +791,52 @@
 
 				$.each(rows, function(j, row)
 				{
-					content.push('<tr>');
+					if(j % 2 == 1)
+					{
+						content.push('<tr>');
+					}
+					else
+					{
+						content.push('<tr style="background-color:#fafafa">');
+					}
 					content.push('<td>'+((row.GROUPNAME == groupname) ? '' : row.GROUPNAME)+'</td>');
-					content.push('<td><span class="volume-1">'+((row.GROUPNAME == groupname) ? '' : row.GROUPVOLUME)+'</span><span class="volume-2">'+((row.GROUPNAME == groupname) ? '' : (row.GROUPVOLUME / 250))+'</span></td>');
+					content.push('<td><span class="volume-1">'+((row.GROUPNAME == groupname) ? '' : app.pre2(row.GROUPVOLUME))+'</span><span class="volume-2">'+((row.GROUPNAME == groupname) ? '' : (app.pre3(row.GROUPVOLUME / 250)))+'</span></td>');
 					content.push('<td style="text-align:left;">'+row.MODEL+'</td>');
+					content.push('<td style="text-align:left;">'+row.PRODUCER+'</td>');
 					content.push('<td>'+(row.ISINSIDE == "1" ? '是' : '')+'</td>');
 					content.push('<td>￥'+row.PRICE+'</td>');
-					content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
-					content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
-					content.push('<td><span class="volume-1">'+row.X+'</span><span class="volume-2">'+(row.X / 250)+'</span></td>');
+					content.push('<td>￥'+row.COST+'</td>');
+					//content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
+					//content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
+					content.push('<td><span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
+					
+					var growthrate = "";
+					var lastvolume = row.LASTVOLUME || 0;
+					if(lastvolume != 0)
+					{
+						var growthrate = (row.X - lastvolume) / lastvolume;
+						if(growthrate > 0)
+						{
+							growthrate = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span style="color:#ff6600">'+growthrate.toFixed(2)+'%</span>';
+						}
+						else
+						{
+							growthrate = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span style="color:#21a717">'+growthrate.toFixed(2)+'%</span>';
+						}
+					}
+					content.push('<td>'+growthrate+'</td>');
 
 					if(monthmap != null)
 					{
 						var monthnames = monthmap.months;
 						if(monthmap.area != "")
 						{
-							content.push('<td><span class="volume-1">'+row[monthmap.area]+'</span><span class="volume-2">'+(row[monthmap.area] / 250)+'</span></td>');
+							content.push('<td><span class="volume-1">'+app.pre2(row[monthmap.area])+'</span><span class="volume-2">'+(app.pre3(row[monthmap.area] / 250))+'</span></td>');
 						}
 						for(var i = 0 ; i < monthnames.length ; i++)
 						{
 							let number = row[monthnames[i]];
-							content.push('<td><span class="volume-1">'+number+'</span><span class="volume-2">'+(number / 250)+'</span></td>');
+							content.push('<td><span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
 						}
 					}
 					else
@@ -827,7 +855,7 @@
 								number = row.X * (arearatio[areanames[i]] || 0);
 							}
 							row[areanames[i]] = number;
-							content.push('<td><span class="volume-1">'+number+'</span><span class="volume-2">'+(number / 250)+'</span></td>');
+							content.push('<td><span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
 						}
 					}
 
@@ -843,24 +871,24 @@
 				content.push('</tbody>');
 				content.push('</table>');
 
-				$plan.find(".profit-panel span").html(fixedcost.getProfit(profit));
-				$plan.find(".volume-panel span").html(totalvolume);
+				$plan.find(".profit-panel span").html(app.pre1(fixedcost.getProfit(profit)));
+				$plan.find(".volume-panel span").html(app.pre2(totalvolume));
 				let averageprice = totalprice / totalvolume;
 				let growth = (averageprice - lastyearaverageprice) / lastyearaverageprice * 100;
 				if(growth > 0)
 				{
-					$plan.find(".average-panel span").html(averageprice.toFixed(2) + '<i class="fa fa-arrow-up" style="color:#ff6600; vertical-align:top"></i><b style="color:#ff6600">'+growth.toFixed(2)+'%</b>');
+					$plan.find(".average-panel span").html(app.pre3(averageprice) + '<i class="fa fa-arrow-up" style="color:#ff6600; vertical-align:top"></i><b style="color:#ff6600">'+app.pre3(growth)+'%</b>');
 				}
 				else
 				{
-					$plan.find(".average-panel span").html(averageprice.toFixed(2) + '<i class="fa fa-arrow-down" style="color:#21a717; vertical-align:top"></i><b style="color:#21a717">'+growth.toFixed(2)+'%</b>');
+					$plan.find(".average-panel span").html(app.pre3(averageprice) + '<i class="fa fa-arrow-down" style="color:#21a717; vertical-align:bottom"></i><b style="color:#21a717">'+app.pre3(growth)+'%</b>');
 				}
 				$plan.find(".detailed-table").html(content.join(""));
 				$plan.find(".detailed-table table").css("width", width+"px")
 
 				let report = summary(rows, parameter, fixedcost, monthmap);
 				$plan.find(".summary-table").html(report.content);
-				$plan.find(".netprofit-panel span").html(report.netprofit);
+				$plan.find(".netprofit-panel span").html(app.pre3(report.netprofit));
 			}
 			else
 			{
