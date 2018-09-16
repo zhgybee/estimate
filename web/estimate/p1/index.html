@@ -294,6 +294,24 @@
 					alert("[7、价格区间]请填写数字");
 					return false;
 				}
+				
+				var iserror = false;
+				$('.group-volume-lower, .group-volume-upper').each(function(i, element)
+				{
+					if(toNumber($(element).val()) < toNumber($(element).attr("min")) || toNumber($(element).val()) > toNumber($(element).attr("max")))
+					{
+						iserror = true;
+						return false;
+					}
+				});
+
+				if(iserror)
+				{
+					alert("[7、价格区间]填写的值不能超出其固定区间限制的范围");
+					return false;
+				}
+
+
 
 
 				var brandchangers = [];
@@ -444,7 +462,11 @@
 					$('.group-price-upper').last().val(item.priceupper);
 					$('.group-default-price').last().html((item.volumelower || "0")+'%<i class="fa fa-long-arrow-right"></i>'+(item.volumeupper || "0")+'%');
 					$('.group-volume-lower').last().val(item.volumelower);
+					$('.group-volume-lower').last().attr("min", item.volumelower);
+					$('.group-volume-lower').last().attr("max", item.volumeupper);
 					$('.group-volume-upper').last().val(item.volumeupper);
+					$('.group-volume-upper').last().attr("min", item.volumelower);
+					$('.group-volume-upper').last().attr("max", item.volumeupper);
 				});
 			});
 		}
@@ -533,6 +555,18 @@
 			parameter["taxrate2"] = $("#taxrate2").val();
 			parameter["taxrate1"] = $("#taxrate1").val();
 			return parameter;
+		}
+
+		function toNumber(value)
+		{
+			if(value == null || value == "")
+			{
+				return 0;
+			}
+			else
+			{
+				return parseFloat(value);
+			}
 		}
 	</script>
 
