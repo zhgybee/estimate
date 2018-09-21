@@ -59,16 +59,13 @@
 		{
 			String model = monthitem.getString("MODEL");
 			String currmonth = monthitem.getString("MONTH");
-			if(month.equals(currmonth))
+			Map<String, String> monthratio = monthratios.get(model);
+			if(monthratio == null)
 			{
-				Map<String, String> monthratio = monthratios.get(model);
-				if(monthratio == null)
-				{
-					monthratio = new HashMap<String, String>();
-					monthratios.put(model, monthratio);
-				}
-				monthratio.put(month, monthitem.getString("RATIO"));
+				monthratio = new HashMap<String, String>();
+				monthratios.put(model, monthratio);
 			}
+			monthratio.put(currmonth, monthitem.getString("RATIO"));
 		}
 		message.data.put("MONTHRATIOS", monthratios);
 		
@@ -77,10 +74,7 @@
 		for(Datum monthtotalitem : monthtotalitems)
 		{
 			String currmonth = monthtotalitem.getString("MONTH");
-			if(month.equals(currmonth))
-			{
-				monthtotalratios.put(month, String.valueOf(monthtotalitem.getDouble("MONTHTOTAL") / monthtotalitem.getDouble("TOTAL")));
-			}
+			monthtotalratios.put(currmonth, String.valueOf(monthtotalitem.getDouble("MONTHTOTAL") / monthtotalitem.getDouble("TOTAL")));
 		}		
 		message.data.put("MONTHTOTALRATIOS", monthtotalratios);		
 		

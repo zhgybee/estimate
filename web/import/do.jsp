@@ -123,6 +123,7 @@
 	{
 		String pyear = "";
 		String pbrand = "";
+		String pproducer = "";
 		for(int i = 2 ; i < rows.size() ; i++)
 		{
 			String[] row = rows.get(i);
@@ -141,10 +142,16 @@
 				{
 					brand = pbrand;
 				}
-	
-				String model = row[2];
 				
-				String isinside = row[3];
+				String producer = row[2];
+				if(producer.equals(""))
+				{
+					producer = pproducer;
+				}
+	
+				String model = row[3];
+				
+				String isinside = row[4];
 				if(isinside.equals("省外烟"))
 				{
 					isinside = "0";
@@ -154,9 +161,9 @@
 					isinside = "1";
 				}
 	
-				String cost = row[4];
+				String cost = row[5];
 	
-				String price = row[5];
+				String price = row[6];
 				
 				cost = StringUtils.replace(cost, "￥", "");
 				price = StringUtils.replace(price, "￥", "");
@@ -166,13 +173,13 @@
 				
 				double costvalue = NumberUtils.toDouble(cost, 0);
 				double pricevalue = NumberUtils.toDouble(price, 0);
-				String producer = row[6];
 				
 				String sql = "INSERT INTO T_CURRITEMS(ID, YEAR, BRAND, MODEL, COST, PRICE, ISINSIDE, PRODUCER, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+
 					SystemUtils.uuid()+"', '"+year+"', '"+brand+"', '"+model+"', '"+cost+"', '"+price+"', '"+isinside+"', '"+producer+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
 	
 				pyear = year;
 				pbrand = brand;
+				pproducer = producer;
 				sqls.add(sql);
 			}
 			else
@@ -224,13 +231,13 @@
 			}
 			else
 			{
-				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+names.length+"/13）错误。");
+				message.message(ServiceMessage.FAILURE, "[预测年年度费用]模板中列数（"+names.length+"/13）错误。");
 			}
 			
 		}
 		else
 		{
-			message.message(ServiceMessage.FAILURE, "[预测年规格]模板中没有数据。");
+			message.message(ServiceMessage.FAILURE, "[预测年年度费用]模板中没有数据。");
 		}
 
 	}

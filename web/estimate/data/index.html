@@ -72,6 +72,7 @@
 				{
 					content.push('<tr>');
 					content.push('<th style="text-align:center">卷烟牌号</th>');
+					content.push('<th>生产厂家</th>');
 					content.push('<th>卷烟规格</th>');
 					content.push('<th>内部烟</th>');
 					content.push('<th>调拨价</th>');
@@ -80,7 +81,7 @@
 
 					$.each(rows, function(i, row)
 					{
-						content.push('<tr><td style="text-align:center">'+row.BRAND+'</td><td>'+row.MODEL+'</td><td>'+row.ISINSIDE+'</td><td>￥'+row.COST+'</td><td>￥'+row.PRICE+'</td></tr>');
+						content.push('<tr><td style="text-align:center">'+row.BRAND+'</td><td>'+row.PRODUCER+'</td><td>'+row.MODEL+'</td><td>'+row.ISINSIDE+'</td><td>￥'+row.COST+'</td><td>￥'+row.PRICE+'</td></tr>');
 					});
 				}
 				else if(type == 3)

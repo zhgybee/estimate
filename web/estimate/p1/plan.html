@@ -753,6 +753,7 @@
 				//content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
 				//content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:80px">同比增减量</td>');
 				content.push('	<td style="width:80px">同比增长</td>');
 
 				if(monthmap != null)
@@ -811,6 +812,7 @@
 					content.push('<td><span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
 					
 					var growthrate = "";
+					var growthvolumn = "";
 					var lastvolume = row.LASTVOLUME || 0;
 					if(lastvolume != 0)
 					{
@@ -818,12 +820,15 @@
 						if(growthrate > 0)
 						{
 							growthrate = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span style="color:#ff6600">'+growthrate.toFixed(2)+'%</span>';
+							growthvolumn = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span style="color:#ff6600">'+(row.X - lastvolume).toFixed(0)+'</span>';
 						}
 						else
 						{
 							growthrate = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span style="color:#21a717">'+growthrate.toFixed(2)+'%</span>';
+							growthvolumn = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span style="color:#21a717">'+(row.X - lastvolume).toFixed(0)+'</span>';
 						}
 					}
+					content.push('<td>'+growthvolumn+'</td>');
 					content.push('<td>'+growthrate+'</td>');
 
 					if(monthmap != null)
