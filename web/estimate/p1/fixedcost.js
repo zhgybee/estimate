@@ -37,7 +37,6 @@ function FixedCost()
 
 	this.getTarget = function(target)
 	{
-		//∑( (不含税批发价 * 1.16 - 不含税调拨价) * 规格销售量 ) = 利税总额预测值 + 管理费用 + 销售费用 + 财务费用 - 公允价值变动损益 - 投资收益 - 汇兑收益 - 营业外收入 + 营业外支出  - 其他项目税金 + 手工输入上年留底进项 + 手工输入费用化进项 + 手工输入进项调整金额 - 其他业务收入 + 其他业务成本
 		return target + (this.value("K05") + this.value("K06") + this.value("K07")) + (this.value("K08") + this.value("K09") + this.value("K10")) + this.value("K11") - this.value("K12") - this.value("K13") - this.value("K14") - this.value("K15") + this.value("K16") - this.value("K17") + this.value("K18") + this.value("K19") + this.value("K23") - this.value("K20") + this.value("K21");
 	}
 

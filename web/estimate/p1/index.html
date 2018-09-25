@@ -133,7 +133,7 @@
 				
 				<div class="clearfix">
 					<div class="parameter-title">6、省内品牌销售最低占比<span class="parameter-description">%</span></div>
-					<input type="text" value="50" class="parameter-field" id="internal-brand-volume"/>
+					<input type="text" value="48" class="parameter-field" id="internal-brand-volume"/>
 				</div>	
 				
 				<div class="clearfix" id="brand-group-panel">
@@ -252,9 +252,9 @@
 					hideLoading();
 					if(response.STATUS == 1)
 					{
-						$("#volume-panel #total-volume-1").html(response.DATA.volume+'<span>条</span>');
-						$("#volume-panel #total-volume-2").html((response.DATA.volume / 250)+'<span>箱</span>');
-						$("#volume-target").val(response.DATA.volume);
+						$("#volume-panel #total-volume-1").html(app.pre2(response.DATA.volume)+'<span>条</span>');
+						$("#volume-panel #total-volume-2").html(app.pre3(response.DATA.volume / 250)+'<span>箱</span>');
+						$("#volume-target").val(app.pre2(response.DATA.volume));
 						getPriceSpace();
 					}
 					else
@@ -311,9 +311,6 @@
 					return false;
 				}
 
-
-
-
 				var brandchangers = [];
 				$(".brand-changer:visible").each(function(i, item)
 				{
@@ -361,6 +358,8 @@
 					groupvolumeuppers.push($(item).val());
 				});
 				
+				
+				parameter["insideratio"] = $("#internal-brand-volume").val();
 				parameter["grouppricelowers"] = grouppricelowers.join(",");
 				parameter["grouppriceuppers"] = grouppriceuppers.join(",");
 				parameter["groupvolumelowers"] = groupvolumelowers.join(",");
@@ -451,7 +450,33 @@
 		function getPriceSpace()
 		{
 			showLoading();
-			$.getJSON("pricespace.jsp?year="+$("#year-selector").val()+"&volumetarget="+$("#volume-target").val(), function(items)
+
+			var parameter = {};
+			var brandchangers = [];
+			$(".brand-changer:visible").each(function(i, item)
+			{
+				brandchangers.push($(item).val());
+			});
+
+			var brandlowers = [];
+			$(".brand-lower").each(function(i, item)
+			{
+				brandlowers.push($(item).val());
+			});
+			
+			var branduppers = [];
+			$(".brand-upper").each(function(i, item)
+			{
+				branduppers.push($(item).val());
+			});
+
+			parameter["brandchangers"] = brandchangers.join(",");
+			parameter["brandlowers"] = brandlowers.join(",");
+			parameter["branduppers"] = branduppers.join(",");
+			parameter["insideratio"] = $("#internal-brand-volume").val();
+
+
+			$.getJSON("pricespace.jsp?year="+$("#year-selector").val()+"&volumetarget="+$("#volume-target").val(), parameter, function(items)
 			{
 				hideLoading();
 				$("#brand-group-panel .parameter-group").remove();
@@ -550,8 +575,8 @@
 		function setParameter(parameter)
 		{
 			parameter["year"] = $("#year-selector").val();
-			parameter["volumetarget"] = $("#volume-target").val();
-			parameter["profittarget"] = $("#profit-target").val();
+			parameter["volumetarget"] = $("#volume-target").val().trim();
+			parameter["profittarget"] = $("#profit-target").val().trim();
 			parameter["taxrate2"] = $("#taxrate2").val();
 			parameter["taxrate1"] = $("#taxrate1").val();
 			return parameter;

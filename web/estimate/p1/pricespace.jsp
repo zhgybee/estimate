@@ -1,3 +1,6 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="com.estimate.utils.SystemUtils"%>
 <%@page import="org.apache.commons.lang3.math.NumberUtils"%>
 <%@page import="org.json.JSONObject"%>
@@ -36,8 +39,72 @@
 			ratio = volumetarget / lastyearvolumetotal;	
 		}
 		
-		Data limits = datasource.find("select MODEL, PRICE, (VOLUME * 1.2 * "+ratio+") * 1.04 as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
+		Data limits = datasource.find("select MODEL, PRICE, (VOLUME * 1.2 * "+ratio+") as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
+		
+		Data insidemodeltatios = datasource.find("select a.MODEL, a.YEAR, a.VOLUME, b.TOTAL, cast(a.VOLUME as double) / cast(b.TOTAL as double) as 'RATIO' from T_TOTAL_SALES a left join (select YEAR, sum(VOLUME) as 'TOTAL' from T_TOTAL_SALES where ISINSIDE = '1' group by YEAR) b on a.YEAR = b.YEAR where a.ISINSIDE = '1' and a.YEAR = ?", String.valueOf(year - 1));
 
+
+		String[] brandchangers = StringUtils.split( StringUtils.defaultString(request.getParameter("brandchangers"), ""), ",");
+		String[] brandlowers = StringUtils.split( StringUtils.defaultString(request.getParameter("brandlowers"), ""), ",");
+		String[] branduppers = StringUtils.split( StringUtils.defaultString(request.getParameter("branduppers"), ""), ",");
+		
+		Map<String, String[]> changers = new HashMap<String, String[]>();
+		//设置某个规格的上下限
+		if(brandchangers.length != 0 && brandchangers.length == brandlowers.length && brandlowers.length == branduppers.length)
+		{
+			for(int i = 0 ; i < brandchangers.length ; i++)
+			{
+				String brand = brandchangers[i];
+				String lower = brandlowers[i];
+				String upper = branduppers[i];
+				
+				changers.put(brand, new String[]{lower, upper});
+			}
+		}
+
+		Map<String, Integer> modelminvolumes = null;
+		double insideratio = NumberUtils.toDouble(request.getParameter("insideratio"), 0);
+		if(insideratio != 0)
+		{
+			modelminvolumes = new HashMap<String, Integer>();
+			double insidetotalvolume = volumetarget * (insideratio / 100);
+			for(Datum insidemodeltatio : insidemodeltatios)
+			{
+				modelminvolumes.put(insidemodeltatio.getString("MODEL"), new Double(Math.ceil(insidetotalvolume * insidemodeltatio.getDouble("RATIO"))).intValue());
+			}
+		}
+		
+		
+		for(Datum limit : limits)
+		{
+			limit.put("MIN", limit.getDouble("MIN"));
+			limit.put("MAX", limit.getDouble("MAX"));
+			
+			String model = limit.getString("MODEL");
+			String[] values = changers.get(model);
+			if(values != null)
+			{
+				limit.put("MIN", values[0]);
+				limit.put("MAX", values[1]);
+			}
+			else
+			{
+				if(modelminvolumes != null)
+				{
+					Integer newmin = modelminvolumes.get(model);
+					if(newmin != null)
+					{
+						double min = limit.getDouble("MIN");
+						double max = limit.getDouble("MAX");
+						if( min < newmin && newmin < max)
+						{
+							limit.put("MIN", newmin);
+						}
+					}
+				}
+			}
+		}
+		
 		Data items = new Data();
 		
 		for(Datum row : rows)

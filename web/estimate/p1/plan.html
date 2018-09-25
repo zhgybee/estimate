@@ -70,8 +70,6 @@
 		<button id="export-button" style="float:right; margin:10px 10px 10px 0px; height:30px; width:90px">导出表格</button>
 		<div style="float:right; margin:10px 10px 10px 0px; height:30px"><button id="upfile-button"></button></div>
 		<div id="file-queue" style="float:right; overflow:hidden; width:300px;"></div>
-
-
 		
 		<ul class="slide-mennus"><li value="1">销量表</li><li value="2">利润表</li><li value="3">销量表+利润表</li></ul>
 		
@@ -289,7 +287,8 @@
 							{
 								var data = $("#plan-"+i).data("data");
 								let rows = data.DATA.ROWS;
-								
+
+								var $upfilevolumns = $("#plan-"+i).find(".upfile-volumn");
 								let number = 0;
 								$.each(rows, function(i, row)
 								{
@@ -298,9 +297,12 @@
 									if(map[name] != null)
 									{
 										number += Math.abs(parseFloat(map[name]) - parseFloat(volume));
+										$($upfilevolumns.get(i)).html( '<span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span>' );
 									}
 								});
-								$("#plan-"+i).find(".custon-volume-panel span").html(number.toFixed(2));
+								$("#plan-"+i).find(".custon-volume-panel span").html('<span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span>');
+								$("#plan-"+i).find(".upfile-volumn-header").show();
+								$("#plan-"+i).find(".upfile-volumn").show();
 							}
 
 						}
@@ -753,6 +755,7 @@
 				//content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
 				//content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:100px; display:none" class="upfile-volumn-header">对比<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:80px">同比增减量</td>');
 				content.push('	<td style="width:80px">同比增长</td>');
 
@@ -810,6 +813,7 @@
 					//content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
 					//content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
 					content.push('<td><span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
+					content.push('<td class="upfile-volumn" style="display:none"></td>');
 					
 					var growthrate = "";
 					var growthvolumn = "";
@@ -820,12 +824,12 @@
 						if(growthrate > 0)
 						{
 							growthrate = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span style="color:#ff6600">'+growthrate.toFixed(2)+'%</span>';
-							growthvolumn = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span style="color:#ff6600">'+(row.X - lastvolume).toFixed(0)+'</span>';
+							growthvolumn = '<i class="fa fa-angle-up" style="color:#ff6600; vertical-align:top; margin-right:3px"></i><span class="volume-1" style="color:#ff6600;">'+app.pre2(row.X - lastvolume)+'</span><span class="volume-2" style="color:#ff6600;">'+(app.pre3((row.X - lastvolume) / 250))+'</span>';
 						}
 						else
 						{
 							growthrate = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span style="color:#21a717">'+growthrate.toFixed(2)+'%</span>';
-							growthvolumn = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span style="color:#21a717">'+(row.X - lastvolume).toFixed(0)+'</span>';
+							growthvolumn = '<i class="fa fa-angle-down" style="color:#21a717; vertical-align:bottom; margin-right:3px"></i><span class="volume-1" style="color:#21a717;">'+app.pre2(row.X - lastvolume)+'</span><span class="volume-2" style="color:#21a717;">'+(app.pre3((row.X - lastvolume) / 250))+'</span>';
 						}
 					}
 					content.push('<td>'+growthvolumn+'</td>');
@@ -876,9 +880,10 @@
 				content.push('</tbody>');
 				content.push('</table>');
 
-				$plan.find(".profit-panel span").html(app.pre1(fixedcost.getProfit(profit)));
-				$plan.find(".volume-panel span").html(app.pre2(totalvolume));
+				$plan.find(".profit-panel span").html(app.pre1(fixedcost.getProfit(profit))+" 万元");
+				$plan.find(".volume-panel span").html('<span class="volume-1">'+app.pre2(totalvolume)+'</span><span class="volume-2">'+(app.pre3(totalvolume / 250))+'</span>');
 				let averageprice = totalprice / totalvolume;
+
 				let growth = (averageprice - lastyearaverageprice) / lastyearaverageprice * 100;
 				if(growth > 0)
 				{
@@ -893,12 +898,12 @@
 
 				let report = summary(rows, parameter, fixedcost, monthmap);
 				$plan.find(".summary-table").html(report.content);
-				$plan.find(".netprofit-panel span").html(app.pre3(report.netprofit));
+				$plan.find(".netprofit-panel span").html(app.pre1(report.netprofit)+" 万元");
 			}
 			else
 			{
 				$plan.find(".detailed-table").empty();
-				$plan.find(".detailed-table").append('<div style="text-align:center; color:red">计算出现错误（'+data.STATUS+'）</div>');
+				$plan.find(".detailed-table").append('<div style="text-align:center; color:red">计算出现错误（'+data.STATUS+'）：'+data.MESSAGES.join("")+'</div>');
 			}	
 		}
 

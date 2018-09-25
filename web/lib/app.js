@@ -2,14 +2,19 @@ var app = {};
 (function (app) 
 {
 
-	app.pre1 = function(number)
+	app.pre0 = function(number)
 	{
 		return number.toFixed(2)
 	}
 
+	app.pre1 = function(number)
+	{
+		return (number / 10000).toFixed(2);
+		//return number.toFixed(2)
+	}
+
 	app.pre2 = function(number)
 	{
-		//return number.toFixed(2)
 		return Math.round(number)
 	}
 

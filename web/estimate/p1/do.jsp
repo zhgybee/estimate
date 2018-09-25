@@ -177,7 +177,7 @@
 				{
 					isrun = false;
 				}
-				if(index == 100)
+				if(index == 3)
 				{
 					isrun = false;
 				}
@@ -192,6 +192,7 @@
 <%!
 	public ServiceMessage startor(ServiceMessage message, HttpServletRequest request, Data rows, Data insidemodeltatios) throws Exception
 	{
+		String messages = "";
 		int status = ServiceMessage.SUCCESS;
 		
 		DecimalFormat format = new DecimalFormat("#.##");
@@ -252,10 +253,10 @@
 					if(modelminvolumes != null)
 					{
 						Integer newmin = modelminvolumes.get(model);
-						int min = row.getInt("MIN");
-						int max = row.getInt("MAX");
 						if(newmin != null)
 						{
+							double min = row.getDouble("MIN");
+							double max = row.getDouble("MAX");
 							if( min < newmin && newmin < max)
 							{
 								row.put("MIN", newmin);
@@ -319,55 +320,25 @@
 				}
 				
 				//设置销量占比总和为100000，根据每组上下限推算每组的数据
-
 				SalesData groupsdata = new SalesData(groups, 100000, -1);
 				groupsdata.startup();
-				groups = groupsdata.rows;
-
-				//销量分解后的总利润
-				for(Datum group : groups)
+				if(groupsdata.status > 0)
 				{
-					
-					//得到本组数据的销量
-					double volumeratio = group.getDouble("X");;
-					double groupvolume = (volumeratio / 1000) / 100 * volumetarget;
-					
-					Data grouprows = group.getData("ROWS");
-					
-					SalesData groupdata = new SalesData(grouprows, groupvolume, -1);
-					groupdata.startup();
-					if(groupdata.status > 0)
-					{
-					}
-					else
-					{
-						status = groupdata.status;
-					}
-					message.message(groupdata.status, "");
-					
-					group.put("GROUPVOLUME", groupvolume);
-
-					group.put("MAX", new Double(groupdata.getMaxTotalProfit()).intValue());
-					group.put("MIN", new Double(groupdata.getMinTotalProfit()).intValue());
-					
-					groupdata.sort(1);
-				}
-
-				
-				if(type.equals("2"))
-				{			
-					SalesData groupsdata2 = new SalesData(groups, profittarget, -1);
-					groupsdata2.clearVolumes();
-					groupsdata2.startup();
-					
+					groups = groupsdata.rows;
+	
+					//销量分解后的总利润
+					double minProfit = 0;
+					double maxProfit = 0;
 					for(Datum group : groups)
 					{
-						double groupvolume = group.getDouble("GROUPVOLUME");	
-						double grouptargetprofit = group.getDouble("X");
+						
+						//得到本组数据的销量
+						double volumeratio = group.getDouble("X");;
+						double groupvolume = (volumeratio / 1000) / 100 * volumetarget;
 						
 						Data grouprows = group.getData("ROWS");
-						SalesData groupdata = new SalesData(grouprows, groupvolume, grouptargetprofit);
-						groupdata.clearVolumes();
+						
+						SalesData groupdata = new SalesData(grouprows, groupvolume, -1);
 						groupdata.startup();
 						if(groupdata.status > 0)
 						{
@@ -376,8 +347,58 @@
 						{
 							status = groupdata.status;
 						}
+						message.message(groupdata.status, "");
+						
+						group.put("GROUPVOLUME", groupvolume);
+
+						group.put("MIN", new Double(groupdata.getMinTotalProfit()).intValue());
+						group.put("MAX", new Double(groupdata.getMaxTotalProfit()).intValue());
+						
+						minProfit += new Double(groupdata.getMinTotalProfit()).intValue();
+						maxProfit += new Double(groupdata.getMaxTotalProfit()).intValue();
+						
+						groupdata.sort(1);
 					}
+	
 					
+					if(type.equals("2"))
+					{			
+						SalesData groupsdata2 = new SalesData(groups, profittarget, -1);
+						groupsdata2.clearVolumes();
+						groupsdata2.startup();
+						
+						if(groupsdata2.status > 0)
+						{
+							for(Datum group : groups)
+							{
+								double groupvolume = group.getDouble("GROUPVOLUME");	
+								double grouptargetprofit = group.getDouble("X");
+								
+								Data grouprows = group.getData("ROWS");
+								SalesData groupdata = new SalesData(grouprows, groupvolume, grouptargetprofit);
+								groupdata.clearVolumes();
+								groupdata.startup();
+								if(groupdata.status > 0)
+								{
+								}
+								else
+								{
+									status = groupdata.status;
+								}
+							}
+						}
+						else
+						{
+							status = groupsdata2.status;
+							messages = "根据销售设置利税总额（"+profittarget+"）错误，根据预测，利税总额应在"+minProfit+"和"+maxProfit+"之间。";
+						}
+						
+					}
+				}
+				else
+				{
+					status = groupsdata.status;
+					messages = "区间占比总和错误";
 				}
 			}
 			else
@@ -422,7 +443,7 @@
 			
 			message.data.put("ROWS", items);
 		}	
-		message.message(status, "");
+		message.message(status, messages);
 		return message;
 	}
 	

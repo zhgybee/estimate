@@ -166,17 +166,17 @@ function handle(rows, parameter, key, area, fixedcost)
 	args.K22 = fixedcost.value("K22", area);
 	args.K23 = fixedcost.value("K23", area);
 
-
+	var taxrate1 = parseFloat(args.taxrate1);
 	$.each(rows, function(j, row)
 	{
 		//营业收入
-		args.totalprice += row.PRICE / 1.16 * row[key];
+		args.totalprice += row.PRICE / (1 + taxrate1) * row[key];
 		//营业成本
-		args.maintotalcost += row.COST / 1.16 * row[key];
+		args.maintotalcost += row.COST / (1 + taxrate1) * row[key];
 		//增值税
-		args.zzs += (row.PRICE / 1.16 - row.COST / 1.16) * row[key] * args.taxrate1;
+		args.zzs += (row.PRICE / (1 + taxrate1) - row.COST / (1 + taxrate1)) * row[key] * taxrate1;
 		//消费税
-		args.xfs += row[key] + row.PRICE / 1.16 * row[key] * 0.11;
+		args.xfs += row[key] + row.PRICE / (1 + taxrate1) * row[key] * 0.11;
 	});	
 
 	args.totalprice = args.totalprice + args.K20;
