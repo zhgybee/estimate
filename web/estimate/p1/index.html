@@ -55,22 +55,22 @@
 					<div class="parameter-group">
 						<div class="parameter-group-item">
 							<div id="first-year" class="parameter-subtitle"></div>
-							<input type="text" value="20" class="parameter-field" id="weight-1"/>
+							<input type="text" value="0" class="parameter-field" id="weight-1"/>
 						</div>	
 						<div class="parameter-group-item">
 							<div id="second-year" class="parameter-subtitle"></div>
-							<input type="text" value="30" class="parameter-field" id="weight-2"/>
+							<input type="text" value="0" class="parameter-field" id="weight-2"/>
 						</div>	
 						<div class="parameter-group-item">
 							<div id="third-year" class="parameter-subtitle"></div>
-							<input type="text" value="50" class="parameter-field" id="weight-3"/>
+							<input type="text" value="100" class="parameter-field" id="weight-3"/>
 						</div>	
 					</div>
 				</div>	
 
 				<div class="clearfix">
 					<div class="parameter-title">2、预测增长率<span class="parameter-description">%</span></div>
-					<input type="text" value="20" class="parameter-field" id="growth"/>
+					<input type="text" value="5" class="parameter-field" id="growth"/>
 				</div>	
 			</div>
 			<div class="button-panel">
@@ -109,6 +109,8 @@
 						<input type="text" id="taxrate2" value="0.0003" class="parameter-field"/>
 					</div>		
 					<div class="parameter-group-item">
+						<div class="parameter-title">5、预测销量浮动</div>	
+						<input type="text" id="fudong" value="0.2" class="parameter-field"/>
 					</div>	
 					<div class="parameter-group-item">
 					</div>	
@@ -116,7 +118,7 @@
 
 
 				<div class="clearfix" id="upper-lower-panel">
-					<div class="parameter-title clearfix">5、品牌规格销售量上限及下限 <span class="add-button" id="upper-lower-button">增加</span></div>
+					<div class="parameter-title clearfix">6、品牌规格销售量上限及下限 <span class="add-button" id="upper-lower-button">增加</span></div>
 					<div class="parameter-header">
 						<div class="parameter-group-item">
 							<div class="parameter-subtitle">规格</div>
@@ -132,12 +134,12 @@
 
 				
 				<div class="clearfix">
-					<div class="parameter-title">6、省内品牌销售最低占比<span class="parameter-description">%</span></div>
+					<div class="parameter-title">7、省内品牌销售最低占比<span class="parameter-description">%</span></div>
 					<input type="text" value="48" class="parameter-field" id="internal-brand-volume"/>
 				</div>	
 				
 				<div class="clearfix" id="brand-group-panel">
-					<div class="parameter-title">7、价格区间<span class="add-button" id="brand-group-button">增加</span></div>
+					<div class="parameter-title">8、价格区间<span class="add-button" id="brand-group-button">增加</span></div>
 					<div class="parameter-header">
 						<div class="parameter-group-item">
 							<div class="parameter-subtitle">价格区间<span class="parameter-description">元</span></div>
@@ -402,7 +404,7 @@
 
 				$group.find(".brand-changer").selection
 				({
-					url:"../dictionary/brand.jsp?volumetarget="+$("#volume-target").val(),
+					url:"../dictionary/brand.jsp?volumetarget="+$("#volume-target").val()+"&fudong="+$("#fudong").val(),
 					ismultiple:false,
 					search:true,
 					onclick:changebrand
@@ -476,7 +478,7 @@
 			parameter["insideratio"] = $("#internal-brand-volume").val();
 
 
-			$.getJSON("pricespace.jsp?year="+$("#year-selector").val()+"&volumetarget="+$("#volume-target").val(), parameter, function(items)
+			$.getJSON("pricespace.jsp?year="+$("#year-selector").val()+"&volumetarget="+$("#volume-target").val()+"&fudong="+$("#fudong").val(), parameter, function(items)
 			{
 				hideLoading();
 				$("#brand-group-panel .parameter-group").remove();
@@ -575,10 +577,11 @@
 		function setParameter(parameter)
 		{
 			parameter["year"] = $("#year-selector").val();
-			parameter["volumetarget"] = $("#volume-target").val().trim();
-			parameter["profittarget"] = $("#profit-target").val().trim();
+			parameter["volumetarget"] = parseFloat($("#volume-target").val().trim());
+			parameter["profittarget"] = parseFloat($("#profit-target").val().trim());
 			parameter["taxrate2"] = $("#taxrate2").val();
 			parameter["taxrate1"] = $("#taxrate1").val();
+			parameter["fudong"] = $("#fudong").val();
 			return parameter;
 		}
 

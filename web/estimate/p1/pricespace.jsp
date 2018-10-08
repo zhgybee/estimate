@@ -1,3 +1,4 @@
+<%@page import="java.math.BigDecimal"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
@@ -20,7 +21,8 @@
 
 	int year = NumberUtils.toInt(request.getParameter("year"));
 	double volumetarget = NumberUtils.toDouble(request.getParameter("volumetarget"));
-	
+	double fudong = NumberUtils.toDouble(request.getParameter("fudong"), 0.2);
+
 	
 	JSONArray array = new JSONArray();
 	
@@ -39,7 +41,7 @@
 			ratio = volumetarget / lastyearvolumetotal;	
 		}
 		
-		Data limits = datasource.find("select MODEL, PRICE, (VOLUME * 1.2 * "+ratio+") as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
+		Data limits = datasource.find("select MODEL, PRICE, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
 		
 		Data insidemodeltatios = datasource.find("select a.MODEL, a.YEAR, a.VOLUME, b.TOTAL, cast(a.VOLUME as double) / cast(b.TOTAL as double) as 'RATIO' from T_TOTAL_SALES a left join (select YEAR, sum(VOLUME) as 'TOTAL' from T_TOTAL_SALES where ISINSIDE = '1' group by YEAR) b on a.YEAR = b.YEAR where a.ISINSIDE = '1' and a.YEAR = ?", String.valueOf(year - 1));
 
@@ -63,6 +65,7 @@
 		}
 
 		Map<String, Integer> modelminvolumes = null;
+		
 		double insideratio = NumberUtils.toDouble(request.getParameter("insideratio"), 0);
 		if(insideratio != 0)
 		{
@@ -73,6 +76,7 @@
 				modelminvolumes.put(insidemodeltatio.getString("MODEL"), new Double(Math.ceil(insidetotalvolume * insidemodeltatio.getDouble("RATIO"))).intValue());
 			}
 		}
+		
 		
 		
 		for(Datum limit : limits)
@@ -186,7 +190,6 @@
 			
 			
 		}
-
 		for(Datum item : items)
 		{
 			JSONObject element = new JSONObject();
@@ -194,8 +197,14 @@
 			element.put("priceupper", item.getDouble("MAX"));
 			if(volumetarget != 0)
 			{
-				element.put("volumelower", Math.floor(item.getDouble("GROUPMIN") / volumetarget * 100 ));
-				element.put("volumeupper", Math.ceil(item.getDouble("GROUPMAX") / volumetarget * 100 ));
+				BigDecimal decimal = new BigDecimal( item.getDouble("GROUPMIN") / volumetarget * 100 );
+				element.put("volumelower", decimal.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
+				
+				decimal = new BigDecimal( item.getDouble("GROUPMAX") / volumetarget * 100 );
+				element.put("volumeupper", decimal.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
+				
+				//element.put("volumelower", Math.floor(item.getDouble("GROUPMIN") / volumetarget * 100 ));
+				//element.put("volumeupper", Math.ceil(item.getDouble("GROUPMAX") / volumetarget * 100 ));
 			}
 			array.put(element);
 		}

@@ -83,6 +83,9 @@
 	{
 		String type = StringUtils.defaultString(request.getParameter("type"), "1");
 		int year = NumberUtils.toInt(request.getParameter("year"), 2018);
+		double fudong = NumberUtils.toDouble(request.getParameter("fudong"), 0.2);
+		
+		
 		Data rows = null;
 		Data insidemodeltatios = null;
 		Map<String, Map<String, String>> monthratios = new HashMap<String, Map<String, String>>();
@@ -103,7 +106,7 @@
 				double lastyearvolumetotal = lastyeartotal.getDouble("TOTAL");
 				double ratio = volumetarget / lastyearvolumetotal;					
 				
-				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.PRODUCER, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, (T_CURRITEMS.PRICE - T_CURRITEMS.COST) as 'PROFIT', TS.MAX, TS.MIN, TS.VOLUME as 'LASTVOLUME' from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * 1.2 * "+ratio+") as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
+				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.PRODUCER, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, (T_CURRITEMS.PRICE - T_CURRITEMS.COST) as 'PROFIT', TS.MAX, TS.MIN, TS.VOLUME as 'LASTVOLUME' from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
 						usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
 
 				
@@ -223,6 +226,7 @@
 
 			//设置省内烟中每个规格占比
 			Map<String, Integer> modelminvolumes = null;
+			
 			double insideratio = NumberUtils.toDouble(request.getParameter("insideratio"), 0);
 			if(insideratio != 0)
 			{
@@ -234,6 +238,7 @@
 					modelminvolumes.put(insidemodeltatio.getString("MODEL"), new Double(Math.ceil(insidetotalvolume * ratio)).intValue());
 				}
 			}
+			
 			
 			//根据增长率自动调整上限，如果手工设置了上下限，则参照手工设置
 			for(Datum row : rows)
@@ -346,8 +351,8 @@
 						else
 						{
 							status = groupdata.status;
+							messages = group.getString("GROUPNAME")+"区间总量"+groupvolume+"不能计算。";
 						}
-						message.message(groupdata.status, "");
 						
 						group.put("GROUPVOLUME", groupvolume);
 

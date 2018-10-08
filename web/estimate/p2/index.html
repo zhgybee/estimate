@@ -77,25 +77,20 @@
 							<i class="checkbox fa fa-square selection-month" value="0" month="11"></i>十一月
 							<i class="checkbox fa fa-square selection-month" value="0" month="12"></i>十二月
 						</div>
-					</div>	
-
-					<div class="parameter-group">
-						<div class="parameter-group-item">
-							<div class="parameter-title">2、计划期末预留库存</div>	
-							<input type="text" id="p2" class="parameter-field" value="0"/>
-						</div>
 					</div>
 
 
-
 					<div class="clearfix" id="stock-panel">
-						<div class="parameter-title clearfix">3、库存 <span class="add-button" id="stock-button">增加</span></div>
+						<div class="parameter-title clearfix">2、库存 <span class="add-button" id="stock-button">增加</span></div>
 						<div class="parameter-header">
 						<div class="parameter-group-item">
 							<div class="parameter-subtitle">规格</div>
 						</div>	
-						<div class="parameter-group-item">
+							<div class="parameter-group-item">
 							<div class="parameter-subtitle">计划期初剩余库存<span class="parameter-description">条</span></div>
+						</div>	
+						<div class="parameter-group-item">
+							<div class="parameter-subtitle">计划期末预留库存<span class="parameter-description">条</span></div>
 						</div>	
 					</div>
 				</div>
@@ -123,7 +118,7 @@
 						<td style="text-align:center; width:60px">序号</td>
 						<td style="text-align:left">卷烟规格</td>
 						<td style="width:150px">采购量<span class="header-description">条</span></td>
-						<td style="width:200px">采购金额<span class="header-description">元</span></td>
+						<td style="width:200px">采购金额<span class="header-description">万元</span></td>
 					</tr>
 				</thead>
 				<tbody>
@@ -205,6 +200,7 @@
 								$("#stock-button").click();
 								$(".brand-changer:visible").last().val(name);
 								$(".p1").last().val(x1);
+								$(".p2").last().val(x2);
 							});
 
 						}
@@ -222,14 +218,14 @@
 			$("#starter-button").on("click", function()
 			{
 
-				if(app.isNumberValue($("#p2")) != null)
+				if(app.isNumberValue($(".p2")) != null)
 				{
-					alert("[2、计划期末预留库存]请填写数字");
+					alert("[计划期末预留库存]请填写数字");
 					return false;
 				}
 				if(app.isNumberValue($(".p1")) != null)
 				{
-					alert("[3、计划期初剩余库存]请填写数字");
+					alert("[计划期初剩余库存]请填写数字");
 					return false;
 				}
 
@@ -260,15 +256,13 @@
 						{
 							if($(item).val() != "")
 							{
-								customstocks[$(item).val()] = {p1:$($(".p1").get(i)).val()};
+								customstocks[$(item).val()] = {p1:$($(".p1").get(i)).val(), p2:$($(".p2").get(i)).val()};
 							}
 						});
 
 						var content = [];
 						let totalmonthsvolume = 0;
 						let totalmonthscost = 0;
-						
-						var p2 = parseFloat($("#p2").val() == "" ? 0 : $("#p2").val()) / rows.length
 						
 						var purchase = {};
 						$.each(rows, function(j, row)
@@ -288,14 +282,11 @@
 								monthsvolume += parseFloat(monthratio[name] || 0) * parseFloat(volume);
 							});	
 
-							let p1 = 0;
 							let customstock = customstocks[model];
 							if(customstock != null)
 							{
-								p1 = parseFloat(customstock.p1 || 0);
+								monthsvolume = monthsvolume - parseFloat(customstock.p1 || 0) + parseFloat(customstock.p2 || 0);
 							}
-
-							monthsvolume = monthsvolume - p1 + p2;
 
 							let monthscost = cost * monthsvolume;
 							content.push('<tr>');
@@ -354,9 +345,10 @@
 				content +='	<div class="parameter-group-item">';
 				content +='		<input type="text" value="" class="parameter-field p1"/>';
 				content +='	</div>';
+				content +='	<div class="parameter-group-item">';
+				content +='		<input type="text" value="" class="parameter-field p2"/>';
+				content +='	</div>';
 				$group.html(content);
-
-
 				$group.find(".brand-changer").selection
 				({
 					url:"../dictionary/brand.jsp",

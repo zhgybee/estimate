@@ -17,6 +17,8 @@
 	JSONArray items = new JSONArray();
 	int year = NumberUtils.toInt(request.getParameter("year"), 2018);
 	double volumetarget = NumberUtils.toDouble(request.getParameter("volumetarget"));
+	double fudong = NumberUtils.toDouble(request.getParameter("fudong"), 0.2);
+
 	
 	Connection connection = null;
 	try
@@ -28,7 +30,7 @@
 		double lastyearvolumetotal = lastyeartotal.getDouble("TOTAL");
 		double ratio = volumetarget / lastyearvolumetotal;	
 		
-		Data groups = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.MODEL, TS.MAX, TS.MIN from T_CURRITEMS left join (select MODEL, (VOLUME * 1.2 * "+ratio+") as MAX, (VOLUME * 0.8 * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by sort", 
+		Data groups = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.MODEL, TS.MAX, TS.MIN from T_CURRITEMS left join (select MODEL, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by sort", 
 				usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
 
 		for(Datum group : groups)
