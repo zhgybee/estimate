@@ -92,7 +92,6 @@
 	
 				String price = row[9];
 	
-				String profitrate = row[10];
 				
 				
 				amount = StringUtils.replace(amount, "￥", "");
@@ -102,6 +101,16 @@
 				amount = StringUtils.replace(amount, ",", "");
 				cost = StringUtils.replace(cost, ",", "");
 				price = StringUtils.replace(price, ",", "");
+
+				double profitrate = 0;
+				try
+				{
+					profitrate = (NumberUtils.toDouble(price, 0) - NumberUtils.toDouble(cost, 0)) / NumberUtils.toDouble(price, 0);
+				}
+				catch(Exception e)
+				{
+					profitrate = -1;
+				}
 				
 				String sql = "INSERT INTO T_SALES(ID, YEAR, MONTH, AREA, BRAND, MODEL, VOLUME, AMOUNT, COST, PRICE, PROFITRATE, CODE, ISINSIDE, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+SystemUtils.uuid()+"', '"+year+"', '"+month+"', '"+area+"', '"+brand+"', '"+model+"', '"+volume+"', '"+amount+"', '"+cost+"', '"+price+"', '"+profitrate+"', '', '"+isinside+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
 	

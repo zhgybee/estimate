@@ -48,151 +48,314 @@ public class Test
 		System.out.println(rows);
 */
 		
-		Data rows1 = new Data();
-
-		
+		test.tttt();
+		Data rows = new Data();
 		
 		Datum row = new Datum();
-		row.put("NAME", "0.0-61.5");
-		row.put("MIN", "78371833");
-		row.put("MAX", "84233291");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "65.72-76.32");
-		row.put("MIN", "35944432");
-		row.put("MAX", "36281509");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "80.0-98.0");
-		row.put("MIN", "110626957");
-		row.put("MAX", "111551083");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "102.82-121.9");
-		row.put("MIN", "192771876");
-		row.put("MAX", "193890187");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "122.96-158.0");
-		row.put("MIN", "177318381");
-		row.put("MAX", "180715252");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "159.0-192.5");
-		row.put("MIN", "234600172");
-		row.put("MAX", "239888696");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "200.0-210.0");
-		row.put("MIN", "221320331");
-		row.put("MAX", "221321580");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "212.0-243.8");
-		row.put("MIN", "125998840");
-		row.put("MAX", "126408266");
-		rows1.add(row);
-
-		row = new Datum();
-		row.put("NAME", "248.04-848.0");
-		row.put("MIN", "501453901");
-		row.put("MAX", "537669390");
-		rows1.add(row);
-		
-		SalesData groupsdata = new SalesData(rows1, 1708774617.21, -1);
-		groupsdata.startup();
-		
-
-		for(Datum group : groupsdata.rows)
-		{
-			System.out.println("===================="+group.getString("GROUPNAME")+"=======================");
-			System.out.println("min="+new BigDecimal(group.getDouble("MIN")).toString());
-			System.out.println("max="+new BigDecimal(group.getDouble("MAX")).toString());
-			System.out.println("x="+new BigDecimal(group.getDouble("X")).toString());
-		}
-
-		/*
-		Datum row = new Datum();	
-		row.put("NAME", "黄山松(迎客松赢客)硬盒");
-		row.put("MAX", 9960);
-		row.put("MIN", 9960);
-		row.put("PROFIT", 70.68965517);
-		row.put("X", 9960);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "利群(西湖恋)97S硬盒");
-		row.put("MAX", 26781);
-		row.put("MIN", 26781);
-		row.put("PROFIT", 81.83103448);
-		row.put("X", 26781);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "黄山(中国印)软盒");
-		row.put("MAX", 47800);
-		row.put("MIN", 47800);
-		row.put("PROFIT", 81.83103448);
-		row.put("X", 47800);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "玉溪软盒");
-		row.put("MAX", 2083320);
-		row.put("MIN", 1772095);
-		row.put("PROFIT", 81.83103448);
-		row.put("X", 1772223);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "贵烟(跨越)90S硬盒");
-		row.put("MAX", 11692);
-		row.put("MIN", 11692);
-		row.put("PROFIT", 81.83103448);
-		row.put("X", 11692);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "都宝(冰爽世界)硬盒");
-		row.put("MAX", 0);
-		row.put("MIN", 0);
-		row.put("PROFIT", 81.83103448);
-		row.put("X", 0);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "云烟(软珍品)");
-		row.put("MAX", 1240442);
-		row.put("MIN", 815367);
-		row.put("PROFIT", 83.98448276);
-		row.put("X", 815367);
-		rows.add(row);
-		
-		row = new Datum();	
-		row.put("NAME", "将军(3G)100S铁盒");
-		row.put("MAX", 888);
-		row.put("MIN", 760);
-		row.put("PROFIT", 74.22413793);
-		row.put("X", 760);
+		row.put("NAME", "雄狮(红)硬盒");
+		row.put("MAX", 109486.0);
+		row.put("MIN", 72990.0);
+		row.put("PROFIT", 3.7799999999999976);
 		rows.add(row);
 
-		
-		
-		
+		row = new Datum();
+		row.put("NAME", "红三环(软黄)");
+		row.put("MAX", 118944.0);
+		row.put("MIN", 97765);
+		row.put("PROFIT", 3.7799999999999976);
+		rows.add(row);
 
-		SalesData d = new SalesData(rows);
-		System.out.println(d.getTotalVolumes());
-		System.out.println(new BigDecimal(d.getMinTotalProfit()).toString());
-		System.out.println(new BigDecimal(d.getMaxTotalProfit()).toString());
-		*/
+		row = new Datum();
+		row.put("NAME", "盛唐吉祥软盒");
+		row.put("MAX", 0.0);
+		row.put("MIN", 0.0);
+		row.put("PROFIT", 4.720000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红三环渡江软盒");
+		row.put("MAX", 9340.0);
+		row.put("MIN", 7677);
+		row.put("PROFIT", 4.720000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红梅顺软盒");
+		row.put("MAX", 177795.0);
+		row.put("MIN", 118529.0);
+		row.put("PROFIT", 5.890000000000001);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "雄狮硬盒");
+		row.put("MAX", 13528.0);
+		row.put("MIN", 9018.0);
+		row.put("PROFIT", 7.02);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红三环(幸福篇)");
+		row.put("MAX", 38306.0);
+		row.put("MIN", 31485);
+		row.put("PROFIT", 7.02);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "大前门软盒");
+		row.put("MAX", 166289.0);
+		row.put("MIN", 110859.0);
+		row.put("PROFIT", 7.419999999999998);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "大前门(硬)");
+		row.put("MAX", 332.0);
+		row.put("MIN", 221.0);
+		row.put("PROFIT", 7.68);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "盛唐金牌硬盒");
+		row.put("MAX", 103628.0);
+		row.put("MIN", 85176);
+		row.put("PROFIT", 9.359999999999996);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "哈德门精品硬盒");
+		row.put("MAX", 87298.0);
+		row.put("MIN", 58198.0);
+		row.put("PROFIT", 9.359999999999996);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "白沙软盒");
+		row.put("MAX", 65611.0);
+		row.put("MIN", 43740.0);
+		row.put("PROFIT", 9.359999999999996);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红梅软盒");
+		row.put("MAX", 52564.0);
+		row.put("MIN", 35042.0);
+		row.put("PROFIT", 9.359999999999996);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "王冠(原味9号塑嘴)110S硬盒");
+		row.put("MAX", 956.0);
+		row.put("MIN", 785);
+		row.put("PROFIT", 10.0);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "王冠(原味1号)");
+		row.put("MAX", 1925.0);
+		row.put("MIN", 1583);
+		row.put("PROFIT", 10.0);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山(红光明)硬盒");
+		row.put("MAX", 206341.0);
+		row.put("MIN", 169599);
+		row.put("PROFIT", 10.920000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山(新一品)硬盒");
+		row.put("MAX", 737100.0);
+		row.put("MIN", 605850);
+		row.put("PROFIT", 10.920000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "哈德门(金典)硬盒");
+		row.put("MAX", 0.0);
+		row.put("MIN", 0.0);
+		row.put("PROFIT", 10.920000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红旗渠(新版银河)硬盒");
+		row.put("MAX", 0.0);
+		row.put("MIN", 0.0);
+		row.put("PROFIT", 10.920000000000002);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "雄狮新硬盒");
+		row.put("MAX", 0.0);
+		row.put("MIN", 0.0);
+		row.put("PROFIT", 13.050000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山一品(新)硬盒");
+		row.put("MAX", 168034.0);
+		row.put("MIN", 138114);
+		row.put("PROFIT", 13.050000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "都宝(纯正9号)硬盒");
+		row.put("MAX", 40405.0);
+		row.put("MIN", 33211);
+		row.put("PROFIT", 13.050000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "红旗渠银河之光硬盒");
+		row.put("MAX", 8816.0);
+		row.put("MIN", 5876.0);
+		row.put("PROFIT", 13.050000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄果树(长征)");
+		row.put("MAX", 17005.0);
+		row.put("MIN", 11336.0);
+		row.put("PROFIT", 13.050000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山(嘉宾迎客松)硬盒");
+		row.put("MAX", 1568199.0);
+		row.put("MIN", 1288962);
+		row.put("PROFIT", 15.660000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "双喜软国际软盒");
+		row.put("MAX", 43774.0);
+		row.put("MIN", 29182.0);
+		row.put("PROFIT", 15.660000000000004);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山(金光明)");
+		row.put("MAX", 151533.0);
+		row.put("MIN", 124551);
+		row.put("PROFIT", 16.83);
+		rows.add(row);
+
+		row = new Datum();
+		row.put("NAME", "黄山(印象一品)硬盒");
+		row.put("MAX", 144724.0);
+		row.put("MIN", 118954);
+		row.put("PROFIT", 16.83);
+		rows.add(row);
+
+		SalesData groupdata = new SalesData(rows, 3540307.33, -1);
+		int minTotalProfit = new Double(groupdata.getMinTotalProfit()).intValue();
+		int maxTotalProfit = new Double(groupdata.getMaxTotalProfit()).intValue();
+		
+		//double v = test.d1(rows, 3540307.33);
+		System.out.println(minTotalProfit);
+		System.out.println(maxTotalProfit);
 	}
+	
+	public void tttt()
+	{
+		Data rows = new Data();
+		Datum row = new Datum();
+		row.put("NAME", "南京(红)");
+		row.put("MAX", 744836.0);
+		row.put("MIN", 496556.0);
+		row.put("PROFIT", 28.129999999999995);	
+		row.put("X", 500000);	
+		rows.add(row);
+		
+		row = new Datum();
+		row.put("NAME", "人民大会堂(硬红)硬盒");
+		row.put("MAX", 12855.0);
+		row.put("MIN", 8569.0);
+		row.put("PROFIT", 31.320000000000007);	
+		row.put("X", 10000);	
+		rows.add(row);
+		
+		row = new Datum();
+		row.put("NAME", "长白山(777)97S硬盒");
+		row.put("MAX", 38006.0);
+		row.put("MIN", 25336.0);
+		row.put("PROFIT", 33.35000000000001);
+		row.put("X", 30000);	
+		rows.add(row);
+		
+		row = new Datum();
+		row.put("NAME", "红双喜(硬晶喜)硬盒");
+		row.put("MAX", 1664.0);
+		row.put("MIN", 1109.0);
+		row.put("PROFIT", 33.35000000000001);	
+		row.put("X", 1200);
+		rows.add(row);	
+
+		SalesData groupdata = new SalesData(rows, 541200, -1);
+		int minTotalProfit = new Double(groupdata.getMinTotalProfit()).intValue();
+		int maxTotalProfit = new Double(groupdata.getMaxTotalProfit()).intValue();
+		System.out.println(minTotalProfit);
+		System.out.println(maxTotalProfit);
+	}
+	
+	public double d1(Data rows, double totalvolumn)
+	{
+		double v = 0;
+		
+		sort(rows,-1);
+		
+		dd1(rows, totalvolumn);
+
+		for(Datum row : rows)
+		{
+			v += row.getDouble("X") * row.getDouble("PROFIT");
+			System.out.println(row.getDouble("MIN")+"		"+row.getDouble("MAX")+"		"+row.getDouble("X"));
+		}
+		return v;
+	}
+	
+	
+	public void dd1(Data rows, double totalvolumn)
+	{
+		if(totalvolumn > 0)
+		{
+			for(Datum row : rows)
+			{
+				double min = row.getDouble("MIN");
+				double max = row.getDouble("MAX");
+				if(!row.containsKey("X"))
+				{
+					row.put("X", min);
+					totalvolumn = totalvolumn - min;
+				}
+				else
+				{
+					double x = row.getDouble("X");
+					double changer = max - x;
+					if(changer > 0)
+					{
+						double value = changer;
+						if(value > totalvolumn)
+						{
+							value = totalvolumn;
+						}
+						
+						row.put("X", x + value);
+						totalvolumn = totalvolumn - value;
+					}
+				}
+			}
+		}
+		
+		if(totalvolumn > 0)
+		{
+			dd1(rows, totalvolumn);
+		}
+	}
+	
+	
+	
+	
 	
 	public void ff(Data rows)
 	{

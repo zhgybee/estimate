@@ -3,6 +3,9 @@ package com.estimate;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Random;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.estimate.datasource.Data;
 import com.estimate.datasource.Datum;
 import java.util.Comparator;
@@ -19,6 +22,8 @@ public class SalesData
 	public Data rows;
 	
 	public int status = 1;
+	
+	public double[] limit = new double[]{0,0,0,0};
 
 	public SalesData(Data rows)
 	{
@@ -34,30 +39,34 @@ public class SalesData
 	
 	public void startup()
 	{
-		double[] limit = getLimit();
-		double minvolumes = limit[0];
-		double maxvolumes = limit[1];
-		double minprofits = limit[2];
-		double maxprofits = limit[3];
-		if(this.profittarget < 0)
+		double minvolumes = 0;
+		double maxvolumes = 0;
+		for(Datum row : this.rows)
 		{
-			if( minvolumes < this.volumetarget && this.volumetarget < maxvolumes)
+			double min = row.getDouble("MIN");
+			double max = row.getDouble("MAX");
+			minvolumes += min;
+			maxvolumes += max;
+		}
+		limit[0] = minvolumes;
+		limit[1] = maxvolumes;
+
+		if( minvolumes < this.volumetarget && this.volumetarget < maxvolumes)
+		{
+			double minprofits = getMinTotalProfit();
+			double maxprofits = getMaxTotalProfit();
+			limit[2] = minprofits;
+			limit[3] = maxprofits;
+			
+			if(this.profittarget < 0)
 			{
 				flushVolumes(0);
 			}
 			else
 			{
-				this.status = -1;
-			}
-		}
-		else
-		{
-			if( minvolumes < this.volumetarget && this.volumetarget < maxvolumes)
-			{
 				if(minprofits < this.profittarget && this.profittarget < maxprofits)
 				{
 					flushVolumes(0);
-					//print();
 					flushProfits(0);
 					solve();
 				}
@@ -66,33 +75,13 @@ public class SalesData
 					this.status = -2;
 				}
 			}
-			else
-			{
-				this.status = -1;
-			}
+		}
+		else
+		{
+			this.status = -1;
 		}
 	}
 	
-	public double[] getLimit()
-	{
-		double minvolumes = 0;
-		double maxvolumes = 0;
-		double minprofits = 0;
-		double maxprofits = 0;
-		for(Datum row : this.rows)
-		{
-			double min = row.getDouble("MIN");
-			double max = row.getDouble("MAX");
-			double p = row.getDouble("PROFIT");
-
-			minvolumes += min;
-			maxvolumes += max;
-			minprofits += min * p;
-			maxprofits += max * p;
-		}
-		
-		return new double[]{minvolumes, maxvolumes, minprofits, maxprofits};
-	}
 	
 	/**
 	 * 解方程组:
@@ -387,51 +376,6 @@ public class SalesData
 		}
 		return totalprofit;
 	}
-
-	public double getMaxTotalProfit()
-	{
-		//得到总量一定的情况下，最高利润组合
-		double totalprofit = 0;
-		for(Datum row : this.rows)
-		{
-			row.put("MPX", row.getDouble("X"));
-			row.put("FLAG", "");
-		}
-		
-		for(int i = 0 ; i < rows.size() ; i++)
-		{
-			maxProfit();
-		}
-
-		for(Datum row : this.rows)
-		{
-			totalprofit += row.getDouble("MPX") * row.getDouble("PROFIT");
-		}
-		
-		return totalprofit;
-	}
-	
-	public double getMinTotalProfit()
-	{
-		//得到总量一定的情况下，最低利润组合
-		double totalprofit = 0;
-		for(Datum row : this.rows)
-		{
-			row.put("MPX", row.getDouble("X"));
-			row.put("FLAG", "");
-		}
-		for(int i = 0 ; i < rows.size() ; i++)
-		{
-			minProfit();
-		}
-
-		for(Datum row : this.rows)
-		{
-			totalprofit += row.getDouble("MPX") * row.getDouble("PROFIT");
-		}
-		
-		return totalprofit;
-	}
 	
 	public double getTotalVolumes()
 	{
@@ -448,6 +392,13 @@ public class SalesData
 		for(Datum row : this.rows)
 		{
 			row.remove("X");
+		}
+	}
+	public void clearKeys(String name)
+	{
+		for(Datum row : this.rows)
+		{
+			row.remove(name);
 		}
 	}
 	
@@ -477,6 +428,135 @@ public class SalesData
 		});
     }
     
+	public double getMaxTotalProfit()
+	{
+		clearKeys("MAXPROFITX");
+		double profit = 0;
+		sort(-1);	
+		int i = 0;
+		maxProfit(this.volumetarget, i);
+
+		for(Datum row : this.rows)
+		{
+			profit += row.getDouble("MAXPROFITX") * row.getDouble("PROFIT");
+		}
+		return profit;
+	}
+
+	public void maxProfit(double totalvolumn, int index)
+	{
+		if(totalvolumn > 0)
+		{
+			for(Datum row : this.rows)
+			{
+				double min = row.getDouble("MIN");
+				double max = row.getDouble("MAX");
+				if(!row.containsKey("MAXPROFITX"))
+				{
+					row.put("MAXPROFITX", min);
+					totalvolumn = totalvolumn - min;
+				}
+				else
+				{
+					double x = row.getDouble("MAXPROFITX");
+					double changer = max - x;
+					if(changer > 0)
+					{
+						double value = changer;
+						if(value > totalvolumn)
+						{
+							value = totalvolumn;
+						}
+						
+						row.put("MAXPROFITX", x + value);
+						totalvolumn = totalvolumn - value;
+					}
+				}
+			}
+		}
+		
+		if(totalvolumn > 0 && index < 5)
+		{
+			index++;
+			maxProfit(totalvolumn, index);
+		}
+	}
+	
+	public double getMinTotalProfit()
+	{
+		clearKeys("MINPROFITX");
+		double profit = 0;
+		sort(1);		
+		minProfit(this.volumetarget);
+
+		for(Datum row : this.rows)
+		{
+			profit += row.getDouble("MINPROFITX") * row.getDouble("PROFIT");
+		}
+		return profit;
+	}
+
+	public void minProfit(double totalvolumn)
+	{
+		if(totalvolumn > 0)
+		{
+			for(Datum row : this.rows)
+			{
+				double min = row.getDouble("MIN");
+				double max = row.getDouble("MAX");
+				if(!row.containsKey("MINPROFITX"))
+				{
+					row.put("MINPROFITX", min);
+					totalvolumn = totalvolumn - min;
+				}
+				else
+				{
+					double x = row.getDouble("MINPROFITX");
+					double changer = max - x;
+					if(changer > 0)
+					{
+						double value = changer;
+						if(value > totalvolumn)
+						{
+							value = totalvolumn;
+						}
+						
+						row.put("MINPROFITX", x + value);
+						totalvolumn = totalvolumn - value;
+					}
+				}
+			}
+		}
+		
+		if(totalvolumn > 0)
+		{
+			minProfit(totalvolumn);
+		}
+	}
+/*
+	public double getMaxTotalProfit()
+	{
+		//得到总量一定的情况下，最高利润组合
+		double totalprofit = 0;
+		for(Datum row : this.rows)
+		{
+			row.put("MPX", row.getDouble("X"));
+			row.put("FLAG", "");
+		}
+		
+		for(int i = 0 ; i < rows.size() ; i++)
+		{
+			maxProfit();
+		}
+
+		for(Datum row : this.rows)
+		{
+			totalprofit += row.getDouble("MPX") * row.getDouble("PROFIT");
+		}
+		
+		return totalprofit;
+	}
+	
 	public void maxProfit()
 	{
 		sort(-1);
@@ -551,7 +631,30 @@ public class SalesData
 		}
 		return changnumber;
 	}
-    
+
+	
+	public double getMinTotalProfit()
+	{
+		//得到总量一定的情况下，最低利润组合
+		double totalprofit = 0;
+		for(Datum row : this.rows)
+		{
+			row.put("MPX", row.getDouble("X"));
+			row.put("FLAG", "");
+		}
+		for(int i = 0 ; i < rows.size() ; i++)
+		{
+			minProfit();
+		}
+
+		for(Datum row : this.rows)
+		{
+			totalprofit += row.getDouble("MPX") * row.getDouble("PROFIT");
+		}
+		
+		return totalprofit;
+	}
+	
 	public void minProfit()
 	{
 		sort(1);
@@ -626,4 +729,5 @@ public class SalesData
 		}
 		return changnumber;
 	}
+	*/
 }

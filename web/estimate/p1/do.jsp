@@ -180,7 +180,8 @@
 				{
 					isrun = false;
 				}
-				if(index == 3)
+				//if(index == 2)
+				if(index == 0)
 				{
 					isrun = false;
 				}
@@ -327,7 +328,7 @@
 				//设置销量占比总和为100000，根据每组上下限推算每组的数据
 				SalesData groupsdata = new SalesData(groups, 100000, -1);
 				groupsdata.startup();
-				if(groupsdata.status > 0)
+				if(groupsdata.status == 1)
 				{
 					groups = groupsdata.rows;
 	
@@ -336,7 +337,6 @@
 					double maxProfit = 0;
 					for(Datum group : groups)
 					{
-						
 						//得到本组数据的销量
 						double volumeratio = group.getDouble("X");;
 						double groupvolume = (volumeratio / 1000) / 100 * volumetarget;
@@ -345,65 +345,74 @@
 						
 						SalesData groupdata = new SalesData(grouprows, groupvolume, -1);
 						groupdata.startup();
-						if(groupdata.status > 0)
+						if(groupdata.status == 1)
 						{
 						}
-						else
+						else if(groupdata.status == -1)
 						{
 							status = groupdata.status;
-							messages = group.getString("GROUPNAME")+"区间总量"+groupvolume+"不能计算。";
+							messages = group.getString("GROUPNAME")+"区间，占比为"+(volumeratio / 1000) / 100+"，区间总销售量为"+groupvolume+"。低于每个规格的下限总和（"+groupdata.limit[0]+"）或高于每个规格的上限总和（"+groupdata.limit[1]+"）";
 						}
-						
 						group.put("GROUPVOLUME", groupvolume);
-
-						group.put("MIN", new Double(groupdata.getMinTotalProfit()).intValue());
-						group.put("MAX", new Double(groupdata.getMaxTotalProfit()).intValue());
-						
-						minProfit += new Double(groupdata.getMinTotalProfit()).intValue();
-						maxProfit += new Double(groupdata.getMaxTotalProfit()).intValue();
-						
+						int minTotalProfit = new Double(groupdata.limit[2]).intValue();
+						int maxTotalProfit = new Double(groupdata.limit[3]).intValue();
+						group.put("MIN", minTotalProfit);
+						group.put("MAX", maxTotalProfit);
+						minProfit += minTotalProfit;
+						maxProfit += maxTotalProfit;						
 						groupdata.sort(1);
 					}
 	
-					
 					if(type.equals("2"))
 					{			
-						SalesData groupsdata2 = new SalesData(groups, profittarget, -1);
-						groupsdata2.clearVolumes();
-						groupsdata2.startup();
-						
-						if(groupsdata2.status > 0)
+						if(status == 1)
 						{
-							for(Datum group : groups)
+							if(minProfit < profittarget && profittarget < maxProfit)
 							{
-								double groupvolume = group.getDouble("GROUPVOLUME");	
-								double grouptargetprofit = group.getDouble("X");
+								//分配每个区间的利税
+								SalesData groupsdata2 = new SalesData(groups, profittarget, -1);
+								groupsdata2.clearVolumes();
+								groupsdata2.startup();
 								
-								Data grouprows = group.getData("ROWS");
-								SalesData groupdata = new SalesData(grouprows, groupvolume, grouptargetprofit);
-								groupdata.clearVolumes();
-								groupdata.startup();
-								if(groupdata.status > 0)
+								if(groupsdata2.status == 1)
 								{
+									for(Datum group : groups)
+									{
+										double groupvolume = group.getDouble("GROUPVOLUME");	
+										double grouptargetprofit = group.getDouble("X");
+										
+										Data grouprows = group.getData("ROWS");
+										SalesData groupdata = new SalesData(grouprows, groupvolume, grouptargetprofit);
+										groupdata.clearVolumes();
+										groupdata.startup();
+										if(groupdata.status == 1)
+										{
+										}
+										else
+										{
+											status = groupdata.status;
+											messages = "计算错误：错误代码（"+status+"）。";
+										}
+									}
 								}
-								else
+								else if(groupsdata2.status == -1)
 								{
-									status = groupdata.status;
+									status = groupsdata2.status;
+									messages = "计算错误：错误代码（"+status+"）。";
 								}
 							}
+							else
+							{
+								status = -1;
+								messages = "利税总额"+new BigDecimal(profittarget).toPlainString()+"（不包括固定费用）填写错误，利税总额应在"+new BigDecimal(minProfit).toPlainString()+"和"+new BigDecimal(maxProfit).toPlainString()+"之间。";
+							}
 						}
-						else
-						{
-							status = groupsdata2.status;
-							messages = "根据销售设置利税总额（"+profittarget+"）错误，根据预测，利税总额应在"+minProfit+"和"+maxProfit+"之间。";
-						}
-						
 					}
 				}
-				else
+				else if(groupsdata.status == -1)
 				{
 					status = groupsdata.status;
-					messages = "区间占比总和错误";
+					messages = "区间占比总和错误。";
 				}
 			}
 			else
@@ -418,7 +427,8 @@
 					salesdata = new SalesData(rows, volumetarget, profittarget);
 				}
 				salesdata.startup();
-				if(salesdata.status > 0)
+				
+				if(salesdata.status == 1)
 				{
 					Datum group = new Datum();
 					group.put("MODEL", "-");
@@ -426,12 +436,17 @@
 					group.put("ROWS", salesdata.rows);
 					groups.add(group);
 				}
-				else
+				else if(salesdata.status == -1)
 				{
 					status = salesdata.status;
+					messages = "销售总量（"+volumetarget+"）低于每个规格的下限总和（"+salesdata.limit[0]+"）或高于每个规格的上限总和（"+salesdata.limit[1]+"）";
+				}
+				else if(salesdata.status == -2)
+				{
+					status = salesdata.status;
+					messages = "利税总额（"+new BigDecimal(profittarget).toPlainString()+"）（不含固定费用）低于最能达到的最小利税总额（"+new BigDecimal(salesdata.limit[2]).toPlainString()+"）或高于最能达到的最高利税总额（"+new BigDecimal(salesdata.limit[3]).toPlainString()+"）";
 				}
 			}
-			
 			
 			Data items = new Data();
 			

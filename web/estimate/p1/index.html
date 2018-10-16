@@ -91,11 +91,11 @@
 				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">1、利税总额<span class="parameter-description">元</span></div>
-						<input type="text" id="profit-target" class="parameter-field" style="background-color:#f1f1f1; color:#ff6600; font-weight:bold;" readonly="readonly"/>
+						<input type="text" id="profit-target" value="993210000" class="parameter-field" style="background-color:#f1f1f1; color:#ff6600; font-weight:bold;" readonly="readonly"/>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">2、总销量目标<span class="parameter-description">条</span></div>
-						<input type="text" id="volume-target" value="" class="parameter-field" style="width:80%; border-right:none"/><button id="refresh" style="width:20%">刷新</button>
+						<input type="text" id="volume-target" value="20163500" class="parameter-field" style="width:80%; border-right:none"/><button id="refresh" style="width:20%">刷新</button>
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">3、增值税税率</div>
@@ -298,18 +298,42 @@
 				}
 				
 				var iserror = false;
-				$('.group-volume-lower, .group-volume-upper').each(function(i, element)
+				var grouptoltalminvolumn = 0;
+				$('.group-volume-lower').each(function(i, element)
 				{
 					if(toNumber($(element).val()) < toNumber($(element).attr("min")) || toNumber($(element).val()) > toNumber($(element).attr("max")))
 					{
 						iserror = true;
 						return false;
 					}
+					grouptoltalminvolumn += toNumber($(element).val());
+				});
+				var grouptoltalmaxvolumn = 0;
+				$('.group-volume-upper').each(function(i, element)
+				{
+					if(toNumber($(element).val()) < toNumber($(element).attr("min")) || toNumber($(element).val()) > toNumber($(element).attr("max")))
+					{
+						iserror = true;
+						return false;
+					}
+					grouptoltalmaxvolumn += toNumber($(element).val());
 				});
 
 				if(iserror)
 				{
 					alert("[7、价格区间]填写的值不能超出其固定区间限制的范围");
+					return false;
+				}
+
+				if($('.group-volume-lower').length > 0 && grouptoltalminvolumn > 100)
+				{
+					alert("[7、价格区间]中最小区间的总和（"+grouptoltalminvolumn+"）大于100");
+					return false;
+				}
+
+				if($('.group-volume-upper').length > 0 && grouptoltalmaxvolumn < 100)
+				{
+					alert("[7、价格区间]中最大区间的总和（"+grouptoltalmaxvolumn+"）小于100");
 					return false;
 				}
 

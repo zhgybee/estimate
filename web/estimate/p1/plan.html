@@ -689,8 +689,8 @@
 			
 			if(parameter.type != 3)
 			{
-				//for(let i = 1 ; i <= 1 ; i++)
-				for(let i = 1 ; i <= 3 ; i++)
+				for(let i = 1 ; i <= 1 ; i++)
+				//for(let i = 1 ; i <= 3 ; i++)
 				{
 					showLoading();
 					$.getJSON('do.jsp', parameter, function(response)
@@ -812,7 +812,7 @@
 					content.push('<td>￥'+row.COST+'</td>');
 					//content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
 					//content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
-					content.push('<td><span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
+					content.push('<td><span class="volume-1" class="modeltotalvolumn">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
 					content.push('<td class="upfile-volumn" style="display:none"></td>');
 					
 					var growthrate = "";
@@ -840,16 +840,20 @@
 						var monthnames = monthmap.months;
 						if(monthmap.area != "")
 						{
-							content.push('<td><span class="volume-1">'+app.pre2(row[monthmap.area])+'</span><span class="volume-2">'+(app.pre3(row[monthmap.area] / 250))+'</span></td>');
+							content.push('<td><span class="volume-1" class="areamodeltotalvolumn">'+app.pre2(row[monthmap.area])+'</span><span class="volume-2">'+(app.pre3(row[monthmap.area] / 250))+'</span></td>');
 						}
 						for(var i = 0 ; i < monthnames.length ; i++)
 						{
 							let number = row[monthnames[i]];
-							content.push('<td><span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
+							content.push('<td><span class="volume-1" class="areamonthvolumn">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
 						}
 					}
 					else
 					{
+						var areavolumn1s = [];
+						var areavolumn2s = [];
+						var modelresidualvolumn1 = row.X;
+						var modelresidualvolumn2 = app.pre3(row.X / 250);
 						for(var i = 0 ; i < areanames.length ; i++)
 						{
 							let arearatio = arearatios[row.MODEL];
@@ -864,7 +868,24 @@
 								number = row.X * (arearatio[areanames[i]] || 0);
 							}
 							row[areanames[i]] = number;
-							content.push('<td><span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
+
+
+							areavolumn1s[i] = app.pre2(number)
+							areavolumn2s[i] = app.pre3(number / 250);
+
+							modelresidualvolumn1 = app.pre2(modelresidualvolumn1 - areavolumn1s[i]);
+							modelresidualvolumn2 = app.pre3(modelresidualvolumn2 - areavolumn2s[i]);
+						}
+
+						for(var i = 0 ; i < areavolumn1s.length ; i++)
+						{
+							if(i == 0)
+							{
+								//数据找平，区县数据合计等于总数（由于四舍五入各区县合计不一定等于总量）
+								areavolumn1s[i] = parseInt(areavolumn1s[i]) + parseInt(modelresidualvolumn1);
+								areavolumn2s[i] = parseFloat(areavolumn2s[i]) + parseFloat(modelresidualvolumn2);
+							}
+							content.push('<td><span class="volume-1">'+areavolumn1s[i]+'</span><span class="volume-2">'+areavolumn2s[i]+'</span></td>');
 						}
 					}
 
@@ -899,11 +920,18 @@
 				let report = summary(rows, parameter, fixedcost, monthmap);
 				$plan.find(".summary-table").html(report.content);
 				$plan.find(".netprofit-panel span").html(app.pre1(report.netprofit)+" 万元");
+
+
+				//区县合计等于总合计
+
+				//modeltotalvolumn   areamodelvolumn
+
+
 			}
 			else
 			{
 				$plan.find(".detailed-table").empty();
-				$plan.find(".detailed-table").append('<div style="text-align:center; color:red">计算出现错误（'+data.STATUS+'）：'+data.MESSAGES.join("")+'</div>');
+				$plan.find(".detailed-table").append('<div style="text-align:center; color:red">'+data.MESSAGES.join("<br/>")+'</div>');
 			}	
 		}
 
