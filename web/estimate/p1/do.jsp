@@ -244,8 +244,8 @@
 			//根据增长率自动调整上限，如果手工设置了上下限，则参照手工设置
 			for(Datum row : rows)
 			{
-				row.put("MIN", Math.floor(row.getDouble("MIN")));
-				row.put("MAX", Math.ceil(row.getDouble("MAX")));
+				row.put("MIN", Math.ceil(row.getDouble("MIN")));
+				row.put("MAX", Math.floor(row.getDouble("MAX")));
 				
 				String model = row.getString("MODEL");
 				String[] values = changers.get(model);

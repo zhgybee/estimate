@@ -48,7 +48,6 @@ public class Test
 		System.out.println(rows);
 */
 		
-		test.tttt();
 		Data rows = new Data();
 		
 		Datum row = new Datum();
@@ -252,8 +251,16 @@ public class Test
 		int maxTotalProfit = new Double(groupdata.getMaxTotalProfit()).intValue();
 		
 		//double v = test.d1(rows, 3540307.33);
-		System.out.println(minTotalProfit);
-		System.out.println(maxTotalProfit);
+		//System.out.println(minTotalProfit);
+		//System.out.println(maxTotalProfit);
+		
+		
+
+		BigDecimal decimal = new BigDecimal( "1.3211" );
+		System.out.println(decimal.setScale(3, BigDecimal.ROUND_UP).doubleValue());
+		
+		System.out.println(decimal.setScale(3, BigDecimal.ROUND_DOWN).doubleValue());
+		
 	}
 	
 	public void tttt()

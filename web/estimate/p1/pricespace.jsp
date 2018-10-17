@@ -77,13 +77,8 @@
 			}
 		}
 		
-		
-		
 		for(Datum limit : limits)
 		{
-			limit.put("MIN", limit.getDouble("MIN"));
-			limit.put("MAX", limit.getDouble("MAX"));
-			
 			String model = limit.getString("MODEL");
 			String[] values = changers.get(model);
 			if(values != null)
@@ -110,7 +105,6 @@
 		}
 		
 		Data items = new Data();
-		
 		for(Datum row : rows)
 		{
 			double groupratio = SystemUtils.round(2, row.getDouble("GROUPRATIO") * 100);
@@ -119,10 +113,8 @@
 				items.add(row);
 			}
 		}
-
 		for(int i = 0 ; i < items.size() ; i++)
 		{
-			
 			Datum item = items.get(i);
 
 			double groupratio = SystemUtils.round(2, item.getDouble("GROUPRATIO") * 100);
@@ -149,29 +141,14 @@
 				{
 					item.put("MAX", rows.get(rows.size() - 1).getDouble("PRICE"));
 				}
-				
 			}
-			
 		}
 		
-		double totalmax = 0;
-		double totalmin = 0;
 		for(Datum item : items)
 		{
 			double min = item.getDouble("MIN");
 			double max = item.getDouble("MAX");
-			double number = 0;
-			for(Datum row : rows)
-			{
-				double price = row.getDouble("PRICE");
-				if(min <= price && price <= max)
-				{
-					number += row.getDouble("SALESRATIO");
-				}
-			}
-			item.put("NUM", number);
 			
-
 			double groupmax = 0;
 			double groumin = 0;
 			for(Datum limit : limits)
@@ -185,10 +162,6 @@
 			}
 			item.put("GROUPMAX", groupmax);
 			item.put("GROUPMIN", groumin);
-			totalmax += groupmax;
-			totalmin += groumin;
-			
-			
 		}
 		for(Datum item : items)
 		{
@@ -198,13 +171,10 @@
 			if(volumetarget != 0)
 			{
 				BigDecimal decimal = new BigDecimal( item.getDouble("GROUPMIN") / volumetarget * 100 );
-				element.put("volumelower", decimal.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
+				element.put("volumelower", decimal.setScale(3, BigDecimal.ROUND_UP).doubleValue());
 				
 				decimal = new BigDecimal( item.getDouble("GROUPMAX") / volumetarget * 100 );
-				element.put("volumeupper", decimal.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
-				
-				//element.put("volumelower", Math.floor(item.getDouble("GROUPMIN") / volumetarget * 100 ));
-				//element.put("volumeupper", Math.ceil(item.getDouble("GROUPMAX") / volumetarget * 100 ));
+				element.put("volumeupper", decimal.setScale(3, BigDecimal.ROUND_DOWN).doubleValue());
 			}
 			array.put(element);
 		}

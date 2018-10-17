@@ -238,8 +238,8 @@ function push(m1, m2)
 function setValue($table, areacolumn)
 {
 	$table.find("tbody .v1").append('<td></td>');
-	$table.find("tbody .v2").append('<td></td>');
-	$table.find("tbody .v3").append('<td>'+app.pre1(areacolumn.totalprice)+'</td>');
+	$table.find("tbody .v2").append('<td>'+app.pre1(areacolumn.totalprice)+'</td>');
+	$table.find("tbody .v3").append('<td>'+app.pre1(areacolumn.totalprice - areacolumn.K20)+'</td>');
 	$table.find("tbody .v4").append('<td>'+app.pre1(areacolumn.K20)+'</td>');
 	$table.find("tbody .v5").append('<td></td>');
 	$table.find("tbody .v6").append('<td></td>');
