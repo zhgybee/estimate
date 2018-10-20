@@ -286,23 +286,27 @@
 							for(let i = 1 ; i <= 3 ; i++)
 							{
 								var data = $("#plan-"+i).data("data");
-								let rows = data.DATA.ROWS;
-
-								var $upfilevolumns = $("#plan-"+i).find(".upfile-volumn");
-								let number = 0;
-								$.each(rows, function(i, row)
+								if(data != null)
 								{
-									var name = row.MODEL;
-									var volume = row.X;
-									if(map[name] != null)
+									let rows = data.DATA.ROWS;
+
+									var $upfilevolumns = $("#plan-"+i).find(".upfile-volumn");
+									let number = 0;
+									$.each(rows, function(i, row)
 									{
-										number += Math.abs(parseFloat(map[name]) - parseFloat(volume));
-										$($upfilevolumns.get(i)).html( '<span class="volume-1">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span>' );
-									}
-								});
-								$("#plan-"+i).find(".custon-volume-panel span").html('<span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span>');
-								$("#plan-"+i).find(".upfile-volumn-header").show();
-								$("#plan-"+i).find(".upfile-volumn").show();
+										var name = row.MODEL;
+										var volume = row.X;
+										if(map[name] != null)
+										{
+											var diff = Math.abs(parseFloat(map[name]) - parseFloat(volume));
+											$($upfilevolumns.get(i)).html( '<span class="volume-1">'+app.pre2(diff)+'</span><span class="volume-2">'+(app.pre3(diff / 250))+'</span>' );
+											number += diff;
+										}
+									});
+									$("#plan-"+i).find(".custon-volume-panel span").html('<span class="volume-1">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span>');
+									$("#plan-"+i).find(".upfile-volumn-header").show();
+									$("#plan-"+i).find(".upfile-volumn").show();
+								}
 							}
 
 						}
@@ -472,22 +476,31 @@
 								monthratio = monthtotalratios;
 							}
 
-							let totalvolume = 0;
+							let modeltotalratio = 0;
 							$.each(monthnames, function(l, name)
 							{
-								totalvolume += parseFloat(monthratio[name] || 0);
+								modeltotalratio += parseFloat(monthratio[name] || 0);
 							});	
+
+							if(modeltotalratio == 0)
+							{
+								monthratio = monthtotalratios;
+								$.each(monthnames, function(l, name)
+								{
+									modeltotalratio += parseFloat(monthratio[name] || 0);
+								});	
+							}
+
+
 							$.each(monthnames, function(l, name)
 							{
 								if(issurplus == 1)
 								{
-									row[name] = parseFloat(monthratio[name] || 0) / totalvolume * volume;
-									//row[name] = parseFloat(monthratio[name] || 0) / totalvolume;
+									row[name] = parseFloat(monthratio[name] || 0) / modeltotalratio * volume;
 								}
 								else
 								{
 									row[name] = parseFloat(monthratio[name] || 0) * volume;
-									//row[name] = parseFloat(monthratio[name] || 0);
 								}
 							});	
 						});	
@@ -741,7 +754,7 @@
 
 				var content = [];
 
-				var width = 1020;
+				var width = 1280;
 				content.push('<table>');
 				content.push('<thead>');
 				content.push('	<tr>');
@@ -752,9 +765,12 @@
 				content.push('	<td style="width:60px;">省内烟</td>');
 				content.push('	<td style="width:80px">批发价<span class="header-description">元</span></td>');
 				content.push('	<td style="width:80px">调拨价<span class="header-description">元</span></td>');
+				content.push('	<td style="width:80px">零售价<span class="header-description">元</span></td>');
+				content.push('	<td style="width:80px">毛利率<span class="header-description">元</span></td>');
 				//content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
 				//content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
+				content.push('	<td style="width:100px">销售额<span class="header-description volume-type">万元</span></td>');
 				content.push('	<td style="width:100px; display:none" class="upfile-volumn-header">对比<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:80px">同比增减量</td>');
 				content.push('	<td style="width:80px">同比增长</td>');
@@ -803,6 +819,10 @@
 					{
 						content.push('<tr style="background-color:#fafafa">');
 					}
+
+					var profitrate = parseFloat(row.PROFITRATE) || 0;
+					var salesvolume = app.pre2(row.X) * (row.PRICE / (1 + parseFloat(parameter.taxrate1 || 0.16)));
+
 					content.push('<td>'+((row.GROUPNAME == groupname) ? '' : row.GROUPNAME)+'</td>');
 					content.push('<td><span class="volume-1">'+((row.GROUPNAME == groupname) ? '' : app.pre2(row.GROUPVOLUME))+'</span><span class="volume-2">'+((row.GROUPNAME == groupname) ? '' : (app.pre3(row.GROUPVOLUME / 250)))+'</span></td>');
 					content.push('<td style="text-align:left;">'+row.MODEL+'</td>');
@@ -810,9 +830,12 @@
 					content.push('<td>'+(row.ISINSIDE == "1" ? '是' : '')+'</td>');
 					content.push('<td>￥'+row.PRICE+'</td>');
 					content.push('<td>￥'+row.COST+'</td>');
+					content.push('<td>￥'+row.RETAILPRICE+'</td>');
+					content.push('<td>'+profitrate.toFixed(2)+'</td>');
 					//content.push('<td><span class="volume-1">'+row.REMIN+'</span><span class="volume-2">'+(row.REMIN / 250)+'</span>');
 					//content.push('<td><span class="volume-1">'+row.REMAX+'</span><span class="volume-2">'+(row.REMAX / 250)+'</span>');
 					content.push('<td><span class="volume-1" class="modeltotalvolumn">'+app.pre2(row.X)+'</span><span class="volume-2">'+(app.pre3(row.X / 250))+'</span></td>');
+					content.push('<td>￥'+app.pre1(salesvolume)+'</td>');
 					content.push('<td class="upfile-volumn" style="display:none"></td>');
 					
 					var growthrate = "";

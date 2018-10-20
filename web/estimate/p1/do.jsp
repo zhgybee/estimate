@@ -106,7 +106,7 @@
 				double lastyearvolumetotal = lastyeartotal.getDouble("TOTAL");
 				double ratio = volumetarget / lastyearvolumetotal;					
 				
-				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.PRODUCER, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, (T_CURRITEMS.PRICE - T_CURRITEMS.COST) as 'PROFIT', TS.MAX, TS.MIN, TS.VOLUME as 'LASTVOLUME' from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
+				rows = datasource.find("select T_CURRITEMS.ID, T_CURRITEMS.COST, T_CURRITEMS.BRAND, T_CURRITEMS.ISINSIDE, T_CURRITEMS.PRODUCER, T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, T_CURRITEMS.RETAILPRICE, T_CURRITEMS.PROFITRATE, (T_CURRITEMS.PRICE - T_CURRITEMS.COST) as 'PROFIT', TS.MAX, TS.MIN, TS.VOLUME as 'LASTVOLUME' from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
 						usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
 
 				

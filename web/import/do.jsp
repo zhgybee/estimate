@@ -137,7 +137,7 @@
 		{
 			String[] row = rows.get(i);
 			
-			if(row.length == 7)
+			if(row.length == 8)
 			{
 				String year = row[0];
 				year = StringUtils.replace(year, "年", "");
@@ -174,17 +174,28 @@
 	
 				String price = row[6];
 				
+				String retailprice = row[7];
+				
 				cost = StringUtils.replace(cost, "￥", "");
 				price = StringUtils.replace(price, "￥", "");
+				retailprice = StringUtils.replace(retailprice, "￥", "");
 	
 				cost = StringUtils.replace(cost, ",", "");
 				price = StringUtils.replace(price, ",", "");
+				retailprice = StringUtils.replace(retailprice, ",", "");
 				
-				double costvalue = NumberUtils.toDouble(cost, 0);
-				double pricevalue = NumberUtils.toDouble(price, 0);
+				double profitrate = 0;
+				try
+				{
+					profitrate = (NumberUtils.toDouble(price, 0) - NumberUtils.toDouble(cost, 0)) / NumberUtils.toDouble(price, 0);
+				}
+				catch(Exception e)
+				{
+					profitrate = -1;
+				}
 				
-				String sql = "INSERT INTO T_CURRITEMS(ID, YEAR, BRAND, MODEL, COST, PRICE, ISINSIDE, PRODUCER, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+
-					SystemUtils.uuid()+"', '"+year+"', '"+brand+"', '"+model+"', '"+cost+"', '"+price+"', '"+isinside+"', '"+producer+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
+				String sql = "INSERT INTO T_CURRITEMS(ID, YEAR, BRAND, MODEL, COST, PRICE, RETAILPRICE, PROFITRATE, ISINSIDE, PRODUCER, SORT, CREATE_USER_ID, CREATE_DATE) VALUES('"+
+					SystemUtils.uuid()+"', '"+year+"', '"+brand+"', '"+model+"', '"+cost+"', '"+price+"', '"+retailprice+"', '"+profitrate+"', '"+isinside+"', '"+producer+"', '"+i+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')";
 	
 				pyear = year;
 				pbrand = brand;
@@ -193,7 +204,7 @@
 			}
 			else
 			{
-				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+row.length+"/7）错误。");
+				message.message(ServiceMessage.FAILURE, "[预测年规格]模板中列数（"+row.length+"/8）错误。");
 				break;
 			}
 		}

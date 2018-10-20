@@ -37,8 +37,8 @@
 	for(int j = 0 ; j < rows.length() ; j++)
 	{
 		JSONObject row = rows.getJSONObject(j);	
-		sqls.add("insert into T_SELECTED_PLAN(ID, YEAR, GROUPNAME, GROUPVOLUME, BRAND, MODEL, MAX, MIN, REMAX, REMIN, PRICE, COST, X, ISINSIDE, PRODUCER, CREATE_USER_ID, CREATE_DATE) values('"+
-		SystemUtils.uuid()+"', '"+year+"', '"+row.optString("GROUPNAME")+"', '"+row.optString("GROUPVOLUME")+"', '"+row.optString("BRAND")+"', '"+row.optString("MODEL")+"', '"+row.optString("MAX")+"', '"+row.optString("MIN")+"', '"+row.optString("REMAX")+"', '"+row.optString("REMIN")+"', '"+row.optString("PRICE")+"', '"+row.optString("COST")+"', '"+row.optString("X")+"', '"+row.optString("ISINSIDE")+"', '"+row.optString("PRODUCER")+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')");
+		sqls.add("insert into T_SELECTED_PLAN(ID, YEAR, GROUPNAME, GROUPVOLUME, BRAND, MODEL, MAX, MIN, REMAX, REMIN, PRICE, COST, RETAILPRICE, PROFITRATE, X, ISINSIDE, PRODUCER, CREATE_USER_ID, CREATE_DATE) values('"+
+		SystemUtils.uuid()+"', '"+year+"', '"+row.optString("GROUPNAME")+"', '"+row.optString("GROUPVOLUME")+"', '"+row.optString("BRAND")+"', '"+row.optString("MODEL")+"', '"+row.optString("MAX")+"', '"+row.optString("MIN")+"', '"+row.optString("REMAX")+"', '"+row.optString("REMIN")+"', '"+row.optString("PRICE")+"', '"+row.optString("COST")+"', '"+row.optString("RETAILPRICE")+"', '"+row.optString("PROFITRATE")+"', '"+row.optString("X")+"', '"+row.optString("ISINSIDE")+"', '"+row.optString("PRODUCER")+"', '"+usercode+"', '"+SystemUtils.toString(Calendar.getInstance())+"')");
 	}
 
 	if(sqls.size() > 0)
