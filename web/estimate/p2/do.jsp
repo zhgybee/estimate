@@ -23,7 +23,6 @@
 	DecimalFormat format = new DecimalFormat("#.##");
 	ServiceMessage message = new ServiceMessage();
 	
-	String type = StringUtils.defaultString(request.getParameter("type"), "1");
 	int year = NumberUtils.toInt(request.getParameter("year"), 2018);
 	String month = StringUtils.defaultString(request.getParameter("month"), "1");
 	
@@ -77,6 +76,13 @@
 			monthtotalratios.put(currmonth, String.valueOf(monthtotalitem.getDouble("MONTHTOTAL") / monthtotalitem.getDouble("TOTAL")));
 		}		
 		message.data.put("MONTHTOTALRATIOS", monthtotalratios);		
+		
+		
+		Data fixedcosts = datasource.find("select * from T_CONFIG where YEAR = ? and MONTH = ?", String.valueOf(year), month);
+		if(fixedcosts.size() > 0)
+		{
+			message.data.put("FIXEDCOST", fixedcosts.get(0));		
+		}
 		
 	}
 	catch(Exception e)

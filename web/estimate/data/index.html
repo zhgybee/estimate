@@ -37,13 +37,14 @@
 		{
 			var year = $.getParameter("year");
 			var type = $.getParameter("type");
-			load(year, type)
+			var month = $.getParameter("month");
+			load(year, month, type)
 		});
 		
-		function load(year, type)
+		function load(year, month, type)
 		{
 			showLoading();
-			$.getJSON("data.jsp?type="+type+"&year="+year, function(response)
+			$.getJSON("data.jsp?type="+type+"&year="+year+"&month="+month, function(response)
 			{
 				hideLoading();
 				var rows = response.DATA.rows;
@@ -103,7 +104,7 @@
 					var items = $.parseJSON(row.CONTENT);
 					for(var key in items)
 					{
-						content.push('<tr><td style="text-align:center">'+row.YEAR+'</td><td>'+row.MONTH+'</td><td>'+itemmap[key]+'</td><td>'+JSON.stringify(items[key])+'</td></tr>');
+						content.push('<tr><td style="text-align:center">'+row.YEAR+'</td><td>'+row.MONTH+'</td><td>'+(itemmap[key] || "")+'</td><td>'+JSON.stringify(items[key])+'</td></tr>');
 					}
 
 				}

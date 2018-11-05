@@ -32,6 +32,7 @@
 
 	int year = NumberUtils.toInt(request.getParameter("year"), 2018);
 	String area = StringUtils.defaultString(request.getParameter("area"), "");
+	String issurplus = StringUtils.defaultString(request.getParameter("issurplus"), "0");
 	
 	Map<String, Map<String, String>> monthratios = new HashMap<String, Map<String, String>>();
 	Map<String, String> monthtotalratios = new HashMap<String, String>();
@@ -93,6 +94,31 @@
 		}		
 
 		message.data.put("FIXEDCOST", monthfixedcost);
+		
+		if(issurplus.equals("1"))
+		{
+			//如果是取剩余月份，那么表格中的去年比较量，也是从去年的相应月份中取值
+			String monthnames = StringUtils.defaultString(request.getParameter("monthnames"), "");
+			
+			Data monthtotalvolumns = null;
+			
+			if(area.equals(""))
+			{
+				monthtotalvolumns = datasource.find("select MODEL, sum(VOLUME) as 'VOLUME' from T_SALES where month in ("+monthnames+") and year = ? group by MODEL", String.valueOf(year - 1));
+			}
+			else
+			{
+				monthtotalvolumns = datasource.find("select MODEL, sum(VOLUME) as 'VOLUME' from T_SALES where month in ("+monthnames+") and year = ? and AREA = ? group by MODEL", String.valueOf(year - 1), area);
+			}
+			
+			Map<String, Integer> monthtotalvolumnmap = new HashMap<String, Integer>();
+			for(Datum monthtotalvolumn : monthtotalvolumns)
+			{
+				monthtotalvolumnmap.put(monthtotalvolumn.getString("MODEL"), monthtotalvolumn.getInt("VOLUME"));
+			}
+			
+			message.data.put("MONTHTOTALVOLUMN", monthtotalvolumnmap);
+		}
 		
 	}
 	catch(Exception e)

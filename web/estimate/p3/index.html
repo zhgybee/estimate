@@ -352,7 +352,7 @@
 		</div>
 	</div>
 	
-	<table id="excel" style="display:none1"><table>
+	<table id="excel" style="display:none1"></table>
 
 	<script type="text/javascript" src="../../lib/jquery/jquery.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/jquery.request.js"></script>
@@ -426,6 +426,8 @@
 						var rows = response.DATA.ROWS;
 						var monthratios = response.DATA.MONTHRATIOS;
 						var monthtotalratios = response.DATA.MONTHTOTALRATIOS;
+						var fixedcost = response.DATA.FIXEDCOST;
+
 
 
 						var insidetotalcost = 0;
@@ -463,6 +465,21 @@
 						$("#v020201 input").val( app.pre0(parseFloat($("#p2").val() || 0) + parseFloat($("#p3").val() || 0) + parseFloat(totalprice) * 1.16 ) );
 						$("#v030101 input").val( app.pre0(parseFloat(insidetotalcost)) );
 						$("#v030201 input").val( app.pre0(parseFloat(outsidetotalcost)) );
+						if(fixedcost == null)
+						{
+							alert($("#year-selector").val()+"年"+month+"月固定费用未上传，将影响部分数据的生成。");
+						}
+						else
+						{
+							var content = $.parseJSON(fixedcost["CONTENT"]);
+							var itemmap = content["K24"];
+							var salary = 0;
+							for(var key in itemmap)
+							{
+								salary += itemmap[key];
+							}
+							$("#v030202 input").val( app.pre0(salary) );
+						}
 
 						flush();
 						

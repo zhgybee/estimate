@@ -433,9 +433,21 @@
 			{
 				
 				var area = $("#month-area-field").val();
+
+				let issurplus = $(".is-surplus-month").attr("value");
 				
+				let monthnames = [];
+				$.each($(".selection-month"), function(i, month)
+				{
+					let $month = $(month);
+					if($month.attr("value") == 1)
+					{
+						monthnames.push( $month.attr("month") )
+					}
+				});
+
 				showLoading();
-				$.getJSON('monthvolume.jsp', {year:parameter.year, area:area}, function(response)
+				$.getJSON('monthvolume.jsp', {year:parameter.year, area:area, issurplus:issurplus, monthnames:monthnames.join(",")}, function(response)
 				{
 					hideLoading();
 					
@@ -444,22 +456,12 @@
 						let monthratios = response.DATA.MONTHRATIOS;
 						let monthtotalratios = response.DATA.MONTHTOTALRATIOS;
 						let monthfixedcost = response.DATA.FIXEDCOST;
+						let monthtotalvolumn = response.DATA.MONTHTOTALVOLUMN;
+						
 						let data = $(".tab-element:visible").data("data");
 						data = JSON.parse(JSON.stringify(data));
 						let rows = data.DATA.ROWS;
 
-						let monthnames = [];
-						$.each($(".selection-month"), function(i, month)
-						{
-							let $month = $(month);
-							if($month.attr("value") == 1)
-							{
-								monthnames.push( $month.attr("month") )
-							}
-						});
-
-
-						let issurplus = $(".is-surplus-month").attr("value");
 						$.each(rows, function(j, row)
 						{
 							let model = row.MODEL;
@@ -477,18 +479,21 @@
 							}
 
 							let modeltotalratio = 0;
-							$.each(monthnames, function(l, name)
+							if(issurplus == 1)
 							{
-								modeltotalratio += parseFloat(monthratio[name] || 0);
-							});	
-
-							if(modeltotalratio == 0)
-							{
-								monthratio = monthtotalratios;
 								$.each(monthnames, function(l, name)
 								{
 									modeltotalratio += parseFloat(monthratio[name] || 0);
 								});	
+
+								if(modeltotalratio == 0)
+								{
+									monthratio = monthtotalratios;
+									$.each(monthnames, function(l, name)
+									{
+										modeltotalratio += parseFloat(monthratio[name] || 0);
+									});
+								}
 							}
 
 
@@ -508,7 +513,7 @@
 
 						$(".tab-element:visible .detailed-table").empty();
 						$(".tab-element:visible .summary-table").empty();
-						fillin($(".tab-element:visible"), data, {area:area, months:monthnames, monthfixedcost:monthfixedcost});
+						fillin($(".tab-element:visible"), data, {area:area, months:monthnames, monthfixedcost:monthfixedcost, monthtotalvolumn:monthtotalvolumn});
 
 						$("#month-stretch-button").click();
 
@@ -702,8 +707,8 @@
 			
 			if(parameter.type != 3)
 			{
-				for(let i = 1 ; i <= 1 ; i++)
-				//for(let i = 1 ; i <= 3 ; i++)
+				//for(let i = 1 ; i <= 1 ; i++)
+				for(let i = 1 ; i <= 3 ; i++)
 				{
 					showLoading();
 					$.getJSON('do.jsp', parameter, function(response)
@@ -766,7 +771,7 @@
 				content.push('	<td style="width:80px">批发价<span class="header-description">元</span></td>');
 				content.push('	<td style="width:80px">调拨价<span class="header-description">元</span></td>');
 				content.push('	<td style="width:80px">零售价<span class="header-description">元</span></td>');
-				content.push('	<td style="width:80px">毛利率<span class="header-description">元</span></td>');
+				content.push('	<td style="width:80px">毛利率</td>');
 				//content.push('	<td style="width:80px">销量下限<span class="header-description volume-type">条</span></td>');
 				//content.push('	<td style="width:80px">销量上限<span class="header-description volume-type">条</span></td>');
 				content.push('	<td style="width:100px">销售量<span class="header-description volume-type">条</span></td>');
@@ -841,6 +846,10 @@
 					var growthrate = "";
 					var growthvolumn = "";
 					var lastvolume = row.LASTVOLUME || 0;
+					if(monthmap != null && monthmap.monthtotalvolumn != null)
+					{
+						lastvolume = monthmap.monthtotalvolumn[row.MODEL] || 0;
+					}
 					if(lastvolume != 0)
 					{
 						var growthrate = (row.X - lastvolume) / lastvolume;
@@ -864,11 +873,13 @@
 						if(monthmap.area != "")
 						{
 							content.push('<td><span class="volume-1" class="areamodeltotalvolumn">'+app.pre2(row[monthmap.area])+'</span><span class="volume-2">'+(app.pre3(row[monthmap.area] / 250))+'</span></td>');
+							row[monthmap.area] = app.pre2(row[monthmap.area]);
 						}
 						for(var i = 0 ; i < monthnames.length ; i++)
 						{
 							let number = row[monthnames[i]];
 							content.push('<td><span class="volume-1" class="areamonthvolumn">'+app.pre2(number)+'</span><span class="volume-2">'+(app.pre3(number / 250))+'</span></td>');
+							row[monthnames[i]] = app.pre2(number);
 						}
 					}
 					else

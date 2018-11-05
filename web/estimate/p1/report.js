@@ -31,7 +31,7 @@ function summary(rows, parameter, fixedcost, monthmap)
 	content += '<tr class="v16"><td style="text-align:left;"					>　　　△提取保险合同准备金净额</td>											<td>16</td></tr>';
 	content += '<tr class="v17"><td style="text-align:left;"					>　　　△保单红利支出</td>														<td>17</td></tr>';
 	content += '<tr class="v18"><td style="text-align:left;"					>　　　△分保费用</td>															<td>18</td></tr>';
-	content += '<tr class="v19"><td style="text-align:left;"					>　　　　营业税金及附加（消费税、城建税、附加、土地增值税、4小）</td>			<td>19</td></tr>';
+	content += '<tr class="v19"><td style="text-align:left;"					>　　　　税金及附加（消费税、城建税、附加、土地增值税、4小）</td>			<td>19</td></tr>';
 	content += '<tr class="v20"><td style="text-align:left;"					>　　　　销售费用</td>															<td>20</td></tr>';
 	content += '<tr class="v21"><td style="text-align:left;"					>　　　　管理费用</td>															<td>21</td></tr>';
 	content += '<tr class="v22"><td style="text-align:left;"					>　　　　　其中：研究与开发费</td>												<td>22</td></tr>';
@@ -199,7 +199,7 @@ function handle(rows, parameter, key, area, fixedcost)
 	//印花税
 	args.yhs = args.totalprice * args.taxrate2 * args.K22;
 
-	//营业税金及附加（消费税、城建税、附加、土地增值税、4小）
+	//税金及附加（消费税、城建税、附加、土地增值税、4小）
 	args.yysjfj = args.xfs + args.jys + args.K04 + args.cjs + args.yhs + args.K01 + args.K02 + args.K03;
 
 	//营业总成本
@@ -286,7 +286,11 @@ function setValue($table, areacolumn)
 	$table.find("tbody .v47").append('<td>'+app.pre1(areacolumn.jlr)+'</td>');
 	$table.find("tbody .v48").append('<td></td>');
 	$table.find("tbody .v49").append('<td>'+app.pre1(areacolumn.lshj)+'</td>');
-	$table.find("tbody .v50").append('<td></td>');
+
+	var sfhj = areacolumn.sds + areacolumn.xfs + areacolumn.zzs + areacolumn.cjs + (areacolumn.jys * 0.6) + (areacolumn.jys * 0.4) + areacolumn.K04 + areacolumn.yhs + areacolumn.K01 + areacolumn.K02 + areacolumn.K03;
+
+
+	$table.find("tbody .v50").append('<td>'+app.pre1(sfhj)+'</td>');
 	$table.find("tbody .v51").append('<td>'+app.pre1(areacolumn.sds)+'</td>');
 	$table.find("tbody .v52").append('<td>'+app.pre1(areacolumn.xfs)+'</td>');
 	$table.find("tbody .v53").append('<td>'+app.pre1(areacolumn.zzs)+'</td>');

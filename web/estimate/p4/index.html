@@ -13,6 +13,8 @@
 	td{text-align:center; padding:12px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;}
 	thead td{background-color:#efefef; padding:15px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #cccccc; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc}
 	table .header-description{color:#aaaaaa; margin-left:5px; font-size:10px}
+	.editor{background-color:#fffdd9}
+	.editor input{width:80px; border:none; text-align:center; height:23px; border-radius:3px; outline:none;}
 
 	</style>
 </head>
@@ -20,13 +22,13 @@
 <body style="">
 	
 	<div style="background-color:#f0f0f0; padding:10px">
-		年份<input type="" style="margin:0px 20px 0px 10px"/>
-		月份<input type="" style="margin:0px 0px 0px 10px"/>
-		<button id="" style="height:28px">确定</button>	
-		<button id="" style="height:28px;">导出</button>
+		年份<input id="year-field" type="text" style="margin:0px 20px 0px 10px; text-align:center"/>
+		月份<input id="month-field" type="text" style="margin:0px 0px 0px 10px; text-align:center"/>
+		<button id="starter-button" style="height:28px">确定</button>	
+		<button id="export-button" style="height:28px;">导出</button>
 
 	</div>
-	
+	<div id="r1"></div>
 
 	<div style="padding:5px">
 		<table style="width:100%">
@@ -46,7 +48,7 @@
 					</tr>
 			</thead>
 			<tbody>
-				<tr>
+				<tr class="v1" style="background-color:#eeeeee">
 					<td style="text-align:left">　实际销量</td>
 					<td>1</td>
 					<td></td>
@@ -59,33 +61,33 @@
 					<td></td>
 					<td></td>	
 				</tr>
-				<tr>
+				<tr class="v2">
 					<td style="text-align:left">　一、主营业务收入</td>
 					<td>2</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v3">
 					<td style="text-align:left">　二、主营业务成本</td>
 					<td>3</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v4" style="background-color:#eeeeee">
 					<td style="text-align:left">　三、边际贡献（毛利）</td>
 					<td>4</td>
 					<td></td>
@@ -98,46 +100,46 @@
 					<td></td>
 					<td></td>	
 				</tr>
-				<tr>
+				<tr class="v5">
 					<td style="text-align:left">　　　　加：业务外收入</td>
 					<td>5</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v6">
 					<td style="text-align:left">　　　　减：业务外成本</td>
 					<td>6</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v7">
 					<td style="text-align:left">　　　　减：可控费用</td>
 					<td>7</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v8" style="background-color:#eeeeee">
 					<td style="text-align:left">　四：可控边际贡献</td>
 					<td>8</td>
 					<td></td>
@@ -150,59 +152,59 @@
 					<td></td>
 					<td></td>	
 				</tr>
-				<tr>
+				<tr class="v9">
 					<td style="text-align:left">　　　　减：固定费用</td>
 					<td>9</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v10">
 					<td style="text-align:left">　　　　减：人工费用</td>
 					<td>10</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v11">
 					<td style="text-align:left">　　　　减：税金及附加</td>
 					<td>11</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v12">
 					<td style="text-align:left">　　　　减：财务费用</td>
 					<td>12</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v13" style="background-color:#eeeeee">
 					<td style="text-align:left">　五、部门边际贡献</td>
 					<td>13</td>
 					<td></td>
@@ -215,33 +217,33 @@
 					<td></td>
 					<td></td>	
 				</tr>
-				<tr>
+				<tr class="v14">
 					<td style="text-align:left">　六、部门净利润</td>
 					<td>14</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v15">
 					<td style="text-align:left">　七、应缴税金（不含企业所得税）</td>
 					<td>15</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>	
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>
+					<td class="editor"></td>	
 				</tr>
-				<tr>
+				<tr class="v16" style="background-color:#eeeeee">
 					<td style="text-align:left">　八、利税总额</td>
 					<td>16</td>
 					<td></td>
@@ -266,23 +268,20 @@
 	<script type="text/javascript" src="../../lib/jquery/plusins/selection/selection.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/plusins/loading/loading.js"></script>
 	<script type="text/javascript" src="../../lib/jquery/jquery.table2excel.js"></script>
+	<script type="text/javascript" src="../../lib/app.js"></script>
+	<script type="text/javascript" src="../p1/report.js"></script>
+	<script type="text/javascript" src="../p1/fixedcost.js"></script>
 	<script type="text/javascript">
 
 		$(function()
 		{
-			changeyear();
-			$("#year-selector").click(function()
-			{
-				changeyear();
-			});
-
 			$("#export-button").on("click", function()
 			{
 				$("table").table2excel
 				({
 					exclude: "",
-					name: "月度资金计划",
-					filename: "月度资金计划" + new Date().toISOString().replace(/[\-\:\.]/g, ""),
+					name: "绩效考核",
+					filename: "绩效考核" + new Date().toISOString().replace(/[\-\:\.]/g, ""),
 					fileext: ".xls",
 					exclude_img: true,
 					exclude_links: true,
@@ -290,61 +289,386 @@
 				});
 			});
 
+
+
+			$(".editor").on("dblclick", function()
+			{
+				var value = $(this).text();
+				var $field = $('<input class="field"/>');
+				$field.val(value);
+				$(this).html($field);
+				$field.focus();
+			});
+
+
+			$(window).on("mousedown.editor", function(event)
+			{
+				if($(event.target).closest(".field").size() == 0)
+				{
+					var $fields = $(".field:visible");
+					if($fields.size() > 0)
+					{
+						$fields.each(function(i)
+						{
+							var $field = $(this);
+							var $cell = $field.parent();
+							$cell.html($field.val());
+						});
+						calculate();
+					}
+				}	
+			});
+
 			$("#starter-button").on("click", function()
 			{
-				var month = $("#month").val();
+				var month = $("#month-field").val();
 				showLoading();
-				$.getJSON('../p2/do.jsp', {year:$("#year-selector").val()}, function(response)
+				$.getJSON('do.jsp', {year:$("#year-field").val(), month:month}, function(response)
 				{
 					hideLoading();
 					if(response.STATUS == 1)
 					{
-						
-						var rows = response.DATA.ROWS;
-						var monthratios = response.DATA.MONTHRATIOS;
-						var monthtotalratios = response.DATA.MONTHTOTALRATIOS;
-
-
-						var insidetotalcost = 0;
-						var outsidetotalcost = 0;
-						var totalprice = 0;		
-						$.each(rows, function(i, row)
+						if(response.MESSAGES != "")
 						{
-							var volume = parseFloat(row["X"]);
-							var model = row["MODEL"];
-							var cost = parseFloat(row["COST"]);
-							var price = parseFloat(row["PRICE"]);
-							var isinside = row["ISINSIDE"];
-							var monthratio = monthratios[model];
-							if(monthratio == null)
-							{
-								monthratio = monthtotalratios;
-							}
+							alert(response.MESSAGES);
+						}
 
+						var rows = response.DATA.ROWS;
+						var arearatios = response.DATA.AREARATIOS;
+						var areatotalratios = response.DATA.AREATOTALRATIOS;
+						var areamonthratios = response.DATA.AREAMONTHRATIOS;
+						var areamonthtotalratios = response.DATA.AREAMONTHTOTALRATIOS;
+						var fixedcost = response.DATA.FIXEDCOST;
 
-							var ratio = parseFloat(monthratio[month] || 0);
-							if(isinside == "1")
-							{
-								insidetotalcost += ratio * (volume * cost);
-							}
-							else if(isinside == "0")
-							{
-								outsidetotalcost += ratio * (volume * cost);
-							}
-							totalprice += ratio * (volume * price);
-
-						});
-
-
-
-						$("#v020102").html(-parseFloat($("#p1").val() || 0) - 122500);
-						$("#v020201").html( parseFloat($("#p2").val() || 0) + parseFloat($("#p3").val() || 0) + parseFloat(totalprice) * 1.16 );
-						$("#v030101").html(parseFloat(insidetotalcost).toFixed(2));
-						$("#v030201").html(parseFloat(outsidetotalcost).toFixed(2));
-						$("#v030202").html($("#p4").val());
-						$("#v030203").html($("#p5").val());
-						$("#v030211").html($("#p6").val());
+						fixedcost = FixedCost.create(fixedcost.YEAR, fixedcost.MONTH, fixedcost.CONTENT);
 						
+						var areanames = fixedcost.areas;
+						
+						var totals = {};
+						$.each(rows, function(j, row)
+						{
+							var model = row.MODEL;
+							var volume = row.X;
+							
+							for(var i = 0 ; i < areanames.length ; i++)
+							{
+								var areaname = areanames[i];
+
+								var arearatio = arearatios[model];
+								if(arearatio == null)
+								{
+									arearatio = areatotalratios;
+								}
+
+								var areavolume = volume * (arearatio[areaname] || 0);
+
+								var monthratios = areamonthratios[ areaname ];
+
+								if(monthratios != null)
+								{
+									var monthratio = monthratios[model];
+									if(monthratio == null)
+									{
+										monthratio = areamonthtotalratios[areaname];
+									}
+									row[areanames[i]] = app.pre2(areavolume * (monthratio[month] || 0));
+								}
+								else
+								{
+									row[areanames[i]] = 0;
+								}
+
+								if(totals[areaname] == null)
+								{
+									totals[areaname] = row[areanames[i]];
+								}
+								else
+								{
+									totals[areaname] = totals[areaname] + row[areanames[i]];
+								}
+							}
+						});
+						
+
+
+
+
+
+						var parameter = {};
+						parameter.year = "2018";
+						parameter.taxrate2 = "0.0003";
+						parameter.taxrate1 = "0.16";
+						let report = summary(rows, parameter, fixedcost, null);
+
+
+						var index = 3;
+						var values = 0;
+						for(var i = 0 ; i < areanames.length ; i++)
+						{
+							var areaname = areanames[i];
+							var value = totals[areaname];
+							set2("v1",  index, value);
+							values += value;
+							index++;
+						}
+						set2("v1",  2, values);
+
+						var $table = report.content;
+
+						var v2v02 = app.toNumber($($table.find(".v2").find("td").get( 2)).html());
+						var v2v03 = app.toNumber($($table.find(".v2").find("td").get( 3)).html());
+						var v2v04 = app.toNumber($($table.find(".v2").find("td").get( 4)).html());
+						var v2v05 = app.toNumber($($table.find(".v2").find("td").get( 5)).html());
+						var v2v06 = app.toNumber($($table.find(".v2").find("td").get( 6)).html());
+						var v2v07 = app.toNumber($($table.find(".v2").find("td").get( 7)).html());
+						var v2v08 = app.toNumber($($table.find(".v2").find("td").get( 8)).html());
+						var v2v09 = app.toNumber($($table.find(".v2").find("td").get( 9)).html());
+						var v2v10 = app.toNumber($($table.find(".v2").find("td").get(10)).html());
+
+						set("v2",  2, v2v10);
+						set("v2",  3, v2v02);
+						set("v2",  4, v2v03);
+						set("v2",  5, v2v04);
+						set("v2",  6, v2v05);
+						set("v2",  7, v2v06);
+						set("v2",  8, v2v07);
+						set("v2",  9, v2v08);
+						set("v2", 10, v2v09);
+
+
+						var v10v02 = app.toNumber($($table.find(".v10").find("td").get( 2)).html());
+						var v10v03 = app.toNumber($($table.find(".v10").find("td").get( 3)).html());
+						var v10v04 = app.toNumber($($table.find(".v10").find("td").get( 4)).html());
+						var v10v05 = app.toNumber($($table.find(".v10").find("td").get( 5)).html());
+						var v10v06 = app.toNumber($($table.find(".v10").find("td").get( 6)).html());
+						var v10v07 = app.toNumber($($table.find(".v10").find("td").get( 7)).html());
+						var v10v08 = app.toNumber($($table.find(".v10").find("td").get( 8)).html());
+						var v10v09 = app.toNumber($($table.find(".v10").find("td").get( 9)).html());
+						var v10v10 = app.toNumber($($table.find(".v10").find("td").get(10)).html());
+
+						set("v3",  2, v10v10);
+						set("v3",  3, v10v02);
+						set("v3",  4, v10v03);
+						set("v3",  5, v10v04);
+						set("v3",  6, v10v05);
+						set("v3",  7, v10v06);
+						set("v3",  8, v10v07);
+						set("v3",  9, v10v08);
+						set("v3", 10, v10v09);
+
+
+
+
+
+
+						var v4v02 = app.toNumber($($table.find(".v4").find("td").get( 2)).html());
+						var v4v03 = app.toNumber($($table.find(".v4").find("td").get( 3)).html());
+						var v4v04 = app.toNumber($($table.find(".v4").find("td").get( 4)).html());
+						var v4v05 = app.toNumber($($table.find(".v4").find("td").get( 5)).html());
+						var v4v06 = app.toNumber($($table.find(".v4").find("td").get( 6)).html());
+						var v4v07 = app.toNumber($($table.find(".v4").find("td").get( 7)).html());
+						var v4v08 = app.toNumber($($table.find(".v4").find("td").get( 8)).html());
+						var v4v09 = app.toNumber($($table.find(".v4").find("td").get( 9)).html());
+						var v4v10 = app.toNumber($($table.find(".v4").find("td").get(10)).html());
+
+						var v30v02 = app.toNumber($($table.find(".v30").find("td").get( 2)).html());
+						var v30v03 = app.toNumber($($table.find(".v30").find("td").get( 3)).html());
+						var v30v04 = app.toNumber($($table.find(".v30").find("td").get( 4)).html());
+						var v30v05 = app.toNumber($($table.find(".v30").find("td").get( 5)).html());
+						var v30v06 = app.toNumber($($table.find(".v30").find("td").get( 6)).html());
+						var v30v07 = app.toNumber($($table.find(".v30").find("td").get( 7)).html());
+						var v30v08 = app.toNumber($($table.find(".v30").find("td").get( 8)).html());
+						var v30v09 = app.toNumber($($table.find(".v30").find("td").get( 9)).html());
+						var v30v10 = app.toNumber($($table.find(".v30").find("td").get(10)).html());
+
+						var v31v02 = app.toNumber($($table.find(".v31").find("td").get( 2)).html());
+						var v31v03 = app.toNumber($($table.find(".v31").find("td").get( 3)).html());
+						var v31v04 = app.toNumber($($table.find(".v31").find("td").get( 4)).html());
+						var v31v05 = app.toNumber($($table.find(".v31").find("td").get( 5)).html());
+						var v31v06 = app.toNumber($($table.find(".v31").find("td").get( 6)).html());
+						var v31v07 = app.toNumber($($table.find(".v31").find("td").get( 7)).html());
+						var v31v08 = app.toNumber($($table.find(".v31").find("td").get( 8)).html());
+						var v31v09 = app.toNumber($($table.find(".v31").find("td").get( 9)).html());
+						var v31v10 = app.toNumber($($table.find(".v31").find("td").get(10)).html());
+
+						var v32v02 = app.toNumber($($table.find(".v32").find("td").get( 2)).html());
+						var v32v03 = app.toNumber($($table.find(".v32").find("td").get( 3)).html());
+						var v32v04 = app.toNumber($($table.find(".v32").find("td").get( 4)).html());
+						var v32v05 = app.toNumber($($table.find(".v32").find("td").get( 5)).html());
+						var v32v06 = app.toNumber($($table.find(".v32").find("td").get( 6)).html());
+						var v32v07 = app.toNumber($($table.find(".v32").find("td").get( 7)).html());
+						var v32v08 = app.toNumber($($table.find(".v32").find("td").get( 8)).html());
+						var v32v09 = app.toNumber($($table.find(".v32").find("td").get( 9)).html());
+						var v32v10 = app.toNumber($($table.find(".v32").find("td").get(10)).html());
+
+						var v35v02 = app.toNumber($($table.find(".v35").find("td").get( 2)).html());
+						var v35v03 = app.toNumber($($table.find(".v35").find("td").get( 3)).html());
+						var v35v04 = app.toNumber($($table.find(".v35").find("td").get( 4)).html());
+						var v35v05 = app.toNumber($($table.find(".v35").find("td").get( 5)).html());
+						var v35v06 = app.toNumber($($table.find(".v35").find("td").get( 6)).html());
+						var v35v07 = app.toNumber($($table.find(".v35").find("td").get( 7)).html());
+						var v35v08 = app.toNumber($($table.find(".v35").find("td").get( 8)).html());
+						var v35v09 = app.toNumber($($table.find(".v35").find("td").get( 9)).html());
+						var v35v10 = app.toNumber($($table.find(".v35").find("td").get(10)).html());
+
+						set("v5",  2, (v4v10 + v30v10 + v31v10 + v32v10 + v35v10));
+						set("v5",  3, (v4v02 + v30v02 + v31v02 + v32v02 + v35v02));
+						set("v5",  4, (v4v03 + v30v03 + v31v03 + v32v03 + v35v03));
+						set("v5",  5, (v4v04 + v30v04 + v31v04 + v32v04 + v35v04));
+						set("v5",  6, (v4v05 + v30v05 + v31v05 + v32v05 + v35v05));
+						set("v5",  7, (v4v06 + v30v06 + v31v06 + v32v06 + v35v06));
+						set("v5",  8, (v4v07 + v30v07 + v31v07 + v32v07 + v35v07));
+						set("v5",  9, (v4v08 + v30v08 + v31v08 + v32v08 + v35v08));
+						set("v5", 10, (v4v09 + v30v09 + v31v09 + v32v09 + v35v09));
+
+
+
+						var v11v02 = app.toNumber($($table.find(".v11").find("td").get( 2)).html());
+						var v11v03 = app.toNumber($($table.find(".v11").find("td").get( 3)).html());
+						var v11v04 = app.toNumber($($table.find(".v11").find("td").get( 4)).html());
+						var v11v05 = app.toNumber($($table.find(".v11").find("td").get( 5)).html());
+						var v11v06 = app.toNumber($($table.find(".v11").find("td").get( 6)).html());
+						var v11v07 = app.toNumber($($table.find(".v11").find("td").get( 7)).html());
+						var v11v08 = app.toNumber($($table.find(".v11").find("td").get( 8)).html());
+						var v11v09 = app.toNumber($($table.find(".v11").find("td").get( 9)).html());
+						var v11v10 = app.toNumber($($table.find(".v11").find("td").get(10)).html());
+
+						var v40v02 = app.toNumber($($table.find(".v40").find("td").get( 2)).html());
+						var v40v03 = app.toNumber($($table.find(".v40").find("td").get( 3)).html());
+						var v40v04 = app.toNumber($($table.find(".v40").find("td").get( 4)).html());
+						var v40v05 = app.toNumber($($table.find(".v40").find("td").get( 5)).html());
+						var v40v06 = app.toNumber($($table.find(".v40").find("td").get( 6)).html());
+						var v40v07 = app.toNumber($($table.find(".v40").find("td").get( 7)).html());
+						var v40v08 = app.toNumber($($table.find(".v40").find("td").get( 8)).html());
+						var v40v09 = app.toNumber($($table.find(".v40").find("td").get( 9)).html());
+						var v40v10 = app.toNumber($($table.find(".v40").find("td").get(10)).html());
+
+
+						set("v6",  2, (v11v10 + v40v10));
+						set("v6",  3, (v11v02 + v40v02));
+						set("v6",  4, (v11v03 + v40v03));
+						set("v6",  5, (v11v04 + v40v04));
+						set("v6",  6, (v11v05 + v40v05));
+						set("v6",  7, (v11v06 + v40v06));
+						set("v6",  8, (v11v07 + v40v07));
+						set("v6",  9, (v11v08 + v40v08));
+						set("v6", 10, (v11v09 + v40v09));
+
+
+
+						index = 3;
+						values = 0;
+						for(var i = 0 ; i < areanames.length ; i++)
+						{
+							var areaname = areanames[i];
+							var value = app.toNumber(app.pre1(app.toNumber(fixedcost.value("K05", areaname)) + app.toNumber(fixedcost.value("K08", areaname))));
+							set("v7",  index, value);
+							values += value;
+							index++;
+						}
+						set("v7",  2, values);
+
+
+
+						
+
+						index = 3;
+						values = 0;
+						for(var i = 0 ; i < areanames.length ; i++)
+						{
+							var areaname = areanames[i];
+							var value = app.toNumber(app.pre1(app.toNumber(fixedcost.value("K06", areaname)) + app.toNumber(fixedcost.value("K09", areaname))));
+							set("v9",  index, value);
+							values += value;
+							index++;
+						}
+						set("v9",  2, values);
+
+
+						index = 3;
+						values = 0;
+						for(var i = 0 ; i < areanames.length ; i++)
+						{
+							var areaname = areanames[i];
+							var value = app.toNumber(app.pre1(app.toNumber(fixedcost.value("K07", areaname)) + app.toNumber(fixedcost.value("K10", areaname))));
+							set("v10",  index, value);
+							values += value;
+							index++;
+						}
+						set("v10",  2, values);
+
+
+						
+						var v19v02 = app.toNumber($($table.find(".v19").find("td").get( 2)).html());
+						var v19v03 = app.toNumber($($table.find(".v19").find("td").get( 3)).html());
+						var v19v04 = app.toNumber($($table.find(".v19").find("td").get( 4)).html());
+						var v19v05 = app.toNumber($($table.find(".v19").find("td").get( 5)).html());
+						var v19v06 = app.toNumber($($table.find(".v19").find("td").get( 6)).html());
+						var v19v07 = app.toNumber($($table.find(".v19").find("td").get( 7)).html());
+						var v19v08 = app.toNumber($($table.find(".v19").find("td").get( 8)).html());
+						var v19v09 = app.toNumber($($table.find(".v19").find("td").get( 9)).html());
+						var v19v10 = app.toNumber($($table.find(".v19").find("td").get(10)).html());
+
+						set("v11",  2, v19v10);
+						set("v11",  3, v19v02);
+						set("v11",  4, v19v03);
+						set("v11",  5, v19v04);
+						set("v11",  6, v19v05);
+						set("v11",  7, v19v06);
+						set("v11",  8, v19v07);
+						set("v11",  9, v19v08);
+						set("v11", 10, v19v09);
+
+
+
+						var v24v02 = app.toNumber($($table.find(".v24").find("td").get( 2)).html());
+						var v24v03 = app.toNumber($($table.find(".v24").find("td").get( 3)).html());
+						var v24v04 = app.toNumber($($table.find(".v24").find("td").get( 4)).html());
+						var v24v05 = app.toNumber($($table.find(".v24").find("td").get( 5)).html());
+						var v24v06 = app.toNumber($($table.find(".v24").find("td").get( 6)).html());
+						var v24v07 = app.toNumber($($table.find(".v24").find("td").get( 7)).html());
+						var v24v08 = app.toNumber($($table.find(".v24").find("td").get( 8)).html());
+						var v24v09 = app.toNumber($($table.find(".v24").find("td").get( 9)).html());
+						var v24v10 = app.toNumber($($table.find(".v24").find("td").get(10)).html());
+
+						set("v12",  2, v24v10);
+						set("v12",  3, v24v02);
+						set("v12",  4, v24v03);
+						set("v12",  5, v24v04);
+						set("v12",  6, v24v05);
+						set("v12",  7, v24v06);
+						set("v12",  8, v24v07);
+						set("v12",  9, v24v08);
+						set("v12", 10, v24v09);
+						
+
+
+
+
+
+						var v50v02 = app.toNumber($($table.find(".v50").find("td").get( 2)).html());
+						var v50v03 = app.toNumber($($table.find(".v50").find("td").get( 3)).html());
+						var v50v04 = app.toNumber($($table.find(".v50").find("td").get( 4)).html());
+						var v50v05 = app.toNumber($($table.find(".v50").find("td").get( 5)).html());
+						var v50v06 = app.toNumber($($table.find(".v50").find("td").get( 6)).html());
+						var v50v07 = app.toNumber($($table.find(".v50").find("td").get( 7)).html());
+						var v50v08 = app.toNumber($($table.find(".v50").find("td").get( 8)).html());
+						var v50v09 = app.toNumber($($table.find(".v50").find("td").get( 9)).html());
+						var v50v10 = app.toNumber($($table.find(".v50").find("td").get(10)).html());
+
+						set("v15",  2, v50v10);
+						set("v15",  3, v50v02);
+						set("v15",  4, v50v03);
+						set("v15",  5, v50v04);
+						set("v15",  6, v50v05);
+						set("v15",  7, v50v06);
+						set("v15",  8, v50v07);
+						set("v15",  9, v50v08);
+						set("v15", 10, v50v09);
+
+
+						calculate();	
+
 					}
 					else
 					{
@@ -354,10 +678,66 @@
 			});
 		});	
 
-		function changeyear()
+		function calculate()
 		{
-			var year = $("#year-selector").val();
-			$("#year-panel").html(year + "年");
+			set("v4",  2, get("v2",  2) - get("v3",  2));
+			set("v4",  3, get("v2",  3) - get("v3",  3));
+			set("v4",  4, get("v2",  4) - get("v3",  4));
+			set("v4",  5, get("v2",  5) - get("v3",  5));
+			set("v4",  6, get("v2",  6) - get("v3",  6));
+			set("v4",  7, get("v2",  7) - get("v3",  7));
+			set("v4",  8, get("v2",  8) - get("v3",  8));
+			set("v4",  9, get("v2",  9) - get("v3",  9));
+			set("v4", 10, get("v2", 10) - get("v3", 10));
+
+			
+
+			set("v8",  2, ( get("v4",  2) + get("v5",  2) - get("v6",  2) - get("v7",  2) ));
+			set("v8",  3, ( get("v4",  3) + get("v5",  3) - get("v6",  3) - get("v7",  3) ));
+			set("v8",  4, ( get("v4",  4) + get("v5",  4) - get("v6",  4) - get("v7",  4) ));
+			set("v8",  5, ( get("v4",  5) + get("v5",  5) - get("v6",  5) - get("v7",  5) ));
+			set("v8",  6, ( get("v4",  6) + get("v5",  6) - get("v6",  6) - get("v7",  6) ));
+			set("v8",  7, ( get("v4",  7) + get("v5",  7) - get("v6",  7) - get("v7",  7) ));
+			set("v8",  8, ( get("v4",  8) + get("v5",  8) - get("v6",  8) - get("v7",  8) ));
+			set("v8",  9, ( get("v4",  9) + get("v5",  9) - get("v6",  9) - get("v7",  9) ));
+			set("v8", 10, ( get("v4", 10) + get("v5", 10) - get("v6", 10) - get("v7", 10) ));
+
+
+
+			set("v13",  2, ( get("v8",  2) - get("v9",  2) - get("v10",  2) - get("v11",  2) - get("v12",  2) ));
+			set("v13",  3, ( get("v8",  3) - get("v9",  3) - get("v10",  3) - get("v11",  3) - get("v12",  3) ));
+			set("v13",  4, ( get("v8",  4) - get("v9",  4) - get("v10",  4) - get("v11",  4) - get("v12",  4) ));
+			set("v13",  5, ( get("v8",  5) - get("v9",  5) - get("v10",  5) - get("v11",  5) - get("v12",  5) ));
+			set("v13",  6, ( get("v8",  6) - get("v9",  6) - get("v10",  6) - get("v11",  6) - get("v12",  6) ));
+			set("v13",  7, ( get("v8",  7) - get("v9",  7) - get("v10",  7) - get("v11",  7) - get("v12",  7) ));
+			set("v13",  8, ( get("v8",  8) - get("v9",  8) - get("v10",  8) - get("v11",  8) - get("v12",  8) ));
+			set("v13",  9, ( get("v8",  9) - get("v9",  9) - get("v10",  9) - get("v11",  9) - get("v12",  9) ));
+			set("v13", 10, ( get("v8", 10) - get("v9", 10) - get("v10", 10) - get("v11", 10) - get("v12", 10) ));
+
+
+			
+			set("v16",  2, ( get("v13",  2) + get("v15",  2) ));
+			set("v16",  3, ( get("v13",  3) + get("v15",  3) ));
+			set("v16",  4, ( get("v13",  4) + get("v15",  4) ));
+			set("v16",  5, ( get("v13",  5) + get("v15",  5) ));
+			set("v16",  6, ( get("v13",  6) + get("v15",  6) ));
+			set("v16",  7, ( get("v13",  7) + get("v15",  7) ));
+			set("v16",  8, ( get("v13",  8) + get("v15",  8) ));
+			set("v16",  9, ( get("v13",  9) + get("v15",  9) ));
+			set("v16", 10, ( get("v13", 10) + get("v15", 10) ));
+		}
+
+		function get(name, index)
+		{
+			return app.toNumber($($("."+name+"").find("td").get(index)).text());
+		}
+		function set(name, index, value)
+		{
+			$($("."+name+"").find("td").get(index)).text( app.pre0(value) );
+		}
+		function set2(name, index, value)
+		{
+			$($("."+name+"").find("td").get(index)).text( app.pre2(value) );
 		}
 	</script>
 
