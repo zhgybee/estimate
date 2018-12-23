@@ -48,11 +48,11 @@
 		Data monthitems = null;
 		if(area.equals(""))
 		{
-			monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+			monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME * PRICE) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME * PRICE) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 		}
 		else
 		{
-			monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area);
+			monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME * PRICE) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME * PRICE) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area);
 		}
 		for(Datum monthitem : monthitems)
 		{
@@ -73,11 +73,11 @@
 		Data monthtotalitems = null;
 		if(area.equals(""))
 		{
-			monthtotalitems = datasource.find("select MONTH, sum(VOLUME * AMOUNT) as 'MONTHTOTAL', (select sum(VOLUME * AMOUNT) from T_SALES where (year = ? or year = ? or year = ?)) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MONTH order by MONTH", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+			monthtotalitems = datasource.find("select MONTH, sum(VOLUME * PRICE) as 'MONTHTOTAL', (select sum(VOLUME * PRICE) from T_SALES where (year = ? or year = ? or year = ?)) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) group by MONTH order by MONTH", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 		}
 		else
 		{
-			monthtotalitems = datasource.find("select MONTH, sum(VOLUME * AMOUNT) as 'MONTHTOTAL', (select sum(VOLUME * AMOUNT) from T_SALES where (year = ? or year = ? or year = ?) and AREA = ?) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MONTH order by MONTH", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area);
+			monthtotalitems = datasource.find("select MONTH, sum(VOLUME * PRICE) as 'MONTHTOTAL', (select sum(VOLUME * PRICE) from T_SALES where (year = ? or year = ? or year = ?) and AREA = ?) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MONTH order by MONTH", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), area);
 		}
 		for(Datum monthtotalitem : monthtotalitems)
 		{

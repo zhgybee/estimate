@@ -41,7 +41,11 @@
 			ratio = volumetarget / lastyearvolumetotal;	
 		}
 		
-		Data limits = datasource.find("select MODEL, PRICE, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
+		//Data limits = datasource.find("select MODEL, PRICE, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL", usercode, String.valueOf(year - 1));
+		
+		Data limits = datasource.find("select T_CURRITEMS.MODEL, T_CURRITEMS.PRICE, TS.MAX, TS.MIN from T_CURRITEMS left join (select MODEL, VOLUME, (VOLUME * "+(1 + fudong)+" * "+ratio+") as MAX, (VOLUME * "+(1 - fudong)+" * "+ratio+") as MIN from T_TOTAL_SALES where CREATE_USER_ID = ? and year = ? group by MODEL) TS on T_CURRITEMS.MODEL = TS.MODEL where T_CURRITEMS.CREATE_USER_ID = ? and T_CURRITEMS.YEAR = ? order by T_CURRITEMS.PRICE, SORT", 
+						usercode, String.valueOf(year - 1), usercode, String.valueOf(year));
+		
 		
 		Data insidemodeltatios = datasource.find("select a.MODEL, a.YEAR, a.VOLUME, b.TOTAL, cast(a.VOLUME as double) / cast(b.TOTAL as double) as 'RATIO' from T_TOTAL_SALES a left join (select YEAR, sum(VOLUME) as 'TOTAL' from T_TOTAL_SALES where ISINSIDE = '1' group by YEAR) b on a.YEAR = b.YEAR where a.ISINSIDE = '1' and a.YEAR = ?", String.valueOf(year - 1));
 

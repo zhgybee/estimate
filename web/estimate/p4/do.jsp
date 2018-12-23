@@ -39,7 +39,7 @@
 		
 		Map<String, Map<String, String>> arearatios = new HashMap<String, Map<String, String>>();
 		//以往三年每个规格区域销量在全年销量中的占比
-		Data areaitems = datasource.find("select a.MODEL, a.AREA, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, AREA, sum(VOLUME) as 'MODELTOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL, AREA order by AREA, MODEL) a left join (select MODEL, sum(VOLUME) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+		Data areaitems = datasource.find("select a.MODEL, a.AREA, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, AREA, sum(VOLUME * PRICE) as 'MODELTOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL, AREA order by AREA, MODEL) a left join (select MODEL, sum(VOLUME * PRICE) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 		for(Datum areaitem : areaitems)
 		{
 			String model = areaitem.getString("MODEL");
@@ -58,7 +58,7 @@
 		
 		
 		//以往3年区域销售量在全年销售量中的占比
-		Data areatotalitems = datasource.find("select AREA, sum(VOLUME * AMOUNT) as 'AREATOTAL', (select sum(VOLUME * AMOUNT) from T_SALES where year = ? or year = ? or year = ?) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by AREA order by AREA", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+		Data areatotalitems = datasource.find("select AREA, sum(VOLUME * PRICE) as 'AREATOTAL', (select sum(VOLUME * PRICE) from T_SALES where year = ? or year = ? or year = ?) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by AREA order by AREA", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 		for(Datum areatotalitem : areatotalitems)
 		{
 			String area = areatotalitem.getString("AREA");
@@ -80,7 +80,7 @@
 		
 
 			Map<String, Map<String, String>> monthratios = new HashMap<String, Map<String, String>>();
-			Data monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname);
+			Data monthitems = datasource.find("select a.MODEL, a.MONTH, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, MONTH, sum(VOLUME * PRICE) as 'MODELTOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL, MONTH order by MONTH, MODEL) a left join (select MODEL, sum(VOLUME * PRICE) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname);
 
 			for(Datum monthitem : monthitems)
 			{
@@ -96,7 +96,7 @@
 			}
 			
 			Map<String, String> monthtotalratios = new HashMap<String, String>();
-			Data monthtotalitems = datasource.find("select MONTH, sum(VOLUME * AMOUNT) as 'MONTHTOTAL', (select sum(VOLUME * AMOUNT) from T_SALES where (year = ? or year = ? or year = ?) and AREA = ?) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MONTH order by MONTH ", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname);
+			Data monthtotalitems = datasource.find("select MONTH, sum(VOLUME * PRICE) as 'MONTHTOTAL', (select sum(VOLUME * PRICE) from T_SALES where (year = ? or year = ? or year = ?) and AREA = ?) as 'TOTAL' from T_SALES where (year = ? or year = ? or year = ?) and AREA = ? group by MONTH order by MONTH ", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname, String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), areaname);
 			for(Datum monthtotalitem : monthtotalitems)
 			{
 				String currmonth = monthtotalitem.getString("MONTH");
@@ -123,11 +123,10 @@
 		else
 		{
 			message.message(ServiceMessage.SUCCESS, month+"月固定费用未上传，将影响计算结果。");
-			fixedcosts = datasource.find("select * from T_CONFIG where YEAR = ?", String.valueOf(year));
-			if(fixedcosts.size() > 0)
-			{
-				fixedcost = fixedcosts.get(0);		
-			}
+			fixedcost = new Datum();
+			fixedcost.put("YEAR", year);
+			fixedcost.put("MONTH", month);
+			fixedcost.put("CONTENT", "{}");
 		}
 		
 		if(fixedcost != null)

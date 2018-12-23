@@ -9,9 +9,9 @@
 	<link rel="stylesheet" href="../../lib/jquery/plusins/selection/selection.css" />
 	<link rel="stylesheet" href="../../lib/jquery/plusins/loading/loading.css" />
 	<style>
-	table{table-layout:fixed; background-color:#ffffff; border-collapse:separate; border-spacing:0px; border-left:1px solid #cccccc; box-sizing:border-box;}
-	td{text-align:center; padding:12px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;}
-	thead td{background-color:#efefef; padding:15px 5px; font-size:14px; border-collapse:separate; overflow:hidden; border-top:1px solid #cccccc; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc}
+	table{table-layout:fixed; background-color:#ffffff; border-collapse:collapse; border-spacing:0px; box-sizing:border-box;}
+	td{text-align:center; padding:12px 5px; font-size:14px; overflow:hidden; border:1px solid #cccccc}
+	thead td{background-color:#efefef; padding:15px 5px; font-size:14px; overflow:hidden;}
 	table .header-description{color:#aaaaaa; margin-left:5px; font-size:10px}
 	.editor{background-color:#fffdd9}
 	.editor input{width:80px; border:none; text-align:center; height:23px; border-radius:3px; outline:none;}
@@ -34,6 +34,9 @@
 		<table style="width:100%">
 			<thead>
 				<tr>
+					<td colspan="11" style="background-color:#ffffff; border:none; text-align:center; font-size:28px; font-weight:bold">绩效考核表</td>
+				</tr>
+				<tr>
 					<td style="text-align:left">　项目</td>
 					<td style="width:60px">行次</td>
 					<td style="width:140px">全区</td>
@@ -45,7 +48,7 @@
 					<td style="width:140px">江北区卷烟营销部</td>
 					<td style="width:140px">机关</td>
 					<td style="width:140px">物流</td>	
-					</tr>
+				</tr>
 			</thead>
 			<tbody>
 				<tr class="v1" style="background-color:#eeeeee">
@@ -415,15 +418,15 @@
 
 						var $table = report.content;
 
-						var v2v02 = app.toNumber($($table.find(".v2").find("td").get( 2)).html());
-						var v2v03 = app.toNumber($($table.find(".v2").find("td").get( 3)).html());
-						var v2v04 = app.toNumber($($table.find(".v2").find("td").get( 4)).html());
-						var v2v05 = app.toNumber($($table.find(".v2").find("td").get( 5)).html());
-						var v2v06 = app.toNumber($($table.find(".v2").find("td").get( 6)).html());
-						var v2v07 = app.toNumber($($table.find(".v2").find("td").get( 7)).html());
-						var v2v08 = app.toNumber($($table.find(".v2").find("td").get( 8)).html());
-						var v2v09 = app.toNumber($($table.find(".v2").find("td").get( 9)).html());
-						var v2v10 = app.toNumber($($table.find(".v2").find("td").get(10)).html());
+						var v2v02 = app.toNumber($($table.find(".v3").find("td").get( 2)).html());
+						var v2v03 = app.toNumber($($table.find(".v3").find("td").get( 3)).html());
+						var v2v04 = app.toNumber($($table.find(".v3").find("td").get( 4)).html());
+						var v2v05 = app.toNumber($($table.find(".v3").find("td").get( 5)).html());
+						var v2v06 = app.toNumber($($table.find(".v3").find("td").get( 6)).html());
+						var v2v07 = app.toNumber($($table.find(".v3").find("td").get( 7)).html());
+						var v2v08 = app.toNumber($($table.find(".v3").find("td").get( 8)).html());
+						var v2v09 = app.toNumber($($table.find(".v3").find("td").get( 9)).html());
+						var v2v10 = app.toNumber($($table.find(".v3").find("td").get(10)).html());
 
 						set("v2",  2, v2v10);
 						set("v2",  3, v2v02);
@@ -569,9 +572,6 @@
 						set("v7",  2, values);
 
 
-
-						
-
 						index = 3;
 						values = 0;
 						for(var i = 0 ; i < areanames.length ; i++)
@@ -642,10 +642,6 @@
 						set("v12", 10, v24v09);
 						
 
-
-
-
-
 						var v50v02 = app.toNumber($($table.find(".v50").find("td").get( 2)).html());
 						var v50v03 = app.toNumber($($table.find(".v50").find("td").get( 3)).html());
 						var v50v04 = app.toNumber($($table.find(".v50").find("td").get( 4)).html());
@@ -656,15 +652,26 @@
 						var v50v09 = app.toNumber($($table.find(".v50").find("td").get( 9)).html());
 						var v50v10 = app.toNumber($($table.find(".v50").find("td").get(10)).html());
 
-						set("v15",  2, v50v10);
-						set("v15",  3, v50v02);
-						set("v15",  4, v50v03);
-						set("v15",  5, v50v04);
-						set("v15",  6, v50v05);
-						set("v15",  7, v50v06);
-						set("v15",  8, v50v07);
-						set("v15",  9, v50v08);
-						set("v15", 10, v50v09);
+						var v51v02 = app.toNumber($($table.find(".v51").find("td").get( 2)).html());
+						var v51v03 = app.toNumber($($table.find(".v51").find("td").get( 3)).html());
+						var v51v04 = app.toNumber($($table.find(".v51").find("td").get( 4)).html());
+						var v51v05 = app.toNumber($($table.find(".v51").find("td").get( 5)).html());
+						var v51v06 = app.toNumber($($table.find(".v51").find("td").get( 6)).html());
+						var v51v07 = app.toNumber($($table.find(".v51").find("td").get( 7)).html());
+						var v51v08 = app.toNumber($($table.find(".v51").find("td").get( 8)).html());
+						var v51v09 = app.toNumber($($table.find(".v51").find("td").get( 9)).html());
+						var v51v10 = app.toNumber($($table.find(".v51").find("td").get(10)).html());
+
+						set("v15",  2, v50v10 - v51v10);
+						set("v15",  3, v50v02 - v51v02);
+						set("v15",  4, v50v03 - v51v03);
+						set("v15",  5, v50v04 - v51v04);
+						set("v15",  6, v50v05 - v51v05);
+						set("v15",  7, v50v06 - v51v06);
+						set("v15",  8, v50v07 - v51v07);
+						set("v15",  9, v50v08 - v51v08);
+						set("v15", 10, v50v09 - v51v09);
+
 
 
 						calculate();	
@@ -715,6 +722,15 @@
 			set("v13", 10, ( get("v8", 10) - get("v9", 10) - get("v10", 10) - get("v11", 10) - get("v12", 10) ));
 
 
+			set("v14", 2, get("v13", 2) * 0.75);
+			set("v14", 3, get("v13", 3) * 0.75);
+			set("v14", 4, get("v13", 4) * 0.75);
+			set("v14", 5, get("v13", 5) * 0.75);
+			set("v14", 6, get("v13", 6) * 0.75);
+			set("v14", 7, get("v13", 7) * 0.75);
+			set("v14", 8, get("v13", 8) * 0.75);
+			set("v14", 9, get("v13", 9) * 0.75);
+			set("v14", 10, get("v13", 10) * 0.75);
 			
 			set("v16",  2, ( get("v13",  2) + get("v15",  2) ));
 			set("v16",  3, ( get("v13",  3) + get("v15",  3) ));

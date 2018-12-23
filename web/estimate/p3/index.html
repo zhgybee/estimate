@@ -523,12 +523,13 @@
 			var v02 = num($("#v0201 input").val()) + num($("#v0202 input").val());
 			var v03 = num($("#v0301 input").val()) + num($("#v0302 input").val());
 			var v04 = num($("#v0401 input").val()) + num($("#v0402 input").val());
-			var v05 = num($("#v0501 input").val()) + num($("#v0502 input").val());
 
 			$("#v01 input").val(app.pre0(v01));
 			$("#v02 input").val(app.pre0(v02));
 			$("#v03 input").val(app.pre0(v03));
 			$("#v04 input").val(app.pre0(v04));
+
+			var v05 = num($("#v01 input").val()) + num($("#v02 input").val()) - num($("#v03 input").val()) - num($("#v04 input").val());
 			$("#v05 input").val(app.pre0(v05));
 
 

@@ -124,7 +124,7 @@
 
 			
 			//以往三年每个规格区域销量在全年销量中的占比
-			Data areaitems = datasource.find("select a.MODEL, a.AREA, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, AREA, sum(VOLUME) as 'MODELTOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL, AREA order by AREA, MODEL) a left join (select MODEL, sum(VOLUME) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+			Data areaitems = datasource.find("select a.MODEL, a.AREA, cast(MODELTOTAL as double) / cast(TOTAL as double) as RATIO from (select MODEL, AREA, sum(VOLUME * PRICE) as 'MODELTOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL, AREA order by AREA, MODEL) a left join (select MODEL, sum(VOLUME * PRICE) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by MODEL order by MODEL) b on a.MODEL = b.MODEL", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 			for(Datum areaitem : areaitems)
 			{
 				String model = areaitem.getString("MODEL");
@@ -140,7 +140,7 @@
 			message.data.put("AREARATIOS", arearatios);
 
 			//以往3年区域销售量在全年销售量中的占比
-			Data areatotalitems = datasource.find("select AREA, sum(VOLUME * AMOUNT) as 'AREATOTAL', (select sum(VOLUME * AMOUNT) from T_SALES where year = ? or year = ? or year = ?) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by AREA order by AREA", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
+			Data areatotalitems = datasource.find("select AREA, sum(VOLUME * PRICE) as 'AREATOTAL', (select sum(VOLUME * PRICE) from T_SALES where year = ? or year = ? or year = ?) as 'TOTAL' from T_SALES where year = ? or year = ? or year = ? group by AREA order by AREA", String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3), String.valueOf(year - 1), String.valueOf(year - 2), String.valueOf(year - 3));
 			for(Datum areatotalitem : areatotalitems)
 			{
 				String area = areatotalitem.getString("AREA");
