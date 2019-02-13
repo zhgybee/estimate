@@ -1,36 +1,38 @@
+/* 用户表 */
 CREATE TABLE T_USER
 (
  ID                  VARCHAR(32),
- NAME                VARCHAR(32),
- CODE                VARCHAR(32),
- LOGIN_NAME          VARCHAR(32),
- PASSWORD            VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ NAME                VARCHAR(32),  --姓名
+ CODE                VARCHAR(32),  --编码
+ LOGIN_NAME          VARCHAR(32),  --登录名
+ PASSWORD            VARCHAR(32),  --密码
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_USER_PK PRIMARY KEY(ID)
 );
 
-
+/* 往年销量表 */
 CREATE TABLE T_SALES
 (
  ID                  VARCHAR(32),
- YEAR                VARCHAR(32),
- MONTH               VARCHAR(32),
- AREA                VARCHAR(32),
- BRAND               VARCHAR(32),
- MODEL               VARCHAR(32),
- VOLUME              INT,
- AMOUNT              DOUBLE,
- COST                DOUBLE,
- PRICE               DOUBLE,
- PROFITRATE          VARCHAR(32),
- CODE                VARCHAR(32),
- ISINSIDE            INT,
- SORT                INT,
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ YEAR                VARCHAR(32),  --年份
+ MONTH               VARCHAR(32),  --月份
+ AREA                VARCHAR(32),  --地区
+ BRAND               VARCHAR(32),  --品牌
+ MODEL               VARCHAR(32),  --规格
+ VOLUME              INT,          --销量
+ AMOUNT              DOUBLE,       --销售金额
+ COST                DOUBLE,       --调拨价
+ PRICE               DOUBLE,       --批发价
+ PROFITRATE          VARCHAR(32),  --毛利
+ CODE                VARCHAR(32),  --编码
+ ISINSIDE            INT,          --是否省内烟
+ SORT                INT,          --排序
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_SALES_PK PRIMARY KEY(ID)
 );
 
+/* 未用 */
 CREATE TABLE T_PARAMETERS
 (
  ID                  VARCHAR(32),
@@ -40,74 +42,77 @@ CREATE TABLE T_PARAMETERS
  P04                 VARCHAR(32),
  P05                 VARCHAR(32),
  YEAR                VARCHAR(32),
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_SALES_PK PRIMARY KEY(ID)
 );
 
+/* 预测已选方案 */
 CREATE TABLE T_SELECTED_PLAN
 (
  ID                  VARCHAR(32),
- YEAR                VARCHAR(32),
- GROUPNAME           VARCHAR(32),
- GROUPVOLUME         DOUBLE,
- BRAND               VARCHAR(32),
- MODEL               VARCHAR(32),
- MAX                 DOUBLE,
- MIN                 DOUBLE,
- REMAX               DOUBLE,
- REMIN               DOUBLE,
- PRICE               DOUBLE,
- COST                DOUBLE,
- RETAILPRICE         DOUBLE,
- PROFITRATE          VARCHAR(32),
- X                   DOUBLE,
- ISINSIDE            INT,
- PRODUCER            VARCHAR(256),
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ YEAR                VARCHAR(32),  --年份          
+ GROUPNAME           VARCHAR(32),  --价格区间名称          
+ GROUPVOLUME         DOUBLE,	   --价格区间销量          
+ BRAND               VARCHAR(32),  --品牌          
+ MODEL               VARCHAR(32),  --规格          
+ MAX                 DOUBLE,	   --最大销量          
+ MIN                 DOUBLE,	   --最小销量      
+ REMAX               DOUBLE,	   --最大销量     
+ REMIN               DOUBLE,	   --最小销量     
+ PRICE               DOUBLE,	   --批发价           
+ COST                DOUBLE,	   --调拨价          
+ RETAILPRICE         DOUBLE,	   --（预测使用）    
+ PROFITRATE          VARCHAR(32),  --（预测使用）         
+ X                   DOUBLE,	   --销量        
+ ISINSIDE            INT,	   --是否省内烟      
+ PRODUCER            VARCHAR(256), --卷烟公司
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_SELECTED_PLAN_PK PRIMARY KEY(ID)
 );
 
-
+/* 固定费用 */
 CREATE TABLE T_CONFIG
 (
  ID                  VARCHAR(32),
- YEAR                VARCHAR(32),
- MONTH               VARCHAR(32),
- CONTENT             VARCHAR(5000),
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ YEAR                VARCHAR(32),  --年份          
+ MONTH               VARCHAR(32),  --月份    
+ CONTENT             VARCHAR(5000),--内容
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_CONFIG_PK PRIMARY KEY(ID)
 );
 
+/* 预测年规格 */
 CREATE TABLE T_CURRITEMS
 (
  ID                  VARCHAR(32),
- YEAR                VARCHAR(32),
- BRAND               VARCHAR(32),
- MODEL               VARCHAR(32),
- COST                DOUBLE,
- PRICE               DOUBLE,
- RETAILPRICE         DOUBLE,
- PROFITRATE          VARCHAR(32),
- CODE                VARCHAR(32),
- ISINSIDE            INT,
- PRODUCER            VARCHAR(256),
- SORT                INT,
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ YEAR                VARCHAR(32),  --年份
+ BRAND               VARCHAR(32),  --品牌
+ MODEL               VARCHAR(32),  --规格
+ COST                DOUBLE,       --调拨价
+ PRICE               DOUBLE,       --批发价
+ RETAILPRICE         DOUBLE,       --（预测使用）
+ PROFITRATE          VARCHAR(32),  --（预测使用）
+ CODE                VARCHAR(32),  --编码
+ ISINSIDE            INT,          --是否省内烟
+ PRODUCER            VARCHAR(256), --卷烟公司
+ SORT                INT,          --排序
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_CURRITEMS_PK PRIMARY KEY(ID)
 );
 
+--预测的采购计划
 CREATE TABLE T_PURCHASE
 (
- ID                  VARCHAR(32),
- YEAR                VARCHAR(32),
- MONTH               VARCHAR(32),
- CONTENT             TEXT,
- CREATE_USER_ID      VARCHAR(32),
- CREATE_DATE         VARCHAR(32),
+ ID                  VARCHAR(32),  
+ YEAR                VARCHAR(32),  --年份
+ MONTH               VARCHAR(32),  --月份
+ CONTENT             TEXT,         --内容
+ CREATE_USER_ID      VARCHAR(32),  --创建人
+ CREATE_DATE         VARCHAR(32),  --创建时间
  CONSTRAINT T_PURCHASE_PK PRIMARY KEY(ID)
 );
 

@@ -95,15 +95,15 @@
 					</div>	
 					<div class="parameter-group-item">
 						<div class="parameter-title">2、总销量目标<span class="parameter-description">条</span></div>
-						<input type="text" id="volume-target" value="" class="parameter-field" style="width:80%; border-right:none"/><button id="refresh" style="width:20%">刷新</button>
+						<input type="text" id="volume-target" value="" class="parameter-field" style="width:84%; border-right:none"/><button id="refresh" style="width:16%">刷新</button>
 					</div>	
+				</div>
+
+				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">3、增值税税率</div>
 						<input type="text" id="taxrate1" value="0.16" class="parameter-field"/>
 					</div>					
-				</div>
-
-				<div class="parameter-group">
 					<div class="parameter-group-item">
 						<div class="parameter-title">4、印花税率</div>	
 						<input type="text" id="taxrate2" value="0.0003" class="parameter-field"/>
@@ -113,12 +113,14 @@
 						<input type="text" id="fudong" value="0.2" class="parameter-field"/>
 					</div>	
 					<div class="parameter-group-item">
+						<div class="parameter-title">6、省内品牌销售最低占比<span class="parameter-description">%</span></div>
+						<input type="text" value="48" class="parameter-field" id="internal-brand-volume"/>
 					</div>	
 				</div>
 
 
 				<div class="clearfix" id="upper-lower-panel">
-					<div class="parameter-title clearfix">6、品牌规格销售量上限及下限 <span class="add-button" id="upper-lower-button">增加</span></div>
+					<div class="parameter-title clearfix">7、品牌规格销售量上限及下限 <span class="add-button" id="upper-lower-button">增加</span></div>
 					<div class="parameter-header">
 						<div class="parameter-group-item">
 							<div class="parameter-subtitle">规格</div>
@@ -130,12 +132,6 @@
 							<div class="parameter-subtitle">上限<span class="parameter-description">条</span></div>
 						</div>	
 					</div>
-				</div>	
-
-				
-				<div class="clearfix">
-					<div class="parameter-title">7、省内品牌销售最低占比<span class="parameter-description">%</span></div>
-					<input type="text" value="48" class="parameter-field" id="internal-brand-volume"/>
 				</div>	
 				
 				<div class="clearfix" id="brand-group-panel">
@@ -428,7 +424,7 @@
 
 				$group.find(".brand-changer").selection
 				({
-					url:"../dictionary/brand.jsp?volumetarget="+$("#volume-target").val()+"&fudong="+$("#fudong").val(),
+					url:"../dictionary/brand.jsp?year="+$("#year-selector").val()+"&volumetarget="+$("#volume-target").val()+"&fudong="+$("#fudong").val(),
 					ismultiple:false,
 					search:true,
 					onclick:changebrand
@@ -542,7 +538,7 @@
 
 					var $panel = $("#fixedcost-panel");
 
-					content += '<div class="parameter-title clearfix">8、固定费用</div>';
+					content += '<div class="parameter-title clearfix">9、固定费用</div>';
 
 					content += '<div class="parameter-header">';
 					content += '<div class="parameter-group-item"><div class="parameter-subtitle" style="">项目</div></div>';
